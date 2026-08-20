@@ -362,6 +362,21 @@
         .matrix-card .mc-live { margin-top: 10px; font-size: 12px; color: var(--accent-cyan); }
         @media (max-width: 600px) { .matrix-grid { grid-template-columns: 1fr; } }
 
+        /* ===== 全站直达标签云 ===== */
+        .site-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 8px; }
+        .site-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: all .18s;
+        }
+        .site-tag:hover { border-color: var(--accent-cyan); background: rgba(34,211,238,0.08); transform: translateY(-1px); }
+
         @media (max-width: 600px) {
             .intro {
                 flex-direction: column;
@@ -410,7 +425,7 @@
     <!-- ===== 正文 ===== -->
     <div class="content">
         <p>
-            我把三段经历 —— <span class="pill">审计</span>、<span class="pill">工程</span>、<span class="pill">MBA</span> —— 揉成了一个东西：
+            我把三段经历 —— <span class="pill">财务</span>、<span class="pill">工程</span>、<span class="pill">MBA</span> —— 揉成了一个东西：
             一套让 AI 决策 <strong>“可审计、可熔断、可跨域迁移”</strong> 的操作系统。
         </p>
         <p>
@@ -554,6 +569,23 @@
             <div class="mc-desc">多模型路由与工作流编排控制台：创意 / 代码 / 润色分工到部署流水线 —— 我指挥 AI 军团的方式。</div>
             <div class="mc-live">Live ↗</div>
         </a>
+    </div>
+
+    <!-- ===== 全站直达 ===== -->
+    <div class="section-head">🔗 全站直达 <span>全部作品与实验站点 · 点击即达</span></div>
+    <div class="site-tags">
+        <a class="site-tag" href="https://hellomind-star.github.io/ymine/" target="_blank">🧠 Y.Mine 主站</a>
+        <a class="site-tag" href="https://hellomind-star.github.io/finance-personality/" target="_blank">💹 人格金融孪生</a>
+        <a class="site-tag" href="https://hellomind-star.github.io/poker-egg-fullstack/" target="_blank">🃏 PokerEgg 扑克竞技场</a>
+        <a class="site-tag" href="https://hellomind-star.github.io/personality-wine-mixing/" target="_blank">🍸 人格调酒系统</a>
+        <a class="site-tag" href="https://hellomind-star.github.io/airmind-os/" target="_blank">🛩️ AirMind OS</a>
+        <a class="site-tag" href="https://hellomind-star.github.io/short-drama-mbti/" target="_blank">🎬 短剧推演器</a>
+        <a class="site-tag" href="https://hellomind-star.github.io/agent-studio-board/" target="_blank">⚙️ 智能工坊</a>
+        <a class="site-tag" href="https://hellomind-star.github.io/Dimension-Chess/" target="_blank">♟️ 维度战棋</a>
+        <a class="site-tag" href="https://hellomind-star.github.io/Dimemsion-Chess-Latent/" target="_blank">🗼 Latent 叠塔</a>
+        <a class="site-tag" href="https://hellomind-star.github.io/ymine-demos/" target="_blank">📻 Y.MINE Demos</a>
+        <a class="site-tag" href="https://hellomind-star.github.io/ymine-validation-hub/" target="_blank">🧪 实验集群总控台</a>
+        <a class="site-tag" href="https://hellomind-star.github.io/ymine-validation-hub/ab-test.html" target="_blank">📊 Y-Exp A/B 框架</a>
     </div>
 
     <!-- ===== 底部 ===== -->
