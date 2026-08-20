@@ -511,7 +511,26 @@
     <!-- ================================================================
     Mermaid CDN
     ================================================================ -->
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1b1140',
+                primaryTextColor: '#e8edff',
+                primaryBorderColor: '#a78bfa',
+                lineColor: '#a7b0c8',
+                secondaryColor: '#0d1424',
+                tertiaryColor: '#0d1424',
+                clusterBkg: 'rgba(167,139,250,0.08)',
+                clusterBorder: 'rgba(167,139,250,0.4)',
+                titleColor: '#e8edff',
+                edgeLabelBackground: '#0d1424',
+                nodeTextColor: '#e8edff'
+            },
+            flowchart: { curve: 'basis', htmlLabels: true }
+        });
     </script>
 
     <script>
