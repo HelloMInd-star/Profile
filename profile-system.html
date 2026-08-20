@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>个人系统说明书 · 图示版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a080c;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            color: #f0e8d8;
+            min-height: 100vh;
+            padding: 24px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* ===== 顶部 ===== */
+        .brand {
+            text-align: center;
+            padding: 20px 0 16px;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.04);
+            margin-bottom: 28px;
+        }
+        .brand h1 {
+            font-weight: 300;
+            font-size: clamp(24px, 4vw, 36px);
+            letter-spacing: clamp(8px, 2vw, 14px);
+            color: #f0e8d8;
+        }
+        .brand h1 .hl {
+            color: #A78BFA;
+        }
+        .brand .sub {
+            font-size: clamp(11px, 1.2vw, 14px);
+            color: rgba(167, 139, 250, 0.06);
+            letter-spacing: 4px;
+            margin-top: 4px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 10px;
+            color: rgba(167, 139, 250, 0.03);
+            text-decoration: none;
+            font-size: 10px;
+            letter-spacing: 3px;
+            transition: 0.2s;
+        }
+        .back-link:hover {
+            color: rgba(167, 139, 250, 0.06);
+        }
+
+        /* ===== 章节 ===== */
+        .section {
+            margin-bottom: 32px;
+        }
+        .section-label {
+            font-size: 9px;
+            color: rgba(167, 139, 250, 0.03);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.02);
+            padding-bottom: 6px;
+        }
+
+        /* ===== 网格 ===== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 700px) {
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 450px) {
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== 卡片基类 ===== */
+        .card {
+            background: rgba(14, 11, 16, 0.25);
+            border: 1px solid rgba(167, 139, 250, 0.02);
+            padding: 16px 16px 18px;
+            transition: 0.2s;
+            text-align: center;
+        }
+        .card:hover {
+            border-color: rgba(167, 139, 250, 0.04);
+            background: rgba(20, 16, 24, 0.2);
+        }
+        .card .label {
+            font-size: 8px;
+            color: rgba(167, 139, 250, 0.03);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .card .title {
+            font-size: clamp(13px, 1.2vw, 17px);
+            font-weight: 400;
+            color: #f0e8d8;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+        .card .desc {
+            font-size: clamp(10px, 0.9vw, 12px);
+            color: rgba(200, 190, 220, 0.15);
+            line-height: 1.6;
+        }
+
+        /* ===== 环形图 ===== */
+        .donut {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 6px auto 10px;
+            border-radius: 50%;
+            background: conic-gradient(#A78BFA 0% 40%, #FBBF24 40% 60%, #22D3EE 60% 80%, #F472B6 80% 95%, #34D399 95% 100%);
+            mask: radial-gradient(farthest-side, transparent calc(100% - 18px), #000 calc(100% - 18px));
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 18px), #000 calc(100% - 18px));
+        }
+        .donut-label {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        .donut-label .item {
+            font-size: 9px;
+            color: rgba(200, 190, 220, 0.08);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .donut-label .item .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #A78BFA;
+        }
+        .donut-label .item .dot.gold {
+            background: #FBBF24;
+        }
+        .donut-label .item .dot.cyan {
+            background: #22D3EE;
+        }
+        .donut-label .item .dot.pink {
+            background: #F472B6;
+        }
+        .donut-label .item .dot.green {
+            background: #34D399;
+        }
+
+        /* ===== 条形图 ===== */
+        .bar-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 4px 0;
+        }
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .bar-row .b-label {
+            font-size: 9px;
+            color: rgba(200, 190, 220, 0.06);
+            min-width: 36px;
+            text-align: right;
+            letter-spacing: 1px;
+        }
+        .bar-row .b-track {
+            flex: 1;
+            height: 4px;
+            background: rgba(167, 139, 250, 0.02);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .bar-row .b-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+        .bar-row .b-fill.purple {
+            background: #A78BFA;
+        }
+        .bar-row .b-fill.gold {
+            background: #FBBF24;
+        }
+        .bar-row .b-fill.cyan {
+            background: #22D3EE;
+        }
+        .bar-row .b-fill.pink {
+            background: #F472B6;
+        }
+        .bar-row .b-fill.green {
+            background: #34D399;
+        }
+        .bar-row .b-val {
+            font-size: 9px;
+            color: rgba(200, 190, 220, 0.04);
+            min-width: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ===== 网格点阵 ===== */
+        .dot-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin: 4px 0 2px;
+        }
+        .dot-grid .cell {
+            background: rgba(167, 139, 250, 0.02);
+            border: 1px solid rgba(167, 139, 250, 0.01);
+            padding: 6px 4px;
+            text-align: center;
+            font-size: 18px;
+            transition: 0.2s;
+            border-radius: 2px;
+        }
+        .dot-grid .cell:hover {
+            border-color: rgba(167, 139, 250, 0.04);
+            background: rgba(20, 16, 24, 0.2);
+        }
+        .dot-grid .cell .c-label {
+            font-size: 7px;
+            color: rgba(200, 190, 220, 0.04);
+            letter-spacing: 1px;
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* ===== 流 ===== */
+        .flow-bar {
+            display: flex;
+            align-items: center;
+            gap: clamp(4px, 1vw, 12px);
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 4px 0;
+            font-size: clamp(10px, 0.9vw, 13px);
+            color: rgba(200, 190, 220, 0.06);
+        }
+        .flow-bar .step {
+            color: rgba(200, 190, 220, 0.12);
+        }
+        .flow-bar .arrow {
+            color: rgba(167, 139, 250, 0.02);
+        }
+
+        /* ===== 脉轮 ===== */
+        .chakra {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 4px 0;
+        }
+        .chakra .ring {
+            width: 100%;
+            max-width: 280px;
+            padding: 8px 14px;
+            border: 1px solid rgba(167, 139, 250, 0.02);
+            text-align: center;
+            font-size: clamp(11px, 0.9vw, 13px);
+            color: rgba(200, 190, 220, 0.08);
+            letter-spacing: 2px;
+            transition: 0.2s;
+        }
+        .chakra .ring:hover {
+            border-color: rgba(167, 139, 250, 0.03);
+            color: rgba(200, 190, 220, 0.15);
+        }
+        .chakra .ring .hl {
+            color: rgba(200, 190, 220, 0.3);
+        }
+        .chakra .ring .emoji {
+            margin-right: 4px;
+        }
+        .chakra .connector {
+            width: 1px;
+            height: 8px;
+            background: rgba(167, 139, 250, 0.02);
+        }
+
+        /* ===== 底部 ===== */
+        .quote-box {
+            margin-top: 28px;
+            padding: 20px 18px;
+            background: rgba(167, 139, 250, 0.01);
+            border: 1px solid rgba(167, 139, 250, 0.02);
+            text-align: center;
+        }
+        .quote-box .text {
+            font-size: clamp(12px, 1.1vw, 16px);
+            color: rgba(200, 190, 220, 0.08);
+            letter-spacing: 2px;
+            line-height: 2;
+            font-style: italic;
+        }
+        .quote-box .text .hl {
+            color: rgba(200, 190, 220, 0.2);
+        }
+
+        .footer {
+            margin-top: 28px;
+            border-top: 1px solid rgba(167, 139, 250, 0.02);
+            padding-top: 14px;
+            text-align: center;
+            font-size: 9px;
+            color: rgba(167, 139, 250, 0.02);
+            letter-spacing: 4px;
+        }
+
+        .tag {
+            font-size: 8px;
+            color: rgba(167, 139, 250, 0.02);
+            border: 1px solid rgba(167, 139, 250, 0.01);
+            padding: 1px 8px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <a href="index.html" class="back-link">← 返回首页</a>
+
+        <!-- ===== 品牌 ===== -->
+        <div class="brand">
+            <h1>⚡ <span class="hl">个人</span>系统说明书</h1>
+            <div class="sub">图示版 · 能力全景</div>
+        </div>
+
+        <!-- ===== 1. 能力分布（环形图） ===== -->
+        <div class="section">
+            <div class="section-label">⚡ 能力分布</div>
+            <div class="card">
+                <div class="donut"></div>
+                <div class="donut-label">
+                    <span class="item"><span class="dot"></span> 艺术</span>
+                    <span class="item"><span class="dot gold"></span> 商业</span>
+                    <span class="item"><span class="dot cyan"></span> 代码</span>
+                    <span class="item"><span class="dot pink"></span> 元系统</span>
+                    <span class="item"><span class="dot green"></span> 脉冲</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 2. 星盘 · 学术 · 实习（三列） ===== -->
+        <div class="section">
+            <div class="section-label">🌌 配置 · 框架 · 实践</div>
+            <div class="grid-3">
+                <div class="card">
+                    <div class="label">🌌 星盘</div>
+                    <div class="title">日处女 · 月天蝎 · 升水瓶</div>
+                    <div class="desc">系统化 · 洞察 · 独特表达</div>
+                </div>
+                <div class="card">
+                    <div class="label">📚 学术</div>
+                    <div class="title">财务 + MBA</div>
+                    <div class="desc">财务管理（本科）· 新加坡 MBA</div>
+                </div>
+                <div class="card">
+                    <div class="label">💼 实践</div>
+                    <div class="title">审计 · 工程 · 运营</div>
+                    <div class="desc">审计 · 土木 · 生菜盲盒</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 3. 工具能力（条形图） ===== -->
+        <div class="section">
+            <div class="section-label">🛠️ 工具能力</div>
+            <div class="card">
+                <div class="bar-group">
+                    <div class="bar-row">
+                        <span class="b-label">结构化</span>
+                        <div class="b-track"><div class="b-fill purple" style="width:90%;"></div></div>
+                        <span class="b-val">90</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="b-label">直觉→模型</span>
+                        <div class="b-track"><div class="b-fill gold" style="width:85%;"></div></div>
+                        <span class="b-val">85</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="b-label">代码实现</span>
+                        <div class="b-track"><div class="b-fill cyan" style="width:80%;"></div></div>
+                        <span class="b-val">80</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="b-label">自研工具</span>
+                        <div class="b-track"><div class="b-fill pink" style="width:75%;"></div></div>
+                        <span class="b-val">75</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 4. MBTI 四态（网格点阵） ===== -->
+        <div class="section">
+            <div class="section-label">🧠 MBTI 状态</div>
+            <div class="grid-4">
+                <div class="card" style="border-color:rgba(167,139,250,0.03);">
+                    <div style="font-size:20px;">🧊</div>
+                    <div class="title" style="font-size:14px;">INTJ</div>
+                    <div class="desc">深度思考 · 建模</div>
+                </div>
+                <div class="card" style="border-color:rgba(251,191,36,0.03);">
+                    <div style="font-size:20px;">⚡</div>
+                    <div class="title" style="font-size:14px; color:rgba(251,191,36,0.4);">ENTJ</div>
+                    <div class="desc">执行 · 推进</div>
+                </div>
+                <div class="card" style="border-color:rgba(244,114,182,0.03);">
+                    <div style="font-size:20px;">🎭</div>
+                    <div class="title" style="font-size:14px; color:rgba(244,114,182,0.4);">ESFP</div>
+                    <div class="desc">爆发 · 表演</div>
+                </div>
+                <div class="card" style="border-color:rgba(34,211,238,0.03);">
+                    <div style="font-size:20px;">🌀</div>
+                    <div class="title" style="font-size:14px; color:rgba(34,211,238,0.4);">INFJ</div>
+                    <div class="desc">倾听 · 接收</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 5. 项目矩阵（网格点阵） ===== -->
+        <div class="section">
+            <div class="section-label">📂 项目矩阵</div>
+            <div class="grid-4">
+                <div class="card" style="border-color:rgba(167,139,250,0.03);">
+                    <div style="font-size:20px;">🎮</div>
+                    <div class="title" style="font-size:12px;">游戏</div>
+                    <div class="desc" style="font-size:9px;">蓄力 · 连击</div>
+                </div>
+                <div class="card" style="border-color:rgba(251,191,36,0.03);">
+                    <div style="font-size:20px;">💰</div>
+                    <div class="title" style="font-size:12px;">金融</div>
+                    <div class="desc" style="font-size:9px;">人格·AB测试</div>
+                </div>
+                <div class="card" style="border-color:rgba(34,211,238,0.03);">
+                    <div style="font-size:20px;">🍸</div>
+                    <div class="title" style="font-size:12px;">交互</div>
+                    <div class="desc" style="font-size:9px;">酒馆·MBTI</div>
+                </div>
+                <div class="card" style="border-color:rgba(244,114,182,0.03);">
+                    <div style="font-size:20px;">🎨</div>
+                    <div class="title" style="font-size:12px;">3D</div>
+                    <div class="desc" style="font-size:9px;">Three.js</div>
+                </div>
+                <div class="card" style="border-color:rgba(52,211,153,0.03); grid-column: span 4; max-width:300px; margin:0 auto; width:100%;">
+                    <div style="font-size:20px;">🧠</div>
+                    <div class="title" style="font-size:12px;">心理产品</div>
+                    <div class="desc" style="font-size:9px;">探索中 · 情绪快照</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 6. 工具链（简卡） ===== -->
+        <div class="section">
+            <div class="section-label">⚙️ 自研工具</div>
+            <div class="grid-4">
+                <div class="card">
+                    <div style="font-size:18px;">📥</div>
+                    <div class="title" style="font-size:11px;">Idea Forge</div>
+                    <div class="desc" style="font-size:8px;">想法→文档</div>
+                </div>
+                <div class="card">
+                    <div style="font-size:18px;">🛠️</div>
+                    <div class="title" style="font-size:11px;">Code-Mate</div>
+                    <div class="desc" style="font-size:8px;">代码→结构</div>
+                </div>
+                <div class="card">
+                    <div style="font-size:18px;">🧠</div>
+                    <div class="title" style="font-size:11px;">Interpreter</div>
+                    <div class="desc" style="font-size:8px;">代码→解释</div>
+                </div>
+                <div class="card">
+                    <div style="font-size:18px;">📂</div>
+                    <div class="title" style="font-size:11px;">Catalog</div>
+                    <div class="desc" style="font-size:8px;">文件夹→树</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 7. 脉轮（竖直） ===== -->
+        <div class="section">
+            <div class="section-label">🌀 能力脉轮</div>
+            <div class="card">
+                <div class="chakra">
+                    <div class="ring"><span class="emoji">🔮</span> <span class="hl">直觉捕获</span></div>
+                    <div class="connector"></div>
+                    <div class="ring"><span class="emoji">📚</span> <span class="hl">学术 · 实习</span></div>
+                    <div class="connector"></div>
+                    <div class="ring"><span class="emoji">🛠️</span> <span class="hl">工具化能力</span></div>
+                    <div class="connector"></div>
+                    <div class="ring"><span class="emoji">📂</span> <span class="hl">项目矩阵</span></div>
+                    <div class="connector"></div>
+                    <div class="ring"><span class="emoji">⚡</span> <span class="hl">元系统架构</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 8. 工作流 ===== -->
+        <div class="section">
+            <div class="section-label">🔄 工作流</div>
+            <div class="card">
+                <div class="flow-bar">
+                    <span class="step">💭</span><span class="arrow">→</span>
+                    <span class="step">📋</span><span class="arrow">→</span>
+                    <span class="step">🔬</span><span class="arrow">→</span>
+                    <span class="step">⚡</span><span class="arrow">→</span>
+                    <span class="step">📦</span><span class="arrow">→</span>
+                    <span class="step">🔁</span>
+                </div>
+                <div style="text-align:center; font-size:8px; color:rgba(167,139,250,0.02); letter-spacing:2px;">
+                    想法 → 文档 → 深研 → MVP → 产出 → 迭代
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 金句 ===== -->
+        <div class="quote-box">
+            <div class="text">
+                “在模糊中捕捉结构，<br />
+                翻译成 <span class="hl">可运行的跨域系统</span>”
+            </div>
+        </div>
+
+        <div class="footer">
+            ⚡ 一个人就是一支团队 · 5 个领域 · 4 个工具
+        </div>
+
+    </div>
+
+</body>
+</html>

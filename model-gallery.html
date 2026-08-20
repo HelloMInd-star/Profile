@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>模型展厅 · 3D 旋转木马</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a080c;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            color: #f0e8d8;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            user-select: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        /* ===== 返回按钮 ===== */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 30;
+            background: rgba(14, 11, 16, 0.5);
+            border: 1px solid rgba(167, 139, 250, 0.04);
+            color: rgba(200, 190, 220, 0.15);
+            padding: 8px 18px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            transition: 0.2s;
+            text-decoration: none;
+            border-radius: 2px;
+            backdrop-filter: blur(8px);
+        }
+        .back-btn:hover {
+            border-color: rgba(167, 139, 250, 0.08);
+            color: rgba(200, 190, 220, 0.25);
+        }
+
+        /* ===== 标题 ===== */
+        .page-title {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+        }
+        .page-title h1 {
+            font-weight: 300;
+            font-size: clamp(16px, 3vw, 24px);
+            letter-spacing: clamp(6px, 2vw, 10px);
+            color: #f0e8d8;
+            text-shadow: 0 0 40px rgba(167, 139, 250, 0.04);
+        }
+        .page-title .sub {
+            font-size: clamp(9px, 1.2vw, 12px);
+            color: rgba(167, 139, 250, 0.06);
+            letter-spacing: 4px;
+            margin-top: 2px;
+        }
+
+        /* ===== 背景粒子 ===== */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== 旋转木马容器 ===== */
+        .carousel-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            perspective: 1200px;
+            perspective-origin: 50% 50%;
+            padding: 60px 20px 80px 20px;
+        }
+
+        .carousel {
+            position: relative;
+            width: clamp(200px, 30vw, 320px);
+            height: clamp(260px, 40vw, 400px);
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            cursor: grab;
+        }
+        .carousel:active {
+            cursor: grabbing;
+        }
+
+        /* ===== 卡片 ===== */
+        .card {
+            position: absolute;
+            width: clamp(180px, 27vw, 290px);
+            height: clamp(240px, 36vw, 370px);
+            left: 50%;
+            top: 50%;
+            margin-left: calc(clamp(180px, 27vw, 290px) / -2);
+            margin-top: calc(clamp(240px, 36vw, 370px) / -2);
+            background: rgba(14, 11, 16, 0.75);
+            border: 1px solid rgba(167, 139, 250, 0.06);
+            border-radius: 4px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            backface-visibility: hidden;
+        }
+        .card:hover {
+            border-color: rgba(167, 139, 250, 0.12);
+            box-shadow: 0 8px 60px rgba(167, 139, 250, 0.08);
+            transform: scale(1.02) translateZ(10px);
+        }
+
+        .card .card-header {
+            padding: clamp(8px, 1.2vw, 14px) clamp(12px, 1.8vw, 18px) clamp(4px, 0.6vw, 8px) clamp(12px, 1.8vw, 18px);
+            border-bottom: 1px solid rgba(167, 139, 250, 0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .card .card-header .num {
+            font-size: clamp(8px, 1vw, 11px);
+            color: rgba(167, 139, 250, 0.04);
+            letter-spacing: 2px;
+        }
+        .card .card-header .label {
+            font-size: clamp(9px, 1.1vw, 13px);
+            color: rgba(200, 190, 220, 0.15);
+            letter-spacing: 2px;
+        }
+        .card .card-body {
+            flex: 1;
+            padding: clamp(6px, 0.8vw, 12px) clamp(10px, 1.4vw, 16px) clamp(10px, 1.4vw, 16px) clamp(10px, 1.4vw, 16px);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card .card-body .mermaid-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(9px, 1vw, 12px);
+            color: rgba(167, 139, 250, 0.02);
+            letter-spacing: 1px;
+            text-align: center;
+            line-height: 1.6;
+            background: rgba(167, 139, 250, 0.01);
+            border-radius: 2px;
+            border: 1px dashed rgba(167, 139, 250, 0.02);
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+        .card .card-body .mermaid-placeholder .tiny-mermaid {
+            font-size: clamp(8px, 0.9vw, 10px);
+            color: rgba(167, 139, 250, 0.03);
+            line-height: 1.4;
+            white-space: pre-wrap;
+            text-align: left;
+            width: 100%;
+            max-height: 100%;
+            overflow: hidden;
+        }
+
+        /* 卡片颜色标识 */
+        .card-1 .card-header .label {
+            color: rgba(167, 139, 250, 0.2);
+        }
+        .card-1:hover {
+            border-color: rgba(167, 139, 250, 0.15);
+        }
+        .card-2 .card-header .label {
+            color: rgba(251, 191, 36, 0.2);
+        }
+        .card-2:hover {
+            border-color: rgba(251, 191, 36, 0.15);
+        }
+        .card-3 .card-header .label {
+            color: rgba(34, 211, 238, 0.2);
+        }
+        .card-3:hover {
+            border-color: rgba(34, 211, 238, 0.15);
+        }
+        .card-4 .card-header .label {
+            color: rgba(244, 114, 182, 0.2);
+        }
+        .card-4:hover {
+            border-color: rgba(244, 114, 182, 0.15);
+        }
+
+        /* ===== 指示器 ===== */
+        .indicators {
+            position: fixed;
+            bottom: clamp(16px, 3vh, 32px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: clamp(8px, 1.5vw, 14px);
+            pointer-events: none;
+        }
+        .indicators .dot {
+            width: clamp(6px, 1vw, 8px);
+            height: clamp(6px, 1vw, 8px);
+            border-radius: 50%;
+            background: rgba(167, 139, 250, 0.04);
+            transition: 0.3s;
+            border: 1px solid rgba(167, 139, 250, 0.02);
+        }
+        .indicators .dot.active {
+            background: rgba(167, 139, 250, 0.08);
+            border-color: rgba(167, 139, 250, 0.04);
+            box-shadow: 0 0 12px rgba(167, 139, 250, 0.04);
+        }
+
+        /* ===== 提示 ===== */
+        .hint {
+            position: fixed;
+            bottom: clamp(44px, 6vh, 64px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            font-size: clamp(8px, 1vw, 11px);
+            color: rgba(167, 139, 250, 0.02);
+            letter-spacing: 3px;
+            pointer-events: none;
+            transition: opacity 2s;
+            text-align: center;
+        }
+        .hint span {
+            color: rgba(167, 139, 250, 0.03);
+        }
+
+        /* ================================================================
+           模态框
+           ================================================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 8, 12, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(16px, 4vw, 40px);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .modal-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            max-width: min(900px, 92vw);
+            width: 100%;
+            max-height: min(85vh, 600px);
+            background: rgba(14, 11, 16, 0.9);
+            border: 1px solid rgba(167, 139, 250, 0.06);
+            border-radius: 4px;
+            padding: clamp(16px, 2.5vw, 32px) clamp(16px, 3vw, 36px) clamp(16px, 2.5vw, 28px);
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 80px rgba(167, 139, 250, 0.02);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.open .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content .modal-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            background: none;
+            border: none;
+            color: rgba(167, 139, 250, 0.04);
+            font-size: clamp(16px, 2vw, 22px);
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            padding: 4px 12px;
+            transition: 0.2s;
+            z-index: 2;
+        }
+        .modal-content .modal-close:hover {
+            color: rgba(167, 139, 250, 0.08);
+        }
+
+        .modal-content .modal-title {
+            font-size: clamp(14px, 2vw, 20px);
+            font-weight: 300;
+            letter-spacing: clamp(4px, 0.8vw, 6px);
+            color: #f0e8d8;
+            margin-bottom: clamp(12px, 2vh, 20px);
+            border-bottom: 1px solid rgba(167, 139, 250, 0.03);
+            padding-bottom: clamp(8px, 1.2vh, 12px);
+        }
+
+        .modal-content .modal-body {
+            width: 100%;
+        }
+        .modal-content .modal-body .mermaid {
+            width: 100%;
+        }
+        .modal-content .modal-body .mermaid svg {
+            max-width: 100% !important;
+            height: auto !important;
+            max-height: min(55vh, 400px);
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 2px;
+        }
+        .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.04);
+        }
+
+        @media (max-width: 600px) {
+            .carousel-wrapper {
+                padding: 40px 10px 60px 10px;
+            }
+            .card .card-body .mermaid-placeholder .tiny-mermaid {
+                font-size: 7px;
+            }
+            .modal-content {
+                max-height: 90vh;
+                padding: 14px 12px;
+            }
+            .modal-content .modal-body .mermaid svg {
+                max-height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 背景粒子 -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- 返回按钮 -->
+    <a href="index.html" class="back-btn">← 返回首页</a>
+
+    <!-- 标题 -->
+    <div class="page-title">
+        <h1>🌌 模型展厅</h1>
+        <div class="sub">拖拽旋转 · 点击放大</div>
+    </div>
+
+    <!-- 旋转木马 -->
+    <div class="carousel-wrapper">
+        <div class="carousel" id="carousel">
+
+            <!-- 卡片 1 -->
+            <div class="card card-1" data-index="0" data-title="思维函数结构图">
+                <div class="card-header">
+                    <span class="num">01</span>
+                    <span class="label">思维函数</span>
+                </div>
+                <div class="card-body">
+                    <div class="mermaid-placeholder">
+                        <div class="tiny-mermaid">
+                            ═══ 输入层 ═══
+                            模糊想法 · 思考深度 · 脉冲状态
+                                ↓
+                            ═══ 处理层 ═══
+                            模式识别 → 跨域联想 → 建模 → 反馈锁 → MVP
+                                ↓
+                            ═══ 输出层 ═══
+                            文档 · 代码 · 工具 · 方法论
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 卡片 2 -->
+            <div class="card card-2" data-index="1" data-title="多智能体工作流图">
+                <div class="card-header">
+                    <span class="num">02</span>
+                    <span class="label">智能体团队</span>
+                </div>
+                <div class="card-body">
+                    <div class="mermaid-placeholder">
+                        <div class="tiny-mermaid">
+                            🧑‍💻 主协调者（你）
+                                │
+                            ┌───┴───┐
+                            ▼       ▼
+                        感知层   认知层
+                            │       │
+                            └───┬───┘
+                                ▼
+                            执行层 → 验证层 → 记忆层
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 卡片 3 -->
+            <div class="card card-3" data-index="2" data-title="星盘×MBTI×思维融合图">
+                <div class="card-header">
+                    <span class="num">03</span>
+                    <span class="label">星盘 · MBTI</span>
+                </div>
+                <div class="card-body">
+                    <div class="mermaid-placeholder">
+                        <div class="tiny-mermaid">
+                            ☀️ 日处女 · 🌙 月天蝎 · ⬆️ 升水瓶
+                                │
+                            ┌───┴───┐
+                            ▼       ▼
+                        INTJ    ESFP
+                        (深研)  (爆发)
+                            │       │
+                            └───┬───┘
+                                ▼
+                        思维系统 → 工具链 → 项目
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 卡片 4 -->
+            <div class="card card-4" data-index="3" data-title="完整系统全景图">
+                <div class="card-header">
+                    <span class="num">04</span>
+                    <span class="label">完整系统</span>
+                </div>
+                <div class="card-body">
+                    <div class="mermaid-placeholder">
+                        <div class="tiny-mermaid">
+                            底层底色（艺术直觉）
+                                ↓
+                            星盘 · 学术 · 实习
+                                ↓
+                            工具化能力 · 代码
+                                ↓
+                            MBTI 状态切换
+                                ↓
+                            项目矩阵（5域）
+                                ↓
+                            元系统架构
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 指示器 -->
+    <div class="indicators" id="indicators">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+
+    <!-- 提示 -->
+    <div class="hint" id="hint">
+        <span>🔄 拖拽旋转 · 点击卡片查看完整图</span>
+    </div>
+
+    <!-- ================================================================
+    模态框
+    ================================================================ -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">✕</button>
+            <div class="modal-title" id="modalTitle">思维函数结构图</div>
+            <div class="modal-body" id="modalBody">
+                <!-- 由 JS 动态填充 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================
+    Mermaid CDN
+    ================================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js">
+    </script>
+
+    <script>
+        // ================================================================
+        //  1. 背景粒子
+        // ================================================================
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h;
+
+        function resizeParticles() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        resizeParticles();
+        window.addEventListener('resize', resizeParticles);
+
+        const particles = [];
+        for (let i = 0; i < Math.min(80, Math.floor(window.innerWidth / 12)); i++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                r: 0.5 + Math.random() * 1.5,
+                dx: (Math.random() - 0.5) * 0.3,
+                dy: (Math.random() - 0.5) * 0.3,
+                o: 0.1 + Math.random() * 0.2,
+            });
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, w, h);
+            for (const p of particles) {
+                p.x += p.dx;
+                p.y += p.dy;
+                if (p.x < 0 || p.x > w) p.dx *= -1;
+                if (p.y < 0 || p.y > h) p.dy *= -1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(167, 139, 250, ${p.o})`;
+                ctx.fill();
+            }
+            requestAnimationFrame(drawParticles);
+        }
+        drawParticles();
+
+        // ================================================================
+        //  2. 旋转木马
+        // ================================================================
+        const carousel = document.getElementById('carousel');
+        const cards = document.querySelectorAll('.card');
+        const total = cards.length;
+        let radius = Math.min(window.innerWidth * 0.35, 340);
+
+        function updateRadius() {
+            radius = Math.min(window.innerWidth * 0.35, 340);
+        }
+        window.addEventListener('resize', updateRadius);
+
+        let currentAngle = 0;
+        let isDragging = false;
+        let startX = 0;
+        let startAngle = 0;
+        let autoRotate = true;
+        let autoRotateTimer = null;
+
+        function positionCards(angle) {
+            const step = (Math.PI * 2) / total;
+            cards.forEach((card, i) => {
+                const a = angle + i * step;
+                const x = Math.sin(a) * radius;
+                const z = Math.cos(a) * radius;
+                const scale = 0.55 + 0.45 * (z / radius + 1) / 2;
+                card.style.transform =
+                    `translateX(${x}px) translateZ(${z}px) scale(${scale})`;
+                card.style.opacity = 0.25 + 0.75 * (z / radius + 1) / 2;
+                card.style.zIndex = Math.floor((z / radius + 1) * 100);
+            });
+            const idx = Math.round((((angle % (Math.PI * 2)) / (Math.PI * 2) + 1) % 1) * total) % total;
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === idx);
+            });
+        }
+
+        function startAutoRotate() {
+            if (autoRotateTimer) clearInterval(autoRotateTimer);
+            autoRotateTimer = setInterval(() => {
+                if (!isDragging && autoRotate) {
+                    currentAngle += 0.006;
+                    positionCards(currentAngle);
+                }
+            }, 30);
+        }
+
+        // 鼠标拖拽
+        carousel.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            autoRotate = false;
+            startX = e.clientX;
+            startAngle = currentAngle;
+            carousel.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const delta = (e.clientX - startX) * 0.005;
+            currentAngle = startAngle + delta;
+            positionCards(currentAngle);
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                autoRotate = true;
+                carousel.style.cursor = 'grab';
+                const step = (Math.PI * 2) / total;
+                const nearest = Math.round(currentAngle / step) * step;
+                currentAngle = nearest;
+                positionCards(currentAngle);
+            }
+        });
+
+        // 触摸支持
+        let touchStartX = 0;
+        let touchStartAngle = 0;
+
+        carousel.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            isDragging = true;
+            autoRotate = false;
+            touchStartX = touch.clientX;
+            touchStartAngle = currentAngle;
+        });
+
+        carousel.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const touch = e.touches[0];
+            const delta = (touch.clientX - touchStartX) * 0.005;
+            currentAngle = touchStartAngle + delta;
+            positionCards(currentAngle);
+        });
+
+        carousel.addEventListener('touchend', () => {
+            if (isDragging) {
+                isDragging = false;
+                autoRotate = true;
+                const step = (Math.PI * 2) / total;
+                const nearest = Math.round(currentAngle / step) * step;
+                currentAngle = nearest;
+                positionCards(currentAngle);
+            }
+        });
+
+        positionCards(0);
+        startAutoRotate();
+
+        setTimeout(() => {
+            document.getElementById('hint').style.opacity = '0';
+        }, 5000);
+
+        window.addEventListener('resize', () => {
+            updateRadius();
+            positionCards(currentAngle);
+        });
+
+        // ================================================================
+        //  3. 点击放大（Mermaid 完整渲染）
+        // ================================================================
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const modalClose = document.getElementById('modalClose');
+
+        const mermaidCodes = [
+            // 图1
+            `
+            graph TB
+                subgraph 输入层["📥 输入层"]
+                    X1["x = 模糊想法"]
+                    X2["t = 思考深度"]
+                    X3["p = 脉冲状态"]
+                end
+                subgraph 处理层["⚙️ 处理层"]
+                    P1["🔍 PatternMatch(x)"]
+                    P2["🧩 CrossDomain(·)"]
+                    P3["📐 Model(·)"]
+                    P4["🔒 FeedbackLock(·)"]
+                    P5["⚡ MVP(·)"]
+                end
+                subgraph 输出层["📦 输出层"]
+                    O1["📋 文档"]
+                    O2["🛠️ 代码"]
+                    O3["🔧 工具"]
+                    O4["📖 方法论"]
+                end
+                X1 & X2 & X3 --> P1
+                P1 --> P2 --> P3 --> P4 --> P5
+                P5 --> O1 & O2 & O3 & O4
+            `,
+            // 图2
+            `
+            graph TB
+                subgraph 主协调者["🧑‍💻 主协调者"]
+                    O["🎯 意图识别 · 任务分发"]
+                end
+                subgraph 感知层["📥 感知层"]
+                    A1["🌊 模糊接收器"]
+                    A2["📄 文本解析器"]
+                    A3["🎨 直觉捕捉器"]
+                end
+                subgraph 认知层["🧠 认知层"]
+                    A4["🔍 模式匹配"]
+                    A5["🧩 跨域路由"]
+                    A6["📐 建模"]
+                end
+                subgraph 执行层["🛠️ 执行层"]
+                    A7["📥 Idea Forge"]
+                    A8["🛠️ Code-Mate"]
+                    A9["🧠 Interpreter"]
+                    A10["📂 Catalog"]
+                end
+                主协调者 --> 感知层 --> 认知层 --> 执行层
+            `,
+            // 图3
+            `
+            graph TB
+                subgraph 星盘["🌌 星盘"]
+                    S1["☀️ 日处女 · 系统化"]
+                    S2["🌙 月天蝎 · 洞察"]
+                    S3["⬆️ 升水瓶 · 表达"]
+                end
+                subgraph MBTI["🧠 MBTI"]
+                    M1["🧊 INTJ 深研"]
+                    M2["⚡ ENTJ 执行"]
+                    M3["🎭 ESFP 爆发"]
+                    M4["🌀 INFJ 接收"]
+                end
+                subgraph 输出["📦 输出"]
+                    O1["🛠️ 工具链"]
+                    O2["📂 项目矩阵"]
+                    O3["📋 文档"]
+                end
+                星盘 --> MBTI --> 输出
+            `,
+            // 图4
+            `
+            graph TB
+                subgraph 底层["🎨 底层"]
+                    B1["舞蹈 · 绘画 · 音乐 · 滑板"]
+                end
+                subgraph 中层["📚 中层"]
+                    L1["财务 · MBA · 审计 · 工程"]
+                    L2["代码 · 工具链 · 结构化"]
+                end
+                subgraph 顶层["📂 顶层"]
+                    T1["5个领域已跑通"]
+                    T2["反馈锁 · MVP · 多智能体"]
+                end
+                底层 --> 中层 --> 顶层
+            `
+        ];
+
+        const cardTitles = [
+            '思维函数结构图',
+            '多智能体工作流图',
+            '星盘×MBTI×思维融合图',
+            '完整系统全景图'
+        ];
+
+        cards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                autoRotate = false;
+                modalTitle.textContent = cardTitles[index];
+                modalBody.innerHTML = `<div class="mermaid">${mermaidCodes[index]}</div>`;
+                modal.classList.add('open');
+                setTimeout(() => {
+                    mermaid.run({ nodes: [modalBody.querySelector('.mermaid')] });
+                }, 100);
+            });
+        });
+
+        function closeModal() {
+            modal.classList.remove('open');
+            autoRotate = true;
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        console.log('🌌 模型展厅已启动 · 拖拽旋转 · 点击卡片放大查看完整图');
+    </script>
+</body>
+</html>

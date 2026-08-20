@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>3D 思维建模台 · 参数调节</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a080c;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            color: #f0e8d8;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        /* ===== 返回按钮 ===== */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 30;
+            background: rgba(14, 11, 16, 0.5);
+            border: 1px solid rgba(167, 139, 250, 0.04);
+            color: rgba(200, 190, 220, 0.15);
+            padding: 8px 18px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            transition: 0.2s;
+            text-decoration: none;
+            border-radius: 2px;
+            backdrop-filter: blur(8px);
+        }
+        .back-btn:hover {
+            border-color: rgba(167, 139, 250, 0.08);
+            color: rgba(200, 190, 220, 0.25);
+        }
+
+        /* ===== 标题 ===== */
+        .page-title {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+        }
+        .page-title h1 {
+            font-weight: 300;
+            font-size: clamp(16px, 3vw, 24px);
+            letter-spacing: clamp(6px, 2vw, 10px);
+            color: #f0e8d8;
+            text-shadow: 0 0 40px rgba(167, 139, 250, 0.04);
+        }
+        .page-title .sub {
+            font-size: clamp(9px, 1.2vw, 12px);
+            color: rgba(167, 139, 250, 0.06);
+            letter-spacing: 4px;
+            margin-top: 2px;
+        }
+
+        /* ===== 3D 容器 ===== */
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+
+        /* ===== 侧边控制面板 ===== */
+        #controls {
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100vh;
+            width: clamp(160px, 22vw, 230px);
+            background: rgba(10, 8, 12, 0.88);
+            backdrop-filter: blur(16px);
+            border-left: 1px solid rgba(167, 139, 250, 0.04);
+            padding: clamp(20px, 4vh, 36px) clamp(12px, 2vw, 18px) clamp(16px, 3vh, 24px);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 20;
+            overflow-y: auto;
+            box-shadow: -8px 0 60px rgba(0, 0, 0, 0.4);
+        }
+        #controls::-webkit-scrollbar {
+            width: 2px;
+        }
+        #controls::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.04);
+        }
+
+        #controls .panel-title {
+            font-size: clamp(9px, 1.2vw, 12px);
+            color: rgba(167, 139, 250, 0.08);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.03);
+            padding-bottom: clamp(8px, 1.2vh, 14px);
+            margin-bottom: clamp(6px, 1vh, 12px);
+            text-align: center;
+            font-weight: 300;
+        }
+
+        #controls .group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: clamp(4px, 0.8vh, 8px) 0;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.02);
+        }
+        #controls .group:last-of-type {
+            border-bottom: none;
+        }
+
+        #controls .group .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+        }
+        #controls .group .row label {
+            font-size: clamp(11px, 1.2vw, 14px);
+            font-weight: 400;
+            letter-spacing: 1px;
+            min-width: 20px;
+            font-family: 'Georgia', serif;
+        }
+        #controls .group .row .label-text {
+            font-size: clamp(8px, 0.9vw, 10px);
+            color: rgba(200, 190, 220, 0.08);
+            letter-spacing: 2px;
+            min-width: 40px;
+            text-align: left;
+        }
+        #controls .group .row .val {
+            font-size: clamp(10px, 1vw, 12px);
+            font-weight: 400;
+            min-width: 28px;
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            color: rgba(200, 190, 220, 0.12);
+        }
+        #controls input[type="range"] {
+            width: 100%;
+            accent-color: #A78BFA;
+            background: rgba(167, 139, 250, 0.03);
+            height: 3px;
+            border-radius: 0;
+            outline: none;
+            cursor: pointer;
+            margin: 2px 0;
+        }
+        #controls input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 10px;
+            background: rgba(167, 139, 250, 0.12);
+            border: 1px solid rgba(167, 139, 250, 0.06);
+            border-radius: 0;
+            cursor: pointer;
+        }
+
+        #controls .hint {
+            margin-top: auto;
+            padding-top: clamp(8px, 1.2vh, 14px);
+            border-top: 1px solid rgba(167, 139, 250, 0.02);
+            font-size: clamp(8px, 0.8vw, 10px);
+            color: rgba(200, 190, 220, 0.02);
+            text-align: center;
+            letter-spacing: 2px;
+            line-height: 1.8;
+        }
+        #controls .hint span {
+            color: rgba(200, 190, 220, 0.03);
+        }
+
+        /* ===== 底部公式 ===== */
+        #formula-bar {
+            position: fixed;
+            bottom: clamp(16px, 3vh, 30px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(10px, 1.2vw, 14px);
+            color: rgba(167, 139, 250, 0.04);
+            letter-spacing: 2px;
+            text-align: center;
+            pointer-events: none;
+            z-index: 10;
+            background: rgba(10, 8, 12, 0.3);
+            padding: clamp(6px, 1vh, 12px) clamp(14px, 3vw, 32px);
+            border: 1px solid rgba(167, 139, 250, 0.02);
+            font-family: 'Courier New', monospace;
+            white-space: nowrap;
+            backdrop-filter: blur(4px);
+            border-radius: 2px;
+        }
+        #formula-bar .highlight {
+            color: rgba(167, 139, 250, 0.08);
+        }
+        #formula-bar .value {
+            color: rgba(167, 139, 250, 0.12);
+            font-weight: 700;
+        }
+
+        @media (max-width: 700px) {
+            #controls {
+                width: clamp(130px, 30vw, 170px);
+                padding: 14px 8px 12px;
+            }
+            #controls .group .row label {
+                font-size: 10px;
+            }
+            #controls .group .row .label-text {
+                font-size: 7px;
+                min-width: 28px;
+            }
+            #controls .group .row .val {
+                font-size: 9px;
+                min-width: 20px;
+            }
+            #formula-bar {
+                font-size: 8px;
+                padding: 4px 10px;
+                bottom: 12px;
+                white-space: normal;
+                max-width: 60vw;
+            }
+            .page-title h1 {
+                font-size: 14px;
+                letter-spacing: 4px;
+            }
+            .back-btn {
+                font-size: 9px;
+                padding: 6px 12px;
+                top: 12px;
+                left: 12px;
+            }
+        }
+        @media (max-width: 480px) {
+            #controls {
+                width: 110px;
+                padding: 10px 6px 8px;
+            }
+            #controls .panel-title {
+                font-size: 7px;
+                letter-spacing: 2px;
+                padding-bottom: 4px;
+            }
+            #controls .group .row .label-text {
+                display: none;
+            }
+            #controls input[type="range"] {
+                height: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 返回按钮 -->
+    <a href="index.html" class="back-btn">← 返回首页</a>
+
+    <!-- 标题 -->
+    <div class="page-title">
+        <h1>🧠 思维建模台</h1>
+        <div class="sub">参数调节 · 3D 可视化</div>
+    </div>
+
+    <!-- 3D 容器 -->
+    <div id="canvas-container"></div>
+
+    <!-- 侧边控制面板 -->
+    <div id="controls">
+        <div class="panel-title">⚡ 思维参数</div>
+
+        <div class="group">
+            <div class="row">
+                <label style="color:#22D3EE;">A</label>
+                <span class="label-text" style="color:rgba(34,211,238,0.15);">艺术</span>
+                <input type="range" id="paramA" min="0.0" max="1.0" step="0.01" value="0.85" />
+                <span class="val" id="valA" style="color:rgba(34,211,238,0.15);">0.85</span>
+            </div>
+        </div>
+        <div class="group">
+            <div class="row">
+                <label style="color:#FBBF24;">B</label>
+                <span class="label-text" style="color:rgba(251,191,36,0.15);">商业</span>
+                <input type="range" id="paramB" min="0.0" max="1.0" step="0.01" value="0.75" />
+                <span class="val" id="valB" style="color:rgba(251,191,36,0.15);">0.75</span>
+            </div>
+        </div>
+        <div class="group">
+            <div class="row">
+                <label style="color:#A78BFA;">C</label>
+                <span class="label-text" style="color:rgba(167,139,250,0.15);">代码</span>
+                <input type="range" id="paramC" min="0.0" max="1.0" step="0.01" value="0.90" />
+                <span class="val" id="valC" style="color:rgba(167,139,250,0.15);">0.90</span>
+            </div>
+        </div>
+        <div class="group">
+            <div class="row">
+                <label style="color:#F472B6;">M</label>
+                <span class="label-text" style="color:rgba(244,114,182,0.15);">元系统</span>
+                <input type="range" id="paramM" min="0.0" max="1.0" step="0.01" value="0.80" />
+                <span class="val" id="valM" style="color:rgba(244,114,182,0.15);">0.80</span>
+            </div>
+        </div>
+        <div class="group">
+            <div class="row">
+                <label style="color:#34D399;">P</label>
+                <span class="label-text" style="color:rgba(52,211,153,0.15);">脉冲</span>
+                <input type="range" id="paramP" min="0.0" max="1.0" step="0.01" value="0.60" />
+                <span class="val" id="valP" style="color:rgba(52,211,153,0.15);">0.60</span>
+            </div>
+        </div>
+
+        <div class="hint">
+            <span>🔄 拖拽旋转</span> · <span>⚡ 调节参数</span>
+        </div>
+    </div>
+
+    <!-- 底部公式 -->
+    <div id="formula-bar">
+        F(x) = <span class="highlight" id="formulaDisplay">(0.85·A + 0.75·B + 0.90·C + 0.80·M + 0.60·P) / 5 = 0.780</span>
+        <span style="color:rgba(167,139,250,0.02); margin-left:8px;">|</span>
+        <span style="color:rgba(167,139,250,0.02); font-size:80%;">收敛进行中</span>
+    </div>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js">
+    </script>
+
+    <script>
+        // ================================================================
+        //  3D 思维函数 · 视觉统一版
+        //  参数：艺术直觉 / 商业逻辑 / 代码能力 / 元系统架构 / 社交脉冲
+        // ================================================================
+
+        // ---- DOM refs ----
+        const container = document.getElementById('canvas-container');
+        const formulaDisplay = document.getElementById('formulaDisplay');
+
+        // ---- Three.js 场景 ----
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a080c);
+
+        const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(7, 5, 11);
+        camera.lookAt(0, 1.5, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        container.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.08;
+        controls.autoRotate = false;
+        controls.target.set(0, 1.5, 0);
+        controls.maxPolarAngle = Math.PI / 2.2;
+        controls.minDistance = 5;
+        controls.maxDistance = 20;
+
+        // ---- Lights ----
+        const ambient = new THREE.AmbientLight(0x1a1420, 0.25);
+        scene.add(ambient);
+        const dir = new THREE.DirectionalLight(0xA78BFA, 0.5);
+        dir.position.set(5, 10, 7);
+        dir.castShadow = true;
+        scene.add(dir);
+        const fill = new THREE.DirectionalLight(0x22D3EE, 0.2);
+        fill.position.set(-5, 3, -5);
+        scene.add(fill);
+        const back = new THREE.DirectionalLight(0xFBBF24, 0.1);
+        back.position.set(0, 2, -8);
+        scene.add(back);
+
+        // ---- Ground ----
+        const grid = new THREE.GridHelper(14, 20, 0x1a1420, 0x1a1420);
+        grid.position.y = -0.5;
+        scene.add(grid);
+        const gGeo = new THREE.PlaneGeometry(16, 16);
+        const gMat = new THREE.ShadowMaterial({ opacity: 0.25, color: 0x0a080c });
+        const ground = new THREE.Mesh(gGeo, gMat);
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.y = -0.5;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        // ---- Params ----
+        const params = { A: 0.85, B: 0.75, C: 0.90, M: 0.80, P: 0.60 };
+        let modelGroup = new THREE.Group();
+        scene.add(modelGroup);
+
+        // ---- Sprite label generator ----
+        function makeLabel(text, color = '#A78BFA', size = 0.6) {
+            const c = document.createElement('canvas');
+            c.width = 512;
+            c.height = 128;
+            const ctx = c.getContext('2d');
+            ctx.clearRect(0, 0, 512, 128);
+            ctx.font = 'bold 44px "Georgia", "Courier New", serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 40;
+            ctx.fillStyle = color;
+            ctx.fillText(text, 256, 64);
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#0a080c';
+            ctx.fillText(text, 256, 64);
+            ctx.fillStyle = color;
+            ctx.fillText(text, 256, 64);
+            const tex = new THREE.CanvasTexture(c);
+            tex.needsUpdate = true;
+            const mat = new THREE.SpriteMaterial({
+                map: tex,
+                transparent: true,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending,
+                opacity: 0.85,
+            });
+            const sprite = new THREE.Sprite(mat);
+            sprite.scale.set(size * 3, size * 0.75, 1);
+            return sprite;
+        }
+
+        // ---- Build model ----
+        function buildModel() {
+            while (modelGroup.children.length) {
+                const c = modelGroup.children[0];
+                if (c.geometry) c.geometry.dispose();
+                if (c.material) c.material.dispose();
+                modelGroup.remove(c);
+            }
+
+            const { A, B, C, M, P } = params;
+            const F = (A + B + C + M + P) / 5;
+
+            // Core sphere
+            const r = 0.6 + F * 1.6;
+            const sphereMat = new THREE.MeshPhysicalMaterial({
+                color: new THREE.Color().setHSL(0.72 - F * 0.25, 0.75, 0.12 + F * 0.38),
+                metalness: 0.4,
+                roughness: 0.3,
+                transparent: true,
+                opacity: 0.65 + F * 0.35,
+                emissive: new THREE.Color().setHSL(0.72 - F * 0.25, 0.6, 0.03 + F * 0.15),
+                emissiveIntensity: 0.4 + F * 0.5,
+                clearcoat: 0.15,
+            });
+            const sphere = new THREE.Mesh(new THREE.SphereGeometry(r, 48, 48), sphereMat);
+            sphere.position.set(0, 1.5 + F * 0.9, 0);
+            sphere.castShadow = true;
+            modelGroup.add(sphere);
+
+            // Glow ring
+            const glowMat = new THREE.MeshBasicMaterial({
+                color: new THREE.Color().setHSL(0.72 - F * 0.25, 0.6, 0.4),
+                transparent: true,
+                opacity: 0.04 + F * 0.08,
+                wireframe: true,
+            });
+            const glow = new THREE.Mesh(new THREE.SphereGeometry(r * 1.2, 32, 32), glowMat);
+            glow.position.copy(sphere.position);
+            modelGroup.add(glow);
+
+            // Five pillars
+            const data = [
+                { key: 'A', value: A, color: '#22D3EE', label: '艺术直觉', pos: [-3.4, 0.2, -2.4] },
+                { key: 'B', value: B, color: '#FBBF24', label: '商业逻辑', pos: [3.4, 0.2, -2.4] },
+                { key: 'C', value: C, color: '#A78BFA', label: '代码能力', pos: [-3.4, 0.2, 2.4] },
+                { key: 'M', value: M, color: '#F472B6', label: '元系统架构', pos: [3.4, 0.2, 2.4] },
+                { key: 'P', value: P, color: '#34D399', label: '社交脉冲', pos: [0, 0.2, -4.0] },
+            ];
+
+            for (const p of data) {
+                const h = 0.4 + p.value * 3.0;
+                const boxMat = new THREE.MeshPhysicalMaterial({
+                    color: new THREE.Color(p.color),
+                    transparent: true,
+                    opacity: 0.2 + p.value * 0.6,
+                    metalness: 0.35,
+                    roughness: 0.4,
+                    emissive: new THREE.Color(p.color),
+                    emissiveIntensity: 0.08 + p.value * 0.2,
+                });
+                const box = new THREE.Mesh(new THREE.BoxGeometry(0.55, h, 0.55), boxMat);
+                box.position.set(p.pos[0], 0.1 + h / 2, p.pos[2]);
+                box.castShadow = true;
+                modelGroup.add(box);
+
+                const dot = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.2 + p.value * 0.25, 8, 8),
+                    new THREE.MeshBasicMaterial({
+                        color: new THREE.Color(p.color),
+                        transparent: true,
+                        opacity: 0.35 + p.value * 0.55,
+                    })
+                );
+                dot.position.set(p.pos[0], 0.1 + h + 0.1, p.pos[2]);
+                modelGroup.add(dot);
+
+                const lbl = makeLabel(p.label, p.color, 0.38);
+                lbl.position.set(p.pos[0], -0.2, p.pos[2]);
+                modelGroup.add(lbl);
+
+                const valLbl = makeLabel(p.value.toFixed(2), p.color, 0.28);
+                valLbl.position.set(p.pos[0], h + 0.7, p.pos[2]);
+                modelGroup.add(valLbl);
+
+                const pts = [
+                    new THREE.Vector3(p.pos[0], h + 0.1, p.pos[2]),
+                    new THREE.Vector3(0, 1.5 + F * 0.9, 0),
+                ];
+                const curve = new THREE.CatmullRomCurve3(pts);
+                const tubeMat = new THREE.MeshBasicMaterial({
+                    color: new THREE.Color(p.color),
+                    transparent: true,
+                    opacity: 0.06 + p.value * 0.08,
+                });
+                const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 14, 0.03, 6, false), tubeMat);
+                modelGroup.add(tube);
+            }
+
+            // Main formula
+            const formula = `F(x) = (${A.toFixed(2)} + ${B.toFixed(2)} + ${C.toFixed(2)} + ${M.toFixed(2)} + ${P.toFixed(2)}) / 5 = ${F.toFixed(3)}`;
+            const fl = makeLabel(formula, '#A78BFA', 0.95);
+            fl.position.set(0, 4.2 + F * 1.2, 0);
+            modelGroup.add(fl);
+
+            const footer = makeLabel('🧠 直觉驱动 · 系统架构 · 跨域迁移', '#A78BFA', 0.55);
+            footer.position.set(0, -0.8, 0);
+            modelGroup.add(footer);
+
+            // Orbit ring
+            const ringPoints = 64;
+            const ringRadius = 2.2 + F * 1.4;
+            const positions = [];
+            for (let i = 0; i <= ringPoints; i++) {
+                const theta = (i / ringPoints) * Math.PI * 2;
+                const r2 = ringRadius + Math.sin(theta * 4) * 0.2;
+                positions.push(Math.cos(theta) * r2, 1.5 + F * 0.7 + Math.sin(theta * 3) * 0.2, Math.sin(theta) * r2);
+            }
+            const ringGeo = new THREE.BufferGeometry();
+            ringGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            const ringMat = new THREE.LineBasicMaterial({
+                color: 0xA78BFA,
+                transparent: true,
+                opacity: 0.06 + F * 0.06,
+            });
+            const ring = new THREE.Line(ringGeo, ringMat);
+            modelGroup.add(ring);
+
+            // Floating particles
+            const particleCount = 150;
+            const pGeo = new THREE.BufferGeometry();
+            const pPos = [];
+            const pColors = [];
+            for (let i = 0; i < particleCount; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                const r2 = 2.5 + Math.random() * 4.5 + F * 1.5;
+                pPos.push(
+                    Math.cos(theta) * Math.sin(phi) * r2,
+                    Math.cos(phi) * r2 * 0.5 + 1.5,
+                    Math.sin(theta) * Math.sin(phi) * r2
+                );
+                const col = new THREE.Color().setHSL(0.72 + Math.random() * 0.12, 0.6, 0.25 + Math.random() * 0.25);
+                pColors.push(col.r, col.g, col.b);
+            }
+            pGeo.setAttribute('position', new THREE.Float32BufferAttribute(pPos, 3));
+            pGeo.setAttribute('color', new THREE.Float32BufferAttribute(pColors, 3));
+            const pMat = new THREE.PointsMaterial({
+                size: 0.045 + F * 0.035,
+                transparent: true,
+                opacity: 0.3,
+                vertexColors: true,
+                blending: THREE.AdditiveBlending,
+            });
+            const particles = new THREE.Points(pGeo, pMat);
+            modelGroup.add(particles);
+
+            // Update bottom formula
+            formulaDisplay.textContent =
+                `(${A.toFixed(2)}·A + ${B.toFixed(2)}·B + ${C.toFixed(2)}·C + ${M.toFixed(2)}·M + ${P.toFixed(2)}·P) / 5 = ${F.toFixed(3)}`;
+        }
+
+        // ---- Slider bindings ----
+        const sliders = {
+            A: document.getElementById('paramA'),
+            B: document.getElementById('paramB'),
+            C: document.getElementById('paramC'),
+            M: document.getElementById('paramM'),
+            P: document.getElementById('paramP'),
+        };
+        const vals = {
+            A: document.getElementById('valA'),
+            B: document.getElementById('valB'),
+            C: document.getElementById('valC'),
+            M: document.getElementById('valM'),
+            P: document.getElementById('valP'),
+        };
+
+        function updateParams() {
+            for (const k of ['A', 'B', 'C', 'M', 'P']) {
+                params[k] = parseFloat(sliders[k].value);
+                vals[k].textContent = params[k].toFixed(2);
+            }
+            buildModel();
+        }
+
+        for (const k of ['A', 'B', 'C', 'M', 'P']) {
+            sliders[k].addEventListener('input', updateParams);
+        }
+
+        // ---- Resize ----
+        window.addEventListener('resize', () => {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        });
+
+        // ---- Animation ----
+        let time = 0;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.005;
+            if (modelGroup.children.length > 0) {
+                const sphere = modelGroup.children[0];
+                if (sphere && sphere.geometry && sphere.geometry.type === 'SphereGeometry') {
+                    const s = 1 + Math.sin(time * 0.5) * 0.01;
+                    sphere.scale.set(s, s, s);
+                }
+            }
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // ---- Init ----
+        buildModel();
+        animate();
+
+        console.log('🧠 3D 思维建模台 · 视觉统一版已启动');
+        console.log('📊 5 个参数：艺术直觉 · 商业逻辑 · 代码能力 · 元系统架构 · 社交脉冲');
+    </script>
+</body>
+</html>

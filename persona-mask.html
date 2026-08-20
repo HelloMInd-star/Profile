@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎭 人格面具双面镜 · 罗煜</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎭</text></svg>">
+<style>
+    :root {
+        --bg-deep: #060a1f; --bg-mid: #0a0f2c;
+        --border: rgba(129,140,248,0.16);
+        --cyan: #22d3ee; --purple: #a78bfa; --gold: #e3b341;
+        --t1: #e8edff; --t2: #a7b0c8; --t3: #78829e;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background: linear-gradient(180deg, var(--bg-deep), var(--bg-mid) 60%, #0b1238);
+        color: var(--t1); min-height: 100vh; padding: 32px 20px 60px;
+        display: flex; justify-content: center;
+    }
+    #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .wrap { max-width: 720px; width: 100%; position: relative; z-index: 1; }
+
+    .back-btn {
+        display: inline-block; font-size: 13px; color: var(--t2);
+        text-decoration: none; border: 1px solid var(--border);
+        padding: 6px 16px; border-radius: 999px; margin-bottom: 28px;
+        transition: all .2s; background: rgba(255,255,255,0.03);
+    }
+    .back-btn:hover { color: var(--cyan); border-color: var(--cyan); }
+
+    .page-title { text-align: center; margin-bottom: 8px; }
+    .page-title h1 {
+        font-size: 30px; font-weight: 700;
+        background: linear-gradient(135deg, #e8edff, var(--purple));
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .page-title .sub { font-size: 14px; color: var(--t2); margin-top: 10px; line-height: 1.8; }
+
+    .concept {
+        margin: 24px 0 30px; padding: 18px 20px;
+        border: 1px solid var(--border); border-radius: 14px;
+        background: rgba(255,255,255,0.02); font-size: 13.5px; line-height: 2; color: var(--t2);
+    }
+    .concept b { color: var(--t1); }
+    .concept .mask { color: var(--gold); }
+    .concept .real { color: var(--cyan); }
+
+    .mbti-grid {
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px;
+    }
+    .mbti-btn {
+        padding: 12px 0; text-align: center; font-size: 14px; font-weight: 600;
+        letter-spacing: 1px; color: var(--t2); cursor: pointer;
+        border: 1px solid var(--border); border-radius: 10px;
+        background: rgba(255,255,255,0.02); transition: all .18s; user-select: none;
+    }
+    .mbti-btn:hover { border-color: rgba(167,139,250,0.5); color: var(--t1); transform: translateY(-2px); }
+    .mbti-btn.active {
+        border-color: var(--gold); color: var(--gold);
+        background: rgba(227,179,65,0.08);
+        box-shadow: 0 0 20px rgba(227,179,65,0.15);
+    }
+
+    .result { display: none; animation: fadeUp .5s ease; }
+    .result.show { display: block; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+    .arch-card {
+        border-radius: 18px; padding: 28px 24px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.02);
+        position: relative; overflow: hidden;
+    }
+    .arch-card .glow {
+        position: absolute; inset: 0; opacity: 0.14; pointer-events: none;
+        background: radial-gradient(80% 100% at 50% 0%, var(--ac, #a78bfa), transparent 70%);
+    }
+    .arch-head { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; position: relative; }
+    .arch-emoji { font-size: 44px; }
+    .arch-name { font-size: 24px; font-weight: 700; }
+    .arch-tag { font-size: 13px; color: var(--t2); margin-top: 2px; }
+    .side-pill {
+        margin-left: auto; font-size: 11px; letter-spacing: 1.5px;
+        color: var(--gold); border: 1px solid rgba(227,179,65,0.4);
+        padding: 3px 12px; border-radius: 999px; white-space: nowrap;
+    }
+    .arch-desc { font-size: 14px; color: var(--t2); line-height: 1.9; margin: 12px 0 22px; position: relative; }
+    .arch-desc i { color: var(--t1); font-style: normal; }
+
+    .dims { position: relative; }
+    .dim-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .dim-label { width: 86px; font-size: 12.5px; color: var(--t2); flex-shrink: 0; }
+    .dim-bar { flex: 1; height: 8px; border-radius: 99px; background: rgba(255,255,255,0.06); overflow: hidden; }
+    .dim-fill { height: 100%; border-radius: 99px; width: 0; transition: width .8s cubic-bezier(.22,1,.36,1); }
+    .dim-val { width: 34px; font-size: 12px; color: var(--t3); text-align: right; font-family: 'SF Mono', monospace; }
+
+    .real-side {
+        margin-top: 22px; padding: 16px 18px; border-radius: 12px;
+        border: 1px dashed rgba(34,211,238,0.35); font-size: 13px; line-height: 1.9; color: var(--t2);
+    }
+    .real-side b { color: var(--cyan); }
+    .real-side a { color: var(--cyan); text-decoration: none; border-bottom: 1px dashed rgba(34,211,238,0.4); }
+    .real-side a:hover { color: #67e8f9; }
+
+    .footer-note { text-align: center; margin-top: 40px; font-size: 12px; color: var(--t3); font-family: 'SF Mono', monospace; }
+    @media (max-width: 560px) {
+        .mbti-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .mbti-btn { font-size: 12px; padding: 10px 0; }
+        .arch-head { flex-wrap: wrap; }
+    }
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="wrap">
+    <a href="index.html" class="back-btn">← 返回首页</a>
+
+    <div class="page-title">
+        <h1>🎭 人格面具双面镜</h1>
+        <div class="sub">16 型 MBTI × 11 种原型 · 六维向量<br>我的人格引擎 IP 核心模型</div>
+    </div>
+
+    <div class="concept">
+        每个人都戴着两层面孔：<br>
+        <span class="mask">◐ 社交面具</span> = 自评 MBTI 映射出的原型 —— <b>你说的你</b>；<br>
+        <span class="real">◑ 真实人格</span> = 11 维行为向量计算出的原型 —— <b>你的行为说的你</b>。<br>
+        两面镜子叠在一起，差异本身就是最诚实的人格报告。
+    </div>
+
+    <div class="mbti-grid" id="mbtiGrid"></div>
+
+    <div class="result" id="result">
+        <div class="arch-card">
+            <div class="glow" id="glow"></div>
+            <div class="arch-head">
+                <div class="arch-emoji" id="aEmoji"></div>
+                <div>
+                    <div class="arch-name" id="aName"></div>
+                    <div class="arch-tag" id="aTag"></div>
+                </div>
+                <span class="side-pill">◐ 社交面具侧</span>
+            </div>
+            <div class="arch-desc" id="aDesc"></div>
+            <div class="dims" id="dims"></div>
+            <div class="real-side">
+                ◑ <b>真实人格侧</b>：由调酒选择、牌桌决策等真实行为沉淀的 11 维向量实时计算，
+                与面具侧叠合生成「双面差异报告」。完整交互在
+                <a href="https://hellomind-star.github.io/finance-personality/" target="_blank">人格金融孪生平台 · 人格护照</a> 在线体验 →
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">Y.Mine 人格实验室 · 双面模型 v1</div>
+</div>
+
+<script>
+const DIMS = [
+    { key:'TOL', name:'容忍度', icon:'🧘', color:'#A78BFA' },
+    { key:'SPD', name:'速度',   icon:'⚡', color:'#22D3EE' },
+    { key:'INF', name:'影响力', icon:'🧠', color:'#FBBF24' },
+    { key:'ENT', name:'能量',   icon:'🔥', color:'#F87171' },
+    { key:'LEAD',name:'主导性', icon:'👑', color:'#34D399' },
+    { key:'VIS', name:'视觉性', icon:'👁️', color:'#F472B6' },
+];
+const ARCH = {
+    dreamweaver:{ name:'织梦者', emoji:'🌙', color:'#9d6bbf', desc:'以直觉为线，编织夜的经纬。', tag:'把未饮过的味道，织进今夜的星图。', v:{TOL:.55,SPD:.45,INF:.70,ENT:.65,LEAD:.40,VIS:.85} },
+    clockmaker: { name:'守序者', emoji:'⚙️', color:'#f0c674', desc:'每一滴都落在它该落的分毫里。', tag:'秩序即安全感，分毫不差即浪漫。', v:{TOL:.35,SPD:.30,INF:.80,ENT:.20,LEAD:.75,VIS:.30} },
+    ember:      { name:'焰心者', emoji:'🔥', color:'#F87171', desc:'把热度分给世界的每一寸。', tag:'你举杯，整张吧台都跟着亮起来。', v:{TOL:.40,SPD:.75,INF:.35,ENT:.90,LEAD:.55,VIS:.60} },
+    velvet:     { name:'月潮者', emoji:'🌊', color:'#22D3EE', desc:'随月盈缺，温柔却不可挡。', tag:'把锋芒藏进丝绒，让夜柔软下来。', v:{TOL:.70,SPD:.50,INF:.55,ENT:.60,LEAD:.35,VIS:.70} },
+    mistwalker: { name:'雾行者', emoji:'🌫️', color:'#8B8FB8', desc:'在朦胧中辨认方向的人。', tag:'心事被风一吹，便起了涟漪。', v:{TOL:.60,SPD:.40,INF:.50,ENT:.35,LEAD:.45,VIS:.55} },
+    alchemist:  { name:'炼金者', emoji:'⚗️', color:'#A78BFA', desc:'把纷繁炼至两样材料。', tag:'以耐心炼新奇，把灵感炼成经典。', v:{TOL:.80,SPD:.55,INF:.85,ENT:.30,LEAD:.60,VIS:.45} },
+    solitude:   { name:'独酌者', emoji:'🌑', color:'#6a6a8a', desc:'夜将尽，留一句给你独听。', tag:'角落那杯，是只有自己懂的语言。', v:{TOL:.50,SPD:.35,INF:.60,ENT:.25,LEAD:.30,VIS:.40} },
+    navigator:  { name:'引航者', emoji:'🧭', color:'#c8a040', desc:'风浪里端得住一杯不洒，便是你的航向。', tag:'方向感，是扛出来的。', v:{TOL:.50,SPD:.70,INF:.55,ENT:.40,LEAD:.80,VIS:.45} },
+    revel:      { name:'夜宴者', emoji:'🥂', color:'#b06fc8', desc:'热烈是底色，锋芒是装饰。', tag:'把每一晚都过成庆典。', v:{TOL:.40,SPD:.65,INF:.25,ENT:.85,LEAD:.55,VIS:.70} },
+    twilight:   { name:'暮色者', emoji:'🌅', color:'#FBBF24', desc:'天光与夜色交接处的人。', tag:'不偏不倚，恰是夜与昼交界的颜色。', v:{TOL:.45,SPD:.60,INF:.45,ENT:.55,LEAD:.50,VIS:.65} },
+    nightcaller:{ name:'夜唤者', emoji:'🦉', color:'#7C5FBF', desc:'在子夜唤醒沉睡的思想。', tag:'在子夜，把沉睡的思想一一唤醒。', v:{TOL:.65,SPD:.70,INF:.65,ENT:.75,LEAD:.70,VIS:.75} },
+};
+const MAP = {
+    INTJ:'alchemist', INTP:'alchemist', ENTJ:'nightcaller', ENTP:'nightcaller',
+    INFJ:'dreamweaver', INFP:'dreamweaver', ENFJ:'ember', ENFP:'ember',
+    ISTJ:'clockmaker', ISFJ:'clockmaker', ESTJ:'navigator', ESFJ:'navigator',
+    ISTP:'velvet', ISFP:'mistwalker', ESTP:'revel', ESFP:'revel',
+};
+
+const grid = document.getElementById('mbtiGrid');
+Object.keys(MAP).forEach(m => {
+    const b = document.createElement('div');
+    b.className = 'mbti-btn'; b.textContent = m;
+    b.onclick = () => select(m, b);
+    grid.appendChild(b);
+});
+
+function select(mbti, btn) {
+    document.querySelectorAll('.mbti-btn').forEach(x => x.classList.remove('active'));
+    btn.classList.add('active');
+    const a = ARCH[MAP[mbti]];
+    document.getElementById('result').classList.add('show');
+    document.getElementById('glow').style.setProperty('--ac', a.color);
+    document.getElementById('aEmoji').textContent = a.emoji;
+    document.getElementById('aName').textContent = a.name;
+    document.getElementById('aName').style.color = a.color;
+    document.getElementById('aTag').textContent = a.tag;
+    document.getElementById('aDesc').innerHTML = mbti + ' 的社交面具是 <i>「' + a.name + '」</i> —— ' + a.desc;
+    const dims = document.getElementById('dims');
+    dims.innerHTML = '';
+    DIMS.forEach(d => {
+        const val = a.v[d.key];
+        const row = document.createElement('div');
+        row.className = 'dim-row';
+        row.innerHTML = '<span class="dim-label">' + d.icon + ' ' + d.name + '</span>' +
+            '<div class="dim-bar"><div class="dim-fill" style="background:' + d.color + '"></div></div>' +
+            '<span class="dim-val">' + Math.round(val * 100) + '</span>';
+        dims.appendChild(row);
+        requestAnimationFrame(() => setTimeout(() =>
+            row.querySelector('.dim-fill').style.width = (val * 100) + '%', 60));
+    });
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// 星空
+(function() {
+    const c = document.getElementById('stars'), x = c.getContext('2d');
+    function rs() { c.width = innerWidth; c.height = innerHeight; }
+    rs(); addEventListener('resize', rs);
+    const ss = Array.from({length: 120}, () => ({
+        x: Math.random()*c.width, y: Math.random()*c.height,
+        r: Math.random()*1.1+0.2, a: Math.random(), s: Math.random()*0.02+0.005,
+        c: ['#ffffff','#c7d2fe','#93c5fd','#c4b5fd'][Math.floor(Math.random()*4)]
+    }));
+    (function draw() {
+        x.clearRect(0,0,c.width,c.height);
+        ss.forEach(s => {
+            s.a += s.s; if (s.a > 1 || s.a < 0) s.s = -s.s;
+            x.globalAlpha = Math.max(0.1, s.a); x.fillStyle = s.c;
+            x.beginPath(); x.arc(s.x, s.y, s.r, 0, Math.PI*2); x.fill();
+        });
+        requestAnimationFrame(draw);
+    })();
+})();
+</script>
+</body>
+</html>

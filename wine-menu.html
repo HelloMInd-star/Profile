@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍸 人格调酒单 · 罗煜</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍸</text></svg>">
+<style>
+    :root {
+        --bg-deep: #060a1f; --bg-mid: #0a0f2c;
+        --border: rgba(129,140,248,0.16);
+        --cyan: #22d3ee; --purple: #a78bfa; --gold: #e3b341;
+        --t1: #e8edff; --t2: #a7b0c8; --t3: #78829e;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background: linear-gradient(180deg, var(--bg-deep), var(--bg-mid) 60%, #0b1238);
+        color: var(--t1); min-height: 100vh; padding: 32px 20px 60px;
+        display: flex; justify-content: center;
+    }
+    #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .wrap { max-width: 760px; width: 100%; position: relative; z-index: 1; }
+
+    .back-btn {
+        display: inline-block; font-size: 13px; color: var(--t2);
+        text-decoration: none; border: 1px solid var(--border);
+        padding: 6px 16px; border-radius: 999px; margin-bottom: 28px;
+        transition: all .2s; background: rgba(255,255,255,0.03);
+    }
+    .back-btn:hover { color: var(--cyan); border-color: var(--cyan); }
+
+    .page-title { text-align: center; margin-bottom: 8px; }
+    .page-title h1 {
+        font-size: 30px; font-weight: 700;
+        background: linear-gradient(135deg, #e8edff, var(--gold));
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .page-title .sub { font-size: 14px; color: var(--t2); margin-top: 10px; line-height: 1.8; }
+
+    .concept {
+        margin: 24px 0 26px; padding: 16px 20px;
+        border: 1px solid var(--border); border-radius: 14px;
+        background: rgba(255,255,255,0.02); font-size: 13.5px; line-height: 2; color: var(--t2);
+    }
+    .concept b { color: var(--t1); }
+    .concept .hl { color: var(--gold); }
+
+    .mbti-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 8px; }
+    .mbti-btn {
+        padding: 11px 0; text-align: center; font-size: 14px; font-weight: 600;
+        letter-spacing: 1px; color: var(--t2); cursor: pointer;
+        border: 1px solid var(--border); border-radius: 10px;
+        background: rgba(255,255,255,0.02); transition: all .18s; user-select: none;
+    }
+    .mbti-btn:hover { border-color: rgba(167,139,250,0.5); color: var(--t1); transform: translateY(-2px); }
+    .mbti-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(227,179,65,0.08); box-shadow: 0 0 20px rgba(227,179,65,0.15); }
+
+    .arch-line {
+        display: none; text-align: center; font-size: 14px; color: var(--t2);
+        margin: 18px 0 6px; animation: fadeUp .4s ease;
+    }
+    .arch-line.show { display: block; }
+    .arch-line b { font-size: 16px; }
+
+    .section-label {
+        margin: 30px 0 12px; font-size: 15px; font-weight: 600; color: var(--t1);
+    }
+    .section-label span { display: block; font-size: 12px; font-weight: 400; color: var(--t3); margin-top: 4px; letter-spacing: 1px; }
+
+    .cock-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 600px) { .cock-grid { grid-template-columns: 1fr; } }
+
+    .cock-card {
+        border: 1px solid var(--border); border-radius: 14px;
+        background: rgba(255,255,255,0.02); padding: 18px;
+        cursor: pointer; transition: all .2s; position: relative; overflow: hidden;
+    }
+    .cock-card:hover { transform: translateY(-2px); border-color: rgba(167,139,250,0.45); }
+    .cock-card .aura { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--ac, #a78bfa); opacity: .8; }
+    .cock-name { font-size: 16px; font-weight: 700; color: var(--t1); }
+    .cock-en { font-size: 11.5px; color: var(--t3); margin-top: 2px; font-family: 'SF Mono', monospace; }
+    .cock-tag { font-size: 12.5px; color: var(--t2); margin: 8px 0 10px; line-height: 1.6; font-style: italic; }
+    .cock-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 11px; color: var(--t3); }
+    .cock-meta span { border: 1px solid var(--border); border-radius: 999px; padding: 2px 9px; }
+    .flavors { margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; }
+    .fl-row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--t3); }
+    .fl-row .nm { width: 28px; flex-shrink: 0; }
+    .fl-bar { flex: 1; height: 5px; border-radius: 99px; background: rgba(255,255,255,0.06); overflow: hidden; }
+    .fl-fill { height: 100%; border-radius: 99px; background: var(--ac, #a78bfa); opacity: .85; }
+
+    .cock-detail { display: none; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border); animation: fadeUp .3s ease; }
+    .cock-card.open .cock-detail { display: block; }
+    .cock-story { font-size: 12.5px; line-height: 1.9; color: var(--t2); margin-bottom: 10px; }
+    .cock-ings { font-size: 12px; line-height: 1.9; color: var(--t3); }
+    .cock-ings b { color: var(--t2); display: block; margin-bottom: 4px; font-size: 11.5px; letter-spacing: 1px; }
+
+    .match-badge {
+        display: none; font-size: 10px; letter-spacing: 1px; color: var(--gold);
+        border: 1px solid rgba(227,179,65,0.4); border-radius: 999px; padding: 2px 8px; margin-left: 8px;
+    }
+    .cock-card.matched .match-badge { display: inline-block; }
+    .cock-card.matched { border-color: rgba(227,179,65,0.4); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    .footer-note { text-align: center; margin-top: 40px; font-size: 12px; color: var(--t3); font-family: 'SF Mono', monospace; }
+    .footer-note a { color: var(--cyan); text-decoration: none; }
+    @media (max-width: 560px) { .mbti-grid { gap: 8px; } .mbti-btn { font-size: 12px; padding: 10px 0; } }
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="wrap">
+    <a href="index.html" class="back-btn">← 返回首页</a>
+
+    <div class="page-title">
+        <h1>🍸 人格调酒单</h1>
+        <div class="sub">人格向量 → 八维风味 → 一杯看得见的性格<br>20 款经典鸡尾酒 × 11 种人格原型</div>
+    </div>
+
+    <div class="concept">
+        这是我人格引擎的<b>五感迁移实验</b>：把人格向量翻译成风味语言 ——
+        <span class="hl">甜 / 酸 / 苦 / 烈 / 烟熏 / 果香 / 草本 / 奶润</span> 八个维度，
+        每一款酒都标注了它亲和的人格原型。选你的 MBTI，看看你属于哪几杯。
+    </div>
+
+    <div class="mbti-grid" id="mbtiGrid"></div>
+    <div class="arch-line" id="archLine"></div>
+
+    <div class="section-label">🍷 酒单 <span>点击卡片展开故事与配方 · 金色标记 = 与你人格亲和</span></div>
+    <div class="cock-grid" id="cockGrid"></div>
+
+    <div class="footer-note">
+        数据来自 Y.MINE 人格调酒系统 · 
+        <a href="https://hellomind-star.github.io/personality-wine-mixing/" target="_blank">完整版在线体验 →</a>
+    </div>
+</div>
+
+<script>
+const MAP = {
+    INTJ:'alchemist', INTP:'alchemist', ENTJ:'nightcaller', ENTP:'nightcaller',
+    INFJ:'dreamweaver', INFP:'dreamweaver', ENFJ:'ember', ENFP:'ember',
+    ISTJ:'clockmaker', ISFJ:'clockmaker', ESTJ:'navigator', ESFJ:'navigator',
+    ISTP:'velvet', ISFP:'mistwalker', ESTP:'revel', ESFP:'revel',
+};
+const ARCH_META = {
+    dreamweaver:['织梦者','🌙','#9d6bbf'], clockmaker:['守序者','⚙️','#f0c674'],
+    ember:['焰心者','🔥','#F87171'], velvet:['月潮者','🌊','#22D3EE'],
+    mistwalker:['雾行者','🌫️','#8B8FB8'], alchemist:['炼金者','⚗️','#A78BFA'],
+    solitude:['独酌者','🌑','#6a6a8a'], navigator:['引航者','🧭','#c8a040'],
+    revel:['夜宴者','🥂','#b06fc8'], twilight:['暮色者','🌅','#FBBF24'],
+    nightcaller:['夜唤者','🦉','#7C5FBF'],
+};
+const FL_NM = { sweet:'甜', sour:'酸', bitter:'苦', strong:'烈', smoky:'烟熏', fruity:'果香', herbal:'草本', creamy:'奶润' };
+const DATA = [{"id": "old-fashioned", "name": "古典之事", "nameEn": "Old Fashioned", "tagline": "把夜，调回它最初的样子。", "story": "它诞生于一只不肯妥协的杯子，糖、苦、威士忌，三样东西便撑起一整个夜晚。守序的人懂得它的好——不必多言，每一滴都落在它该落的分毫里。", "baseSpirit": "whisky", "abv": 32, "glass": "rocks", "garnish": "橙皮与酒渍樱桃", "flavor": {"sweet": 3, "sour": 0, "bitter": 5, "strong": 7, "smoky": 4, "fruity": 0, "herbal": 2, "creamy": 1}, "ingredients": [{"name": "波本威士忌", "amount": "60ml"}, {"name": "安高天娜苦精", "amount": "2 dashes"}, {"name": "安高天娜苦精（橙味）", "amount": "1 dash"}, {"name": "方糖", "amount": "1 块"}, {"name": "清水", "amount": "1 茶匙"}], "moods": ["elegant", "calm"], "auraColor": "#a8842f", "affinity": ["clockmaker", "alchemist"], "difficulty": 2, "category": "经典"}, {"id": "negroni", "name": "涩格罗尼", "nameEn": "Negroni", "tagline": "一半是夜，一半是不肯熄的火。", "story": "佛罗伦萨的伯爵要一杯比美国佬更烈的酒，于是金酒、苦味酒、甜威末等比相会。它是叛逆里的守序——三股锋芒，谁也不肯让谁，却在杯中达成一种冷峻的平衡。", "baseSpirit": "gin", "abv": 28, "glass": "rocks", "garnish": "橙皮", "flavor": {"sweet": 1, "sour": 1, "bitter": 8, "strong": 7, "smoky": 1, "fruity": 2, "herbal": 3, "creamy": 0}, "ingredients": [{"name": "金酒", "amount": "30ml"}, {"name": "金巴利", "amount": "30ml"}, {"name": "甜红威末", "amount": "30ml"}], "moods": ["rebel", "elegant"], "auraColor": "#c97b5a", "affinity": ["clockmaker", "nightcaller"], "difficulty": 1, "category": "经典"}, {"id": "margarita", "name": "玛格丽特", "nameEn": "Margarita", "tagline": "盐边之上，是吻过夜的酸。", "story": "相传它为一位名叫玛格丽特的女子而生，盐是泪的隐喻，酸是思念的形状。浪漫的人端起它，总能在龙舌兰的锋后尝到一缕温柔的果香，像回忆里不肯褪色的那一笔。", "baseSpirit": "tequila", "abv": 22, "glass": "mug", "garnish": "青柠轮与盐边", "flavor": {"sweet": 2, "sour": 6, "bitter": 1, "strong": 6, "smoky": 0, "fruity": 5, "herbal": 1, "creamy": 0}, "ingredients": [{"name": "银龙舌兰", "amount": "45ml"}, {"name": "橙味利口酒（君度）", "amount": "20ml"}, {"name": "鲜青柠汁", "amount": "20ml"}, {"name": "盐", "amount": "适量（杯口）"}], "moods": ["romantic", "passion"], "auraColor": "#9b7bd4", "affinity": ["velvet", "ember"], "difficulty": 2, "category": "经典"}, {"id": "mojito", "name": "莫吉托", "nameEn": "Mojito", "tagline": "把一整座夏夜，揉碎进杯里。", "story": "哈瓦那的薄荷叶与朗姆在杯中相遇，气泡升腾如夜里的笑声。它属于那些把热度递给世界的人——明亮、清新，却在草本深处藏着一缕让人安定的绿。", "baseSpirit": "rum", "abv": 13, "glass": "highball", "garnish": "薄荷嫩尖与青柠角", "flavor": {"sweet": 3, "sour": 4, "bitter": 1, "strong": 4, "smoky": 0, "fruity": 4, "herbal": 8, "creamy": 0}, "ingredients": [{"name": "白朗姆", "amount": "50ml"}, {"name": "鲜青柠汁", "amount": "20ml"}, {"name": "甘蔗糖浆", "amount": "15ml"}, {"name": "薄荷叶", "amount": "8-10 片"}, {"name": "苏打水", "amount": "适量"}], "moods": ["passion", "celebration"], "auraColor": "#7c5fbf", "affinity": ["ember", "velvet"], "difficulty": 2, "category": "经典"}, {"id": "manhattan", "name": "曼哈顿", "nameEn": "Manhattan", "tagline": "一杯之间，已是整座夜城。", "story": "丘吉尔之母的宴会桌上，它第一次被举起。黑麦的烈、甜威末的柔、苦精的锋，恰是夜城里那种不喧不闹却句句有力的雅致。", "baseSpirit": "whisky", "abv": 30, "glass": "coupe", "garnish": "酒渍樱桃", "flavor": {"sweet": 3, "sour": 0, "bitter": 4, "strong": 8, "smoky": 2, "fruity": 1, "herbal": 3, "creamy": 1}, "ingredients": [{"name": "黑麦威士忌", "amount": "60ml"}, {"name": "甜红威末", "amount": "25ml"}, {"name": "安高天娜苦精", "amount": "2 dashes"}], "moods": ["elegant", "mystery"], "auraColor": "#d4a84b", "affinity": ["clockmaker", "twilight"], "difficulty": 2, "category": "经典"}, {"id": "dry-martini", "name": "干马天尼", "nameEn": "Dry Martini", "tagline": "少即是夜的全部。", "story": "金酒与干威末的比例之争，是调酒界最久的角力。它属于有耐心的人——把纷繁炼至两样材料，再用一颗橄榄封住夜的沉默。", "baseSpirit": "gin", "abv": 34, "glass": "martini", "garnish": "柠檬皮扭或绿橄榄", "flavor": {"sweet": 0, "sour": 1, "bitter": 3, "strong": 8, "smoky": 0, "fruity": 0, "herbal": 6, "creamy": 0}, "ingredients": [{"name": "伦敦干金酒", "amount": "60ml"}, {"name": "干味美思", "amount": "10ml"}, {"name": "橙味苦精（可选）", "amount": "1 dash"}], "moods": ["elegant", "calm"], "auraColor": "#d8c9f5", "affinity": ["alchemist", "clockmaker"], "difficulty": 3, "category": "经典"}, {"id": "espresso-martini", "name": "浓缩马天尼", "nameEn": "Espresso Martini", "tagline": "醒与醉，在杯中谈判。", "story": "一位模特说“我要一杯能让我醒来的酒”，于是伏特加与浓缩咖啡在摇壶里相遇。苦与润交织，泡沫如夜的礼花，是庆典里的一记清醒。", "baseSpirit": "vodka", "abv": 24, "glass": "coupe", "garnish": "咖啡豆三粒", "flavor": {"sweet": 4, "sour": 1, "bitter": 5, "strong": 6, "smoky": 1, "fruity": 0, "herbal": 0, "creamy": 6}, "ingredients": [{"name": "伏特加", "amount": "50ml"}, {"name": "浓缩咖啡", "amount": "30ml（现萃）"}, {"name": "咖啡利口酒", "amount": "20ml"}, {"name": "甘蔗糖浆", "amount": "10ml"}], "moods": ["celebration", "passion"], "auraColor": "#5d44a0", "affinity": ["ember", "nightcaller"], "difficulty": 3, "category": "创意"}, {"id": "pina-colada", "name": "椰林飘香", "nameEn": "Piña Colada", "tagline": "把夜，调成一片会发光的海。", "story": "波多黎各的海风把椰浆与菠萝揉进朗姆里。它是夜最柔软的一面——甜、润、果香缠绵，像一段不必清醒的浪漫。", "baseSpirit": "rum", "abv": 14, "glass": "tiki", "garnish": "菠萝叶与酒渍樱桃", "flavor": {"sweet": 7, "sour": 2, "bitter": 0, "strong": 4, "smoky": 0, "fruity": 6, "herbal": 0, "creamy": 9}, "ingredients": [{"name": "白朗姆", "amount": "50ml"}, {"name": "椰浆", "amount": "30ml"}, {"name": "菠萝汁", "amount": "60ml"}, {"name": "淡奶油", "amount": "15ml"}], "moods": ["romantic", "celebration"], "auraColor": "#f0c674", "affinity": ["velvet", "twilight"], "difficulty": 2, "category": "经典"}, {"id": "whisky-sour", "name": "威士忌酸", "nameEn": "Whisky Sour", "tagline": "酸过之后，是夜给的甜。", "story": "威士忌的烈被柠檬的酸剖开，又被糖浆一点点抚平。蛋清明灭如月，是怅然之人杯中那层不肯散的思绪。", "baseSpirit": "whisky", "abv": 24, "glass": "rocks", "garnish": "橙皮与酒渍樱桃", "flavor": {"sweet": 4, "sour": 6, "bitter": 2, "strong": 6, "smoky": 1, "fruity": 1, "herbal": 0, "creamy": 2}, "ingredients": [{"name": "波本威士忌", "amount": "60ml"}, {"name": "鲜柠檬汁", "amount": "25ml"}, {"name": "甘蔗糖浆", "amount": "20ml"}, {"name": "安高天娜苦精", "amount": "2 dashes（可选）"}], "moods": ["melancholy", "calm"], "auraColor": "#a8842f", "affinity": ["mistwalker", "solitude"], "difficulty": 3, "category": "经典"}, {"id": "gimlet", "name": "吉姆雷特", "nameEn": "Gimlet", "tagline": "清亮一抹，夜的边角便齐整了。", "story": "它是给水手防坏血病的方子，后来成了雅致本身的代名词。金酒与青柠的相遇干净利落，像一句不需解释的话。", "baseSpirit": "gin", "abv": 26, "glass": "coupe", "garnish": "青柠轮", "flavor": {"sweet": 4, "sour": 6, "bitter": 1, "strong": 6, "smoky": 0, "fruity": 3, "herbal": 4, "creamy": 0}, "ingredients": [{"name": "伦敦干金酒", "amount": "60ml"}, {"name": "青柠汁", "amount": "20ml"}, {"name": "甘蔗糖浆", "amount": "15ml"}], "moods": ["elegant", "calm"], "auraColor": "#d8c9f5", "affinity": ["clockmaker", "alchemist"], "difficulty": 1, "category": "经典"}, {"id": "bloody-mary", "name": "血腥玛丽", "nameEn": "Bloody Mary", "tagline": "一杯里，藏着夜的腥红与火。", "story": "伏特加隐于番茄的红之后，胡椒与辣酱在喉间点燃。它是清晨与深夜交界处的叛逆，咸、辣、草本错落，谁也不肯让谁。", "baseSpirit": "vodka", "abv": 12, "glass": "highball", "garnish": "芹菜杆与柠檬角", "flavor": {"sweet": 1, "sour": 3, "bitter": 2, "strong": 6, "smoky": 1, "fruity": 4, "herbal": 6, "creamy": 1}, "ingredients": [{"name": "伏特加", "amount": "45ml"}, {"name": "番茄汁", "amount": "90ml"}, {"name": "鲜柠檬汁", "amount": "15ml"}, {"name": "辣酱（塔巴斯科）", "amount": "3 dashes"}, {"name": "伍斯特沙司", "amount": "2 dashes"}, {"name": "黑胡椒与芹菜盐", "amount": "少许"}], "moods": ["rebel", "celebration"], "auraColor": "#c97b5a", "affinity": ["nightcaller", "ember"], "difficulty": 2, "category": "经典"}, {"id": "aperol-spritz", "name": "阿佩罗海滩", "nameEn": "Aperol Spritz", "tagline": "把夕阳，留到夜的边缘。", "story": "威尼斯的运河边，阿佩罗的橘与气泡的轻把它推成庆典的标志。它明亮、微苦、果香四溢，是夜尚未正式开始时那声欢快的招呼。", "baseSpirit": "liqueur", "abv": 11, "glass": "highball", "garnish": "鲜橙片", "flavor": {"sweet": 6, "sour": 3, "bitter": 3, "strong": 4, "smoky": 0, "fruity": 7, "herbal": 1, "creamy": 1}, "ingredients": [{"name": "阿佩罗开胃酒", "amount": "90ml"}, {"name": "普罗赛克起泡酒", "amount": "90ml"}, {"name": "苏打水", "amount": "30ml"}, {"name": "鲜橙片", "amount": "1 片"}], "moods": ["celebration", "passion"], "auraColor": "#f0c674", "affinity": ["ember", "twilight"], "difficulty": 1, "category": "经典"}, {"id": "penicillin", "name": "盘尼西林", "nameEn": "Penicillin", "tagline": "一杯，治夜的轻恙。", "story": "它是新派调酒的处方：威士忌、柠檬、蜂蜜姜糖，再浮一层泥煤威士忌。烟熏自顶层渗下，像一剂为织梦者与炼金者开的良方。", "baseSpirit": "whisky", "abv": 26, "glass": "rocks", "garnish": "糖渍姜与柠檬皮", "flavor": {"sweet": 4, "sour": 1, "bitter": 3, "strong": 7, "smoky": 8, "fruity": 0, "herbal": 5, "creamy": 1}, "ingredients": [{"name": "混合苏格兰威士忌", "amount": "60ml"}, {"name": "鲜柠檬汁", "amount": "22ml"}, {"name": "蜂蜜姜糖浆", "amount": "22ml"}, {"name": "艾雷岛单一麦芽威士忌", "amount": "10ml（浮于顶层）"}], "moods": ["mystery", "calm"], "auraColor": "#5d44a0", "affinity": ["alchemist", "dreamweaver"], "difficulty": 3, "category": "创意"}, {"id": "vieux-carre", "name": "老广场", "nameEn": "Vieux Carré", "tagline": "新奥尔良的夜，封进一只杯。", "story": "它诞生于法国区的一张吧台，黑麦与干邑、苦精与甜威末层层叠加。复杂、沉稳、神秘，是夜的深处那盏不灭的灯。", "baseSpirit": "whisky", "abv": 30, "glass": "rocks", "garnish": "柠檬皮扭与酒渍樱桃", "flavor": {"sweet": 3, "sour": 1, "bitter": 5, "strong": 8, "smoky": 2, "fruity": 1, "herbal": 4, "creamy": 1}, "ingredients": [{"name": "黑麦威士忌", "amount": "30ml"}, {"name": "干邑白兰地", "amount": "30ml"}, {"name": "甜红威末", "amount": "20ml"}, {"name": "毕士苦精", "amount": "1 dash"}, {"name": "安高天娜苦精", "amount": "1 dash"}], "moods": ["mystery", "elegant"], "auraColor": "#7c5fbf", "affinity": ["clockmaker", "solitude"], "difficulty": 3, "category": "经典"}, {"id": "aviation", "name": "飞行", "nameEn": "Aviation", "tagline": "一抹紫罗兰，便飞过了夜。", "story": "紫罗兰利口酒给它覆上暮色般的淡紫，马拉斯加樱桃是底下的星。它属于那些向陌生敞怀的人——飞行的姿态，正是夜的邀请。", "baseSpirit": "gin", "abv": 26, "glass": "coupe", "garnish": "马拉斯加樱桃", "flavor": {"sweet": 2, "sour": 4, "bitter": 2, "strong": 7, "smoky": 0, "fruity": 5, "herbal": 3, "creamy": 0}, "ingredients": [{"name": "伦敦干金酒", "amount": "45ml"}, {"name": "马拉斯加樱桃利口酒", "amount": "15ml"}, {"name": "紫罗兰利口酒（Crème de Violette）", "amount": "10ml"}, {"name": "鲜柠檬汁", "amount": "15ml"}], "moods": ["mystery", "romantic"], "auraColor": "#9b7bd4", "affinity": ["dreamweaver", "mistwalker"], "difficulty": 3, "category": "经典"}, {"id": "last-word", "name": "最后的话", "nameEn": "Last Word", "tagline": "夜将尽，留一句给你独听。", "story": "禁酒令时期的方子，等比四味，谁也不压谁。草本、酸甜、樱桃的余韵在舌上轮转，是独酌者角落里那句不必对人说的话。", "baseSpirit": "gin", "abv": 28, "glass": "coupe", "garnish": "马拉斯加樱桃", "flavor": {"sweet": 3, "sour": 5, "bitter": 4, "strong": 7, "smoky": 0, "fruity": 1, "herbal": 6, "creamy": 0}, "ingredients": [{"name": "伦敦干金酒", "amount": "22ml"}, {"name": "查特绿利口酒", "amount": "22ml"}, {"name": "马拉斯加樱桃利口酒", "amount": "22ml"}, {"name": "鲜柠檬汁", "amount": "22ml"}], "moods": ["melancholy", "mystery"], "auraColor": "#7c5fbf", "affinity": ["solitude", "dreamweaver"], "difficulty": 2, "category": "经典"}, {"id": "the-gauge", "name": "刻度", "nameEn": "The Gauge", "tagline": "多一分则过，少一分不足。", "story": "以经典曼哈顿为骨架，加入阿玛罗增添草本复杂度，两种苦精精准校准风味刻度——就像 ISTJ 做任何事都有精确的标尺。没有花里胡哨的装饰，只有严谨到苛刻的平衡，喝下去的每一口都是\"靠谱\"的味道。", "baseSpirit": "whisky", "abv": 32, "glass": "coupe", "garnish": "柠檬皮扭与马拉斯奇诺樱桃", "flavor": {"sweet": 2, "sour": 1, "bitter": 5, "strong": 7, "smoky": 1, "fruity": 0, "herbal": 4, "creamy": 0}, "ingredients": [{"name": "黑麦威士忌 Rye Whiskey", "amount": "45ml"}, {"name": "干味美思 Dry Vermouth", "amount": "15ml"}, {"name": "阿玛罗 Amaro Nonino", "amount": "10ml"}, {"name": "安格斯特拉苦精 Angostura Bitters", "amount": "2 dashes"}, {"name": "橙味苦精 Orange Bitters", "amount": "1 dash"}], "moods": ["elegant", "calm"], "auraColor": "#b8842f", "affinity": ["clockmaker", "navigator"], "difficulty": 3, "category": "原创"}, {"id": "wool-sweater", "name": "毛衣", "nameEn": "Wool Sweater", "tagline": "穿在身上的温度。", "story": "这是一杯\"穿在身上的酒\"——爱尔兰威士忌的温润打底，蜂蜜和榛子像冬日的暖阳，奶油带来柔软包裹感，一点点柠檬提鲜不让甜腻泛滥。就像 ISFJ，总是用最温柔的方式照顾身边每一个人，不张扬、不抢眼，但你知道只要 TA 在，就不会冷。", "baseSpirit": "whisky", "abv": 22, "glass": "rocks", "garnish": "肉豆蔻粉撒面与一小枝百里香", "flavor": {"sweet": 6, "sour": 2, "bitter": 1, "strong": 4, "smoky": 0, "fruity": 2, "herbal": 3, "creamy": 7}, "ingredients": [{"name": "爱尔兰威士忌 Irish Whiskey", "amount": "40ml"}, {"name": "蜂蜜糖浆 Honey Syrup", "amount": "15ml"}, {"name": "榛子利口酒 Frangelico", "amount": "10ml"}, {"name": "鲜榨柠檬汁 Lemon Juice", "amount": "10ml"}, {"name": "浓奶油 Heavy Cream", "amount": "15ml"}, {"name": "蛋清 Egg White", "amount": "半个（约15ml，可选）"}], "moods": ["calm", "romantic"], "auraColor": "#e0b85e", "affinity": ["velvet", "mistwalker"], "difficulty": 3, "category": "原创"}, {"id": "chain-of-command", "name": "军令", "nameEn": "Chain of Command", "tagline": "一杯酒，就是一个决定。", "story": "双威士忌基底奠定力量感的基调，金巴利和甜味美思构成苦甜平衡的中层，苦精与茴香洗杯带来直击鼻腔的冲击力——每一层都有明确的分工，像一支纪律严明的军队。这不是一杯用来\"小酌\"的酒，这是一杯用来\"做决定\"的酒。喝下去，你就是那个发号施令的人。", "baseSpirit": "whisky", "abv": 35, "glass": "rocks", "garnish": "柠檬皮扭（喷香后放入）", "flavor": {"sweet": 2, "sour": 0, "bitter": 6, "strong": 9, "smoky": 6, "fruity": 0, "herbal": 4, "creamy": 0}, "ingredients": [{"name": "烟熏苏格兰威士忌 Peated Scotch", "amount": "30ml"}, {"name": "黑麦威士忌 Rye Whiskey", "amount": "20ml"}, {"name": "金巴利 Campari", "amount": "15ml"}, {"name": "甜味美思 Sweet Vermouth", "amount": "10ml"}, {"name": "安格斯特拉苦精 Angostura Bitters", "amount": "3 dashes"}, {"name": "茴香酒 Pernod", "amount": "洗杯用（涮一圈后倒出）"}], "moods": ["elegant", "mystery"], "auraColor": "#7c4a3a", "affinity": ["navigator", "clockmaker"], "difficulty": 4, "category": "原创"}, {"id": "the-host", "name": "派对主持", "nameEn": "The Host", "tagline": "让每个人都开心的魔法。", "story": "热带水果的热情开场，西柚的微苦增加层次，气泡带来轻盈的社交感——这是一杯\"让所有人都喜欢\"的酒。酒精度不高，颜值在线，入口友好，谁都能喝两杯，就像 ESFJ 总能照顾到在场每个人的感受。百香果的香气一上桌就会被问\"这是什么酒？\"——没错，它就是全场的焦点。", "baseSpirit": "rum", "abv": 14, "glass": "flute", "garnish": "西柚片、百香果半颗与薄荷叶", "flavor": {"sweet": 5, "sour": 4, "bitter": 2, "strong": 3, "smoky": 0, "fruity": 8, "herbal": 1, "creamy": 0}, "ingredients": [{"name": "白朗姆酒 White Rum", "amount": "30ml"}, {"name": "蜜桃利口酒 Peach Liqueur", "amount": "15ml"}, {"name": "西柚汁 Grapefruit Juice", "amount": "20ml"}, {"name": "百香果糖浆 Passion Fruit Syrup", "amount": "10ml"}, {"name": "青柠汁 Lime Juice", "amount": "10ml"}, {"name": "普罗塞克起泡酒 Prosecco", "amount": "30ml（顶部加满）"}], "moods": ["passion", "celebration"], "auraColor": "#f0a050", "affinity": ["ember", "velvet"], "difficulty": 2, "category": "原创"}];
+
+let curArch = null;
+const grid = document.getElementById('mbtiGrid');
+Object.keys(MAP).forEach(m => {
+    const b = document.createElement('div');
+    b.className = 'mbti-btn'; b.textContent = m;
+    b.onclick = () => {
+        document.querySelectorAll('.mbti-btn').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        curArch = MAP[m];
+        const meta = ARCH_META[curArch];
+        const line = document.getElementById('archLine');
+        line.classList.add('show');
+        line.innerHTML = m + ' → <b style="color:' + meta[2] + '">' + meta[1] + ' ' + meta[0] + '</b> · 金色标记的酒与你亲和';
+        render();
+    };
+    grid.appendChild(b);
+});
+
+function topFlavors(f) {
+    return Object.entries(f).filter(([k,v]) => v > 0).sort((a,b) => b[1]-a[1]).slice(0,4);
+}
+
+function render() {
+    const g = document.getElementById('cockGrid');
+    g.innerHTML = '';
+    DATA.forEach(c => {
+        const matched = curArch && c.affinity.includes(curArch);
+        const card = document.createElement('div');
+        card.className = 'cock-card' + (matched ? ' matched' : '');
+        card.style.setProperty('--ac', c.auraColor || '#a78bfa');
+        const fls = topFlavors(c.flavor).map(([k,v]) =>
+            '<div class="fl-row"><span class="nm">' + FL_NM[k] + '</span>' +
+            '<div class="fl-bar"><div class="fl-fill" style="width:' + (v*10) + '%"></div></div></div>'
+        ).join('');
+        const ings = c.ingredients.map(i => i.name + ' · ' + i.amount).join('<br>');
+        card.innerHTML =
+            '<div class="aura"></div>' +
+            '<div class="cock-name">' + c.name + '<span class="match-badge">◆ 与你亲和</span></div>' +
+            '<div class="cock-en">' + c.nameEn + ' · ' + c.baseSpirit + '</div>' +
+            '<div class="cock-tag">「' + c.tagline + '」</div>' +
+            '<div class="cock-meta"><span>ABV ' + c.abv + '%</span><span>' + c.category + '</span><span>难度 ' + '★'.repeat(c.difficulty) + '</span></div>' +
+            '<div class="flavors">' + fls + '</div>' +
+            '<div class="cock-detail">' +
+                '<div class="cock-story">' + c.story + '</div>' +
+                '<div class="cock-ings"><b>配方 RECIPE</b>' + ings + '<br><br>杯具：' + c.glass + ' · 装饰：' + c.garnish + '</div>' +
+            '</div>';
+        card.onclick = () => card.classList.toggle('open');
+        g.appendChild(card);
+    });
+}
+render();
+
+// 星空
+(function() {
+    const c = document.getElementById('stars'), x = c.getContext('2d');
+    function rs() { c.width = innerWidth; c.height = innerHeight; }
+    rs(); addEventListener('resize', rs);
+    const ss = Array.from({length: 120}, () => ({
+        x: Math.random()*c.width, y: Math.random()*c.height,
+        r: Math.random()*1.1+0.2, a: Math.random(), s: Math.random()*0.02+0.005,
+        c: ['#ffffff','#c7d2fe','#93c5fd','#c4b5fd'][Math.floor(Math.random()*4)]
+    }));
+    (function draw() {
+        x.clearRect(0,0,c.width,c.height);
+        ss.forEach(s => {
+            s.a += s.s; if (s.a > 1 || s.a < 0) s.s = -s.s;
+            x.globalAlpha = Math.max(0.1, s.a); x.fillStyle = s.c;
+            x.beginPath(); x.arc(s.x, s.y, s.r, 0, Math.PI*2); x.fill();
+        });
+        requestAnimationFrame(draw);
+    })();
+})();
+</script>
+</body>
+</html>
