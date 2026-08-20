@@ -537,19 +537,33 @@
 
             // 状态文字
             if (game.state === 'win') {
-                ctx.fillStyle = 'rgba(251,191,36,0.04)';
+                ctx.fillStyle = 'rgba(6,10,31,0.92)';
                 ctx.fillRect(0, 0, W, H);
-                ctx.fillStyle = '#FBBF24';
-                ctx.font = '24px "Georgia", serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.shadowColor = 'rgba(251,191,36,0.15)';
+
+                ctx.fillStyle = '#FBBF24';
+                ctx.font = '24px "Georgia", serif';
+                ctx.shadowColor = 'rgba(251,191,36,0.4)';
                 ctx.shadowBlur = 40;
-                ctx.fillText('⚡ 思维函数 · 合成完成', W / 2, H / 2 - 20);
+                ctx.fillText('⚡ 思维函数 · 合成完成', W / 2, H / 2 - 90);
                 ctx.shadowBlur = 0;
-                ctx.fillStyle = 'rgba(167,139,250,0.06)';
+
+                ctx.font = '13px monospace';
+                ctx.fillStyle = '#a7b0c8';
+                ctx.fillText('输入  A 艺术直觉 · B 商业嗅觉 · C 代码能力 · M 元认知 · P 脉冲执行', W / 2, H / 2 - 50);
+                ctx.fillText('运行  PatternMatch → CrossDomain → Model → FeedbackLock', W / 2, H / 2 - 26);
+
+                ctx.fillStyle = '#22D3EE';
+                ctx.font = 'bold 15px monospace';
+                ctx.fillText('输出  🎁 一个看得见、摸得着、可交互的作品', W / 2, H / 2 + 6);
+                ctx.fillStyle = '#e8edff';
+                ctx.font = '13px monospace';
+                ctx.fillText('—— 就像你现在正玩着的这座网站', W / 2, H / 2 + 30);
+
+                ctx.fillStyle = '#78829e';
                 ctx.font = '12px monospace';
-                ctx.fillText('按 R 重新挑战', W / 2, H / 2 + 28);
+                ctx.fillText('按 R 重新挑战', W / 2, H / 2 + 72);
             }
 
             if (game.state === 'egg1') {

@@ -191,6 +191,12 @@
             max-height: 100%;
             overflow: hidden;
         }
+        .card .card-body .mermaid-placeholder.mini {
+            border: none; background: transparent; padding: 2px;
+        }
+        .mini-mermaid { width: 100%; display: flex; align-items: center; justify-content: center; }
+        .mini-mermaid svg { max-width: 100% !important; height: auto !important; max-height: 150px; }
+        .mini-mermaid p { margin: 0; }
 
         /* 卡片颜色标识 */
         .card-1 .card-header .label {
@@ -392,18 +398,7 @@
                     <span class="label">思维函数</span>
                 </div>
                 <div class="card-body">
-                    <div class="mermaid-placeholder">
-                        <div class="tiny-mermaid">
-                            ═══ 输入层 ═══
-                            模糊想法 · 思考深度 · 脉冲状态
-                                ↓
-                            ═══ 处理层 ═══
-                            模式识别 → 跨域联想 → 建模 → 反馈锁 → MVP
-                                ↓
-                            ═══ 输出层 ═══
-                            文档 · 代码 · 工具 · 方法论
-                        </div>
-                    </div>
+                    <div class="mermaid-placeholder mini"><div class="mini-mermaid" data-idx="0"></div></div>
                 </div>
             </div>
 
@@ -414,19 +409,7 @@
                     <span class="label">智能体团队</span>
                 </div>
                 <div class="card-body">
-                    <div class="mermaid-placeholder">
-                        <div class="tiny-mermaid">
-                            🧑‍💻 主协调者（你）
-                                │
-                            ┌───┴───┐
-                            ▼       ▼
-                        感知层   认知层
-                            │       │
-                            └───┬───┘
-                                ▼
-                            执行层 → 验证层 → 记忆层
-                        </div>
-                    </div>
+                    <div class="mermaid-placeholder mini"><div class="mini-mermaid" data-idx="1"></div></div>
                 </div>
             </div>
 
@@ -437,20 +420,7 @@
                     <span class="label">星盘 · MBTI</span>
                 </div>
                 <div class="card-body">
-                    <div class="mermaid-placeholder">
-                        <div class="tiny-mermaid">
-                            ☀️ 日处女 · 🌙 月天蝎 · ⬆️ 升水瓶
-                                │
-                            ┌───┴───┐
-                            ▼       ▼
-                        INTJ    ESFP
-                        (深研)  (爆发)
-                            │       │
-                            └───┬───┘
-                                ▼
-                        思维系统 → 工具链 → 项目
-                        </div>
-                    </div>
+                    <div class="mermaid-placeholder mini"><div class="mini-mermaid" data-idx="2"></div></div>
                 </div>
             </div>
 
@@ -461,21 +431,7 @@
                     <span class="label">完整系统</span>
                 </div>
                 <div class="card-body">
-                    <div class="mermaid-placeholder">
-                        <div class="tiny-mermaid">
-                            底层底色（艺术直觉）
-                                ↓
-                            星盘 · 学术 · 实习
-                                ↓
-                            工具化能力 · 代码
-                                ↓
-                            MBTI 状态切换
-                                ↓
-                            项目矩阵（5域）
-                                ↓
-                            元系统架构
-                        </div>
-                    </div>
+                    <div class="mermaid-placeholder mini"><div class="mini-mermaid" data-idx="3"></div></div>
                 </div>
             </div>
 
@@ -823,6 +779,18 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
         });
+
+        // ---- 卡片内渲染迷你 mermaid 图 ----
+        (function initMiniMermaid() {
+            const minis = document.querySelectorAll('.mini-mermaid');
+            const nodes = [];
+            minis.forEach((el, i) => {
+                el.classList.add('mermaid');
+                el.textContent = mermaidCodes[i];
+                nodes.push(el);
+            });
+            if (nodes.length) mermaid.run({ nodes });
+        })();
 
         console.log('🌌 模型展厅已启动 · 拖拽旋转 · 点击卡片放大查看完整图');
     </script>
