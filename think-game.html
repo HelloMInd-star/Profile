@@ -47,6 +47,121 @@
             color: #a7b0c8;
         }
 
+        /* ===== 说明书侧边标签 ===== */
+        .manual-tab {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            z-index: 40;
+            writing-mode: vertical-rl;
+            letter-spacing: 4px;
+            font-size: 12px;
+            background: rgba(14, 11, 16, 0.75);
+            border: 1px solid rgba(167, 139, 250, 0.35);
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+            color: #c4b5fd;
+            padding: 18px 10px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: 0.25s;
+        }
+        .manual-tab:hover {
+            background: rgba(167, 139, 250, 0.18);
+            color: #e8ecff;
+            padding-right: 16px;
+        }
+
+        /* ===== 说明书滑出面板 ===== */
+        .manual-panel {
+            position: fixed;
+            top: 0;
+            right: -380px;
+            width: 360px;
+            max-width: 88vw;
+            height: 100vh;
+            z-index: 50;
+            background: rgba(10, 8, 15, 0.97);
+            border-left: 1px solid rgba(167, 139, 250, 0.35);
+            box-shadow: -12px 0 40px rgba(0, 0, 0, 0.6);
+            padding: 56px 26px 30px;
+            overflow-y: auto;
+            transition: right 0.35s ease;
+        }
+        .manual-panel.open { right: 0; }
+        .manual-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            color: #a7b0c8;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .manual-close:hover { color: #fff; border-color: #c4b5fd; }
+        .manual-panel h2 {
+            font-size: 16px;
+            color: #c4b5fd;
+            letter-spacing: 2px;
+            margin: 0 0 4px;
+        }
+        .manual-panel .m-sub {
+            font-size: 11px;
+            color: #78829e;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+        }
+        .manual-sec {
+            margin-bottom: 16px;
+            padding: 12px 14px;
+            background: rgba(167, 139, 250, 0.05);
+            border: 1px solid rgba(167, 139, 250, 0.15);
+            border-radius: 8px;
+        }
+        .manual-sec h3 {
+            font-size: 12px;
+            color: #fbbf24;
+            letter-spacing: 1px;
+            margin: 0 0 8px;
+        }
+        .manual-sec p, .manual-sec li {
+            font-size: 12px;
+            line-height: 1.8;
+            color: #c8cfdd;
+            margin: 0;
+        }
+        .manual-sec ul { margin: 0; padding-left: 16px; }
+        .manual-sec kbd {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 3px;
+            padding: 1px 5px;
+            font-size: 10px;
+            font-family: monospace;
+        }
+        .frag-tag {
+            display: inline-block;
+            padding: 0 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-right: 2px;
+        }
+        .manual-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 45;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .manual-overlay.open { opacity: 1; pointer-events: auto; }
+
         /* ===== 标题 ===== */
         .page-title {
             position: fixed;
@@ -159,6 +274,54 @@
     <!-- 返回按钮 -->
     <a href="index.html" class="back-btn">← 返回首页</a>
 
+    <!-- 说明书侧边标签 -->
+    <div class="manual-tab" id="manualTab">📖 说明书</div>
+
+    <!-- 说明书遮罩 -->
+    <div class="manual-overlay" id="manualOverlay"></div>
+
+    <!-- 说明书滑出面板 -->
+    <div class="manual-panel" id="manualPanel">
+        <button class="manual-close" id="manualClose">✕</button>
+        <h2>📖 游戏说明书</h2>
+        <div class="m-sub">FIRE & ICE · 思维函数协作游戏</div>
+
+        <div class="manual-sec">
+            <h3>🎯 目标</h3>
+            <p>双人协作收集 <b>5 枚思维碎片</b>，在中央机关处合成「思维函数」，解锁通关输出。这个游戏本身就是用「3D 思维模型」做出来的——通关过程就是模型运行的过程。</p>
+        </div>
+
+        <div class="manual-sec">
+            <h3>🕹 操作</h3>
+            <ul>
+                <li><b style="color:#34d399">绿色 · 直觉感知</b>：<kbd>W A S D</kbd> 移动</li>
+                <li><b style="color:#a78bfa">紫色 · 系统输出</b>：<kbd>↑ ← ↓ →</kbd> 移动</li>
+                <li><kbd>R</kbd> 重置本局</li>
+            </ul>
+        </div>
+
+        <div class="manual-sec">
+            <h3>💎 五枚思维碎片</h3>
+            <ul>
+                <li><span class="frag-tag" style="background:rgba(34,211,238,.15);color:#22d3ee">A</span>艺术直觉 · PatternMatch</li>
+                <li><span class="frag-tag" style="background:rgba(251,191,36,.15);color:#fbbf24">B</span>商业嗅觉 · CrossDomain</li>
+                <li><span class="frag-tag" style="background:rgba(167,139,250,.15);color:#a78bfa">C</span>代码能力 · Model</li>
+                <li><span class="frag-tag" style="background:rgba(244,114,182,.15);color:#f472b6">M</span>元认知 · 反馈调节</li>
+                <li><span class="frag-tag" style="background:rgba(52,211,153,.15);color:#34d399">P</span>脉冲执行 · FeedbackLock</li>
+            </ul>
+        </div>
+
+        <div class="manual-sec">
+            <h3>🔒 中央机关</h3>
+            <p>集齐碎片后，两名玩家需<b>同时站进中央机关</b>（反馈锁），思维函数才会启动合成。一个人踩不动——协作是这个游戏的核心机制。</p>
+        </div>
+
+        <div class="manual-sec">
+            <h3>🥚 隐藏彩蛋</h3>
+            <p>地图里藏着彩蛋入口，和冰块一起找找看。通关后还有完整的「输入 → 运行 → 输出」函数面板等你验收。</p>
+        </div>
+    </div>
+
     <!-- 标题 -->
     <div class="page-title">
         <h1>🎮 冰火闯关</h1>
@@ -189,6 +352,24 @@
         //  — 中央 = 反馈锁机关
         //  — 双彩蛋隐藏入口
         // ================================================================
+
+        // ---- 说明书开关 ----
+        (function () {
+            const tab = document.getElementById('manualTab');
+            const panel = document.getElementById('manualPanel');
+            const overlay = document.getElementById('manualOverlay');
+            const closeBtn = document.getElementById('manualClose');
+            function setManual(open) {
+                panel.classList.toggle('open', open);
+                overlay.classList.toggle('open', open);
+            }
+            tab.addEventListener('click', () => setManual(true));
+            closeBtn.addEventListener('click', () => setManual(false));
+            overlay.addEventListener('click', () => setManual(false));
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') setManual(false);
+            });
+        })();
 
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
