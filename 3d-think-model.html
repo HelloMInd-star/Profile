@@ -30,7 +30,7 @@
             z-index: 30;
             background: rgba(14, 11, 16, 0.5);
             border: 1px solid rgba(167, 139, 250, 0.04);
-            color: rgba(200, 190, 220, 0.15);
+            color: #a7b0c8;
             padding: 8px 18px;
             font-size: 11px;
             letter-spacing: 2px;
@@ -42,8 +42,8 @@
             backdrop-filter: blur(8px);
         }
         .back-btn:hover {
-            border-color: rgba(167, 139, 250, 0.08);
-            color: rgba(200, 190, 220, 0.25);
+            border-color: #c4b5fd;
+            color: #a7b0c8;
         }
 
         /* ===== 标题 ===== */
@@ -65,7 +65,7 @@
         }
         .page-title .sub {
             font-size: clamp(9px, 1.2vw, 12px);
-            color: rgba(167, 139, 250, 0.06);
+            color: #c4b5fd;
             letter-spacing: 4px;
             margin-top: 2px;
         }
@@ -104,7 +104,7 @@
 
         #controls .panel-title {
             font-size: clamp(9px, 1.2vw, 12px);
-            color: rgba(167, 139, 250, 0.08);
+            color: #c4b5fd;
             letter-spacing: 4px;
             text-transform: uppercase;
             border-bottom: 1px solid rgba(167, 139, 250, 0.03);
@@ -140,7 +140,7 @@
         }
         #controls .group .row .label-text {
             font-size: clamp(8px, 0.9vw, 10px);
-            color: rgba(200, 190, 220, 0.08);
+            color: #a7b0c8;
             letter-spacing: 2px;
             min-width: 40px;
             text-align: left;
@@ -151,7 +151,7 @@
             min-width: 28px;
             text-align: right;
             font-family: 'Courier New', monospace;
-            color: rgba(200, 190, 220, 0.12);
+            color: #a7b0c8;
         }
         #controls input[type="range"] {
             width: 100%;
@@ -179,13 +179,13 @@
             padding-top: clamp(8px, 1.2vh, 14px);
             border-top: 1px solid rgba(167, 139, 250, 0.02);
             font-size: clamp(8px, 0.8vw, 10px);
-            color: rgba(200, 190, 220, 0.02);
+            color: #a7b0c8;
             text-align: center;
             letter-spacing: 2px;
             line-height: 1.8;
         }
         #controls .hint span {
-            color: rgba(200, 190, 220, 0.03);
+            color: #a7b0c8;
         }
 
         /* ===== 底部公式 ===== */
@@ -195,7 +195,7 @@
             left: 50%;
             transform: translateX(-50%);
             font-size: clamp(10px, 1.2vw, 14px);
-            color: rgba(167, 139, 250, 0.04);
+            color: #c4b5fd;
             letter-spacing: 2px;
             text-align: center;
             pointer-events: none;
@@ -209,10 +209,10 @@
             border-radius: 2px;
         }
         #formula-bar .highlight {
-            color: rgba(167, 139, 250, 0.08);
+            color: #c4b5fd;
         }
         #formula-bar .value {
-            color: rgba(167, 139, 250, 0.12);
+            color: #c4b5fd;
             font-weight: 700;
         }
 
@@ -290,41 +290,41 @@
         <div class="group">
             <div class="row">
                 <label style="color:#22D3EE;">A</label>
-                <span class="label-text" style="color:rgba(34,211,238,0.15);">艺术</span>
+                <span class="label-text" style="color:#22d3ee;">艺术</span>
                 <input type="range" id="paramA" min="0.0" max="1.0" step="0.01" value="0.85" />
-                <span class="val" id="valA" style="color:rgba(34,211,238,0.15);">0.85</span>
+                <span class="val" id="valA" style="color:#22d3ee;">0.85</span>
             </div>
         </div>
         <div class="group">
             <div class="row">
                 <label style="color:#FBBF24;">B</label>
-                <span class="label-text" style="color:rgba(251,191,36,0.15);">商业</span>
+                <span class="label-text" style="color:#fbbf24;">商业</span>
                 <input type="range" id="paramB" min="0.0" max="1.0" step="0.01" value="0.75" />
-                <span class="val" id="valB" style="color:rgba(251,191,36,0.15);">0.75</span>
+                <span class="val" id="valB" style="color:#fbbf24;">0.75</span>
             </div>
         </div>
         <div class="group">
             <div class="row">
                 <label style="color:#A78BFA;">C</label>
-                <span class="label-text" style="color:rgba(167,139,250,0.15);">代码</span>
+                <span class="label-text" style="color:#c4b5fd;">代码</span>
                 <input type="range" id="paramC" min="0.0" max="1.0" step="0.01" value="0.90" />
-                <span class="val" id="valC" style="color:rgba(167,139,250,0.15);">0.90</span>
+                <span class="val" id="valC" style="color:#c4b5fd;">0.90</span>
             </div>
         </div>
         <div class="group">
             <div class="row">
                 <label style="color:#F472B6;">M</label>
-                <span class="label-text" style="color:rgba(244,114,182,0.15);">元系统</span>
+                <span class="label-text" style="color:#f472b6;">元系统</span>
                 <input type="range" id="paramM" min="0.0" max="1.0" step="0.01" value="0.80" />
-                <span class="val" id="valM" style="color:rgba(244,114,182,0.15);">0.80</span>
+                <span class="val" id="valM" style="color:#f472b6;">0.80</span>
             </div>
         </div>
         <div class="group">
             <div class="row">
                 <label style="color:#34D399;">P</label>
-                <span class="label-text" style="color:rgba(52,211,153,0.15);">脉冲</span>
+                <span class="label-text" style="color:#34d399;">脉冲</span>
                 <input type="range" id="paramP" min="0.0" max="1.0" step="0.01" value="0.60" />
-                <span class="val" id="valP" style="color:rgba(52,211,153,0.15);">0.60</span>
+                <span class="val" id="valP" style="color:#34d399;">0.60</span>
             </div>
         </div>
 
@@ -336,8 +336,8 @@
     <!-- 底部公式 -->
     <div id="formula-bar">
         F(x) = <span class="highlight" id="formulaDisplay">(0.85·A + 0.75·B + 0.90·C + 0.80·M + 0.60·P) / 5 = 0.780</span>
-        <span style="color:rgba(167,139,250,0.02); margin-left:8px;">|</span>
-        <span style="color:rgba(167,139,250,0.02); font-size:80%;">收敛进行中</span>
+        <span style="color:#c4b5fd; margin-left:8px;">|</span>
+        <span style="color:#c4b5fd; font-size:80%;">收敛进行中</span>
     </div>
 
     <!-- Three.js -->
