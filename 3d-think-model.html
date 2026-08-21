@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>3D 思维建模台 · 参数调节</title>
+    <title>3D 思维建模台 · 权重调节器</title>
     <style>
+        /* ===== 全局重置 ===== */
         * {
             margin: 0;
             padding: 0;
@@ -22,28 +23,62 @@
             left: 0;
         }
 
-        /* ===== 返回按钮 ===== */
-        .back-btn {
+        /* ===== 按钮组 ===== */
+        .top-btns {
             position: fixed;
             top: 20px;
-            left: 20px;
-            z-index: 30;
-            background: rgba(14, 11, 16, 0.5);
-            border: 1px solid rgba(167, 139, 250, 0.04);
-            color: #a7b0c8;
+            right: 20px;
+            z-index: 40;
+            display: flex;
+            gap: 12px;
+        }
+        .top-btns .action-btn {
+            background: rgba(14, 11, 16, 0.6);
+            border: 1px solid rgba(167, 139, 250, 0.15);
+            color: #c4b5fd;
             padding: 8px 18px;
             font-size: 11px;
             letter-spacing: 2px;
             cursor: pointer;
             font-family: 'Georgia', serif;
-            transition: 0.2s;
+            transition: 0.3s ease;
+            border-radius: 4px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.03);
+        }
+        .top-btns .action-btn:hover {
+            border-color: rgba(167, 139, 250, 0.4);
+            box-shadow: 0 0 30px rgba(167, 139, 250, 0.08);
+            color: #f0e8d8;
+        }
+        .top-btns .action-btn.active {
+            border-color: rgba(167, 139, 250, 0.5);
+            background: rgba(167, 139, 250, 0.08);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 40;
+            background: rgba(14, 11, 16, 0.6);
+            border: 1px solid rgba(167, 139, 250, 0.15);
+            color: #c4b5fd;
+            padding: 8px 18px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            transition: 0.3s ease;
             text-decoration: none;
-            border-radius: 2px;
-            backdrop-filter: blur(8px);
+            border-radius: 4px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.03);
         }
         .back-btn:hover {
-            border-color: #c4b5fd;
-            color: #a7b0c8;
+            border-color: rgba(167, 139, 250, 0.4);
+            box-shadow: 0 0 30px rgba(167, 139, 250, 0.08);
+            color: #f0e8d8;
         }
 
         /* ===== 标题 ===== */
@@ -58,16 +93,17 @@
         }
         .page-title h1 {
             font-weight: 300;
-            font-size: clamp(16px, 3vw, 24px);
-            letter-spacing: clamp(6px, 2vw, 10px);
+            font-size: clamp(16px, 3vw, 26px);
+            letter-spacing: clamp(6px, 2vw, 12px);
             color: #f0e8d8;
-            text-shadow: 0 0 40px rgba(167, 139, 250, 0.04);
+            text-shadow: 0 0 60px rgba(167, 139, 250, 0.08);
         }
         .page-title .sub {
             font-size: clamp(9px, 1.2vw, 12px);
             color: #c4b5fd;
-            letter-spacing: 4px;
-            margin-top: 2px;
+            letter-spacing: 5px;
+            margin-top: 4px;
+            opacity: 0.7;
         }
 
         /* ===== 3D 容器 ===== */
@@ -83,33 +119,29 @@
             right: 0;
             top: 0;
             height: 100vh;
-            width: clamp(160px, 22vw, 230px);
-            background: rgba(10, 8, 12, 0.88);
-            backdrop-filter: blur(16px);
-            border-left: 1px solid rgba(167, 139, 250, 0.04);
-            padding: clamp(20px, 4vh, 36px) clamp(12px, 2vw, 18px) clamp(16px, 3vh, 24px);
+            width: clamp(170px, 22vw, 240px);
+            background: rgba(10, 8, 12, 0.7);
+            backdrop-filter: blur(24px) saturate(1.2);
+            border-left: 1px solid rgba(167, 139, 250, 0.06);
+            padding: clamp(24px, 4vh, 40px) clamp(14px, 2vw, 22px) clamp(16px, 3vh, 28px);
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
             z-index: 20;
             overflow-y: auto;
-            box-shadow: -8px 0 60px rgba(0, 0, 0, 0.4);
+            box-shadow: -8px 0 80px rgba(0, 0, 0, 0.6);
         }
-        #controls::-webkit-scrollbar {
-            width: 2px;
-        }
-        #controls::-webkit-scrollbar-thumb {
-            background: rgba(167, 139, 250, 0.04);
-        }
+        #controls::-webkit-scrollbar { width: 2px; }
+        #controls::-webkit-scrollbar-thumb { background: rgba(167, 139, 250, 0.08); border-radius: 2px; }
 
         #controls .panel-title {
             font-size: clamp(9px, 1.2vw, 12px);
             color: #c4b5fd;
-            letter-spacing: 4px;
+            letter-spacing: 5px;
             text-transform: uppercase;
-            border-bottom: 1px solid rgba(167, 139, 250, 0.03);
-            padding-bottom: clamp(8px, 1.2vh, 14px);
-            margin-bottom: clamp(6px, 1vh, 12px);
+            border-bottom: 1px solid rgba(167, 139, 250, 0.06);
+            padding-bottom: clamp(10px, 1.4vh, 16px);
+            margin-bottom: clamp(8px, 1.2vh, 14px);
             text-align: center;
             font-weight: 300;
         }
@@ -118,12 +150,10 @@
             display: flex;
             flex-direction: column;
             gap: 2px;
-            padding: clamp(4px, 0.8vh, 8px) 0;
-            border-bottom: 1px solid rgba(167, 139, 250, 0.02);
+            padding: clamp(6px, 1vh, 10px) 0;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.03);
         }
-        #controls .group:last-of-type {
-            border-bottom: none;
-        }
+        #controls .group:last-of-type { border-bottom: none; }
 
         #controls .group .row {
             display: flex;
@@ -132,147 +162,411 @@
             gap: 6px;
         }
         #controls .group .row label {
-            font-size: clamp(11px, 1.2vw, 14px);
+            font-size: clamp(12px, 1.2vw, 15px);
             font-weight: 400;
             letter-spacing: 1px;
             min-width: 20px;
             font-family: 'Georgia', serif;
+            text-shadow: 0 0 20px currentColor;
         }
         #controls .group .row .label-text {
             font-size: clamp(8px, 0.9vw, 10px);
             color: #a7b0c8;
             letter-spacing: 2px;
-            min-width: 40px;
+            min-width: 44px;
             text-align: left;
+            opacity: 0.7;
         }
         #controls .group .row .val {
             font-size: clamp(10px, 1vw, 12px);
             font-weight: 400;
-            min-width: 28px;
+            min-width: 32px;
             text-align: right;
             font-family: 'Courier New', monospace;
-            color: #a7b0c8;
+            color: #c4b5fd;
+            opacity: 0.9;
         }
+
         #controls input[type="range"] {
             width: 100%;
             accent-color: #A78BFA;
-            background: rgba(167, 139, 250, 0.03);
+            background: transparent;
             height: 3px;
             border-radius: 0;
             outline: none;
             cursor: pointer;
-            margin: 2px 0;
+            margin: 4px 0;
+            -webkit-appearance: none;
+            appearance: none;
+            background: linear-gradient(90deg, rgba(167, 139, 250, 0.08), rgba(167, 139, 250, 0.2));
+            border-radius: 2px;
+        }
+        #controls input[type="range"]::-webkit-slider-runnable-track {
+            height: 3px;
+            background: linear-gradient(90deg, rgba(167, 139, 250, 0.08), rgba(167, 139, 250, 0.2));
+            border-radius: 2px;
         }
         #controls input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 10px;
-            height: 10px;
-            background: rgba(167, 139, 250, 0.12);
-            border: 1px solid rgba(167, 139, 250, 0.06);
-            border-radius: 0;
+            width: 12px;
+            height: 12px;
+            background: rgba(167, 139, 250, 0.15);
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s ease;
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.05);
+        }
+        #controls input[type="range"]::-webkit-slider-thumb:hover {
+            background: rgba(167, 139, 250, 0.25);
+            border-color: rgba(167, 139, 250, 0.5);
+        }
+        #controls input[type="range"]::-moz-range-track {
+            height: 3px;
+            background: rgba(167, 139, 250, 0.15);
+            border-radius: 2px;
+            border: none;
+        }
+        #controls input[type="range"]::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: rgba(167, 139, 250, 0.15);
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            border-radius: 50%;
             cursor: pointer;
         }
 
         #controls .hint {
             margin-top: auto;
-            padding-top: clamp(8px, 1.2vh, 14px);
-            border-top: 1px solid rgba(167, 139, 250, 0.02);
+            padding-top: clamp(10px, 1.4vh, 16px);
+            border-top: 1px solid rgba(167, 139, 250, 0.04);
             font-size: clamp(8px, 0.8vw, 10px);
             color: #a7b0c8;
             text-align: center;
             letter-spacing: 2px;
-            line-height: 1.8;
-        }
-        #controls .hint span {
-            color: #a7b0c8;
+            line-height: 2;
+            opacity: 0.5;
         }
 
         /* ===== 底部公式 ===== */
         #formula-bar {
             position: fixed;
-            bottom: clamp(16px, 3vh, 30px);
+            bottom: clamp(20px, 3.5vh, 36px);
             left: 50%;
             transform: translateX(-50%);
-            font-size: clamp(10px, 1.2vw, 14px);
+            font-size: clamp(10px, 1.2vw, 15px);
             color: #c4b5fd;
             letter-spacing: 2px;
             text-align: center;
             pointer-events: none;
             z-index: 10;
-            background: rgba(10, 8, 12, 0.3);
-            padding: clamp(6px, 1vh, 12px) clamp(14px, 3vw, 32px);
-            border: 1px solid rgba(167, 139, 250, 0.02);
+            background: rgba(10, 8, 12, 0.5);
+            padding: clamp(8px, 1.2vh, 14px) clamp(18px, 3.5vw, 40px);
+            border: 1px solid rgba(167, 139, 250, 0.08);
             font-family: 'Courier New', monospace;
             white-space: nowrap;
-            backdrop-filter: blur(4px);
-            border-radius: 2px;
+            backdrop-filter: blur(12px);
+            border-radius: 6px;
+            box-shadow: 0 0 40px rgba(167, 139, 250, 0.02);
+            animation: formulaGlow 3s ease-in-out infinite alternate;
         }
-        #formula-bar .highlight {
-            color: #c4b5fd;
-        }
-        #formula-bar .value {
-            color: #c4b5fd;
-            font-weight: 700;
+        @keyframes formulaGlow {
+            0% { border-color: rgba(167, 139, 250, 0.05); box-shadow: 0 0 20px rgba(167, 139, 250, 0.01); }
+            100% { border-color: rgba(167, 139, 250, 0.15); box-shadow: 0 0 40px rgba(167, 139, 250, 0.04); }
         }
 
+        /* ============================================================
+           🆕 函数模拟器覆盖层
+           ============================================================ */
+        .sim-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 50;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            pointer-events: auto;
+        }
+        .sim-overlay.open {
+            display: flex;
+        }
+
+        .sim-panel {
+            background: rgba(10, 8, 12, 0.85);
+            backdrop-filter: blur(30px) saturate(1.4);
+            border: 1px solid rgba(167, 139, 250, 0.12);
+            border-radius: 16px;
+            padding: 28px 32px 24px;
+            width: 90%;
+            max-width: 720px;
+            max-height: 85vh;
+            box-shadow: 0 20px 120px rgba(0, 0, 0, 0.8), 0 0 60px rgba(167, 139, 250, 0.02);
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateY(20px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .sim-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.06);
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+        }
+        .sim-header span {
+            font-size: clamp(14px, 2vw, 20px);
+            letter-spacing: 4px;
+            color: #f0e8d8;
+            font-weight: 300;
+        }
+        .sim-header .close-btn {
+            background: rgba(167, 139, 250, 0.05);
+            border: 1px solid rgba(167, 139, 250, 0.1);
+            color: #a7b0c8;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sim-header .close-btn:hover {
+            background: rgba(167, 139, 250, 0.15);
+            color: #f0e8d8;
+        }
+
+        .sim-body {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* 条形图 */
+        .sim-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .sim-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sim-bar-label {
+            width: 18px;
+            font-weight: 700;
+            font-size: 14px;
+            font-family: 'Georgia', serif;
+            text-align: right;
+        }
+        .sim-bar-track {
+            flex: 1;
+            height: 16px;
+            background: rgba(167, 139, 250, 0.04);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(167, 139, 250, 0.03);
+        }
+        .sim-bar-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.08s linear;
+            background: #A78BFA;
+            box-shadow: 0 0 20px currentColor;
+        }
+        .sim-bar-value {
+            width: 40px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #a7b0c8;
+            text-align: right;
+        }
+
+        /* ===== 🆕 权重调节区 ===== */
+        .sim-weights {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            padding: 10px 12px 8px;
+            border: 1px solid rgba(167, 139, 250, 0.04);
+            margin-top: 2px;
+        }
+        .sim-weights .weight-title {
+            font-size: 10px;
+            color: #a7b0c8;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            opacity: 0.5;
+        }
+        .sim-weight-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .sim-weight-row .wlabel {
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'Georgia', serif;
+            min-width: 22px;
+            text-align: right;
+        }
+        .sim-weight-row .wslider {
+            flex: 1;
+            accent-color: #A78BFA;
+            background: transparent;
+            height: 2px;
+            border-radius: 0;
+            outline: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(167, 139, 250, 0.1);
+            border-radius: 2px;
+            margin: 0;
+        }
+        .sim-weight-row .wslider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 10px;
+            background: rgba(167, 139, 250, 0.2);
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .sim-weight-row .wslider::-webkit-slider-thumb:hover {
+            background: rgba(167, 139, 250, 0.35);
+            border-color: rgba(167, 139, 250, 0.6);
+        }
+        .sim-weight-row .wval {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #c4b5fd;
+            min-width: 28px;
+            text-align: right;
+        }
+
+        /* ===== 🆕 加权公式拆解 ===== */
+        .sim-formula-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 8px 12px;
+            border-left: 2px solid rgba(167, 139, 250, 0.2);
+            font-family: 'Courier New', monospace;
+            font-size: clamp(11px, 1.2vw, 14px);
+            color: #c4b5fd;
+            word-break: break-all;
+            line-height: 1.8;
+            margin-top: 2px;
+        }
+        .sim-formula-box .f-highlight {
+            color: #f0e8d8;
+            font-weight: 700;
+        }
+        .sim-formula-box .f-dim {
+            color: #a7b0c866;
+        }
+
+        /* 折线图 + 统计 */
+        .sim-stats {
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+        .sim-chart-wrap {
+            flex: 2;
+            min-width: 180px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid rgba(167, 139, 250, 0.03);
+        }
+        .sim-chart-wrap canvas {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 4px;
+        }
+        .sim-metrics {
+            flex: 1;
+            min-width: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(167, 139, 250, 0.03);
+        }
+        .sim-metrics .metric {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: #a7b0c8;
+        }
+        .sim-metrics .metric .mval {
+            color: #f0e8d8;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+        }
+        .sim-metrics .metric .mval.highlight {
+            color: #A78BFA;
+            font-size: 18px;
+            text-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
+        }
+
+        /* ===== 响应式 ===== */
         @media (max-width: 700px) {
-            #controls {
-                width: clamp(130px, 30vw, 170px);
-                padding: 14px 8px 12px;
-            }
-            #controls .group .row label {
-                font-size: 10px;
-            }
-            #controls .group .row .label-text {
-                font-size: 7px;
-                min-width: 28px;
-            }
-            #controls .group .row .val {
-                font-size: 9px;
-                min-width: 20px;
-            }
-            #formula-bar {
-                font-size: 8px;
-                padding: 4px 10px;
-                bottom: 12px;
-                white-space: normal;
-                max-width: 60vw;
-            }
-            .page-title h1 {
-                font-size: 14px;
-                letter-spacing: 4px;
-            }
-            .back-btn {
-                font-size: 9px;
-                padding: 6px 12px;
-                top: 12px;
-                left: 12px;
-            }
+            #controls { width: clamp(140px, 32vw, 180px); padding: 16px 10px 14px; }
+            #controls .group .row label { font-size: 11px; }
+            #controls .group .row .label-text { font-size: 7px; min-width: 30px; }
+            #controls .group .row .val { font-size: 9px; min-width: 22px; }
+            #formula-bar { font-size: 9px; padding: 6px 14px; bottom: 14px; white-space: normal; max-width: 70vw; letter-spacing: 1px; }
+            .page-title h1 { font-size: 15px; letter-spacing: 4px; }
+            .back-btn, .top-btns .action-btn { font-size: 9px; padding: 6px 12px; top: 12px; }
+            .top-btns { top: 12px; right: 12px; gap: 8px; }
+            .sim-panel { padding: 20px 16px; }
+            .sim-stats { flex-direction: column; }
+            .sim-weight-row .wlabel { font-size: 10px; min-width: 18px; }
+            .sim-weight-row .wval { font-size: 10px; min-width: 24px; }
         }
         @media (max-width: 480px) {
-            #controls {
-                width: 110px;
-                padding: 10px 6px 8px;
-            }
-            #controls .panel-title {
-                font-size: 7px;
-                letter-spacing: 2px;
-                padding-bottom: 4px;
-            }
-            #controls .group .row .label-text {
-                display: none;
-            }
-            #controls input[type="range"] {
-                height: 2px;
-            }
+            #controls { width: 120px; padding: 12px 6px 10px; }
+            #controls .panel-title { font-size: 7px; letter-spacing: 2px; padding-bottom: 4px; }
+            #controls .group .row .label-text { display: none; }
+            #controls input[type="range"] { height: 2px; }
+            #controls input[type="range"]::-webkit-slider-thumb { width: 10px; height: 10px; }
+            .sim-panel { padding: 16px 12px; max-width: 98%; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 返回按钮 -->
+    <!-- ===== 返回 + 模拟器按钮 ===== -->
     <a href="index.html" class="back-btn">← 返回首页</a>
+    <div class="top-btns">
+        <button id="simToggle" class="action-btn">📊 函数模拟器</button>
+    </div>
 
     <!-- 标题 -->
     <div class="page-title">
@@ -286,7 +580,6 @@
     <!-- 侧边控制面板 -->
     <div id="controls">
         <div class="panel-title">⚡ 思维参数</div>
-
         <div class="group">
             <div class="row">
                 <label style="color:#22D3EE;">A</label>
@@ -327,20 +620,63 @@
                 <span class="val" id="valP" style="color:#34d399;">0.60</span>
             </div>
         </div>
-
         <div class="hint">
             <span>🔄 拖拽旋转</span> · <span>⚡ 调节参数</span>
         </div>
     </div>
 
-    <!-- 底部公式 -->
+    <!-- 底部公式（3D核心，等权） -->
     <div id="formula-bar">
         F(x) = <span class="highlight" id="formulaDisplay">(0.85·A + 0.75·B + 0.90·C + 0.80·M + 0.60·P) / 5 = 0.780</span>
-        <span style="color:#c4b5fd; margin-left:8px;">|</span>
-        <span style="color:#c4b5fd; font-size:80%;">收敛进行中</span>
+        <span style="color:rgba(167,139,250,0.2); margin:0 8px;">|</span>
+        <span style="color:rgba(167,139,250,0.3); font-size:70%; letter-spacing:3px;">✦ 3D 核心（等权）</span>
     </div>
 
-    <!-- Three.js -->
+    <!-- ============================================================
+    🆕 函数模拟器覆盖层（含权重调节器）
+    ============================================================ -->
+    <div id="simOverlay" class="sim-overlay">
+        <div class="sim-panel">
+            <div class="sim-header">
+                <span>📊 函数模拟仪表盘</span>
+                <button id="simClose" class="close-btn">✕</button>
+            </div>
+            <div class="sim-body">
+                <!-- 1. 条形图 -->
+                <div class="sim-bars" id="simBars">
+                    <!-- 由 JS 动态渲染 -->
+                </div>
+
+                <!-- 2. 🆕 权重调节区 -->
+                <div class="sim-weights">
+                    <div class="weight-title">⚖️ 权重系数（拖动调节优先级）</div>
+                    <div id="weightControls">
+                        <!-- 由 JS 动态渲染 -->
+                    </div>
+                </div>
+
+                <!-- 3. 🆕 加权公式拆解 -->
+                <div class="sim-formula-box" id="weightedFormula">
+                    F_weighted = (1.00·A + 1.00·B + 1.00·C + 1.00·M + 1.00·P) / 5.00 = <span class="f-highlight">0.780</span>
+                </div>
+
+                <!-- 4. 折线图 + 统计 -->
+                <div class="sim-stats">
+                    <div class="sim-chart-wrap">
+                        <canvas id="simChart" width="400" height="150"></canvas>
+                    </div>
+                    <div class="sim-metrics">
+                        <div class="metric">加权输出 <span class="mval highlight" id="simCurrentF">0.780</span></div>
+                        <div class="metric">参数维度 <span class="mval">5</span></div>
+                        <div class="metric">采样点数 <span class="mval" id="simSampleCount">0</span></div>
+                        <div class="metric" style="font-size:10px; color:#a7b0c866; margin-top:4px;">拖拽权重 · 实时重算</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Three.js ===== -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js">
@@ -348,8 +684,7 @@
 
     <script>
         // ================================================================
-        //  3D 思维函数 · 视觉统一版
-        //  参数：艺术直觉 / 商业逻辑 / 代码能力 / 元系统架构 / 社交脉冲
+        //  【核心】3D 思维建模台 · 逻辑完全保留（等权平均）
         // ================================================================
 
         // ---- DOM refs ----
@@ -359,6 +694,7 @@
         // ---- Three.js 场景 ----
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x0a080c);
+        scene.fog = new THREE.FogExp2(0x0a080c, 0.012);
 
         const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
         camera.position.set(7, 5, 11);
@@ -369,6 +705,8 @@
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
         container.appendChild(renderer.domElement);
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -381,32 +719,35 @@
         controls.maxDistance = 20;
 
         // ---- Lights ----
-        const ambient = new THREE.AmbientLight(0x1a1420, 0.25);
+        const ambient = new THREE.AmbientLight(0x1a1420, 0.3);
         scene.add(ambient);
-        const dir = new THREE.DirectionalLight(0xA78BFA, 0.5);
-        dir.position.set(5, 10, 7);
+        const dir = new THREE.DirectionalLight(0xA78BFA, 0.8);
+        dir.position.set(5, 12, 7);
         dir.castShadow = true;
         scene.add(dir);
-        const fill = new THREE.DirectionalLight(0x22D3EE, 0.2);
-        fill.position.set(-5, 3, -5);
+        const fill = new THREE.DirectionalLight(0x22D3EE, 0.35);
+        fill.position.set(-6, 4, -5);
         scene.add(fill);
-        const back = new THREE.DirectionalLight(0xFBBF24, 0.1);
-        back.position.set(0, 2, -8);
+        const back = new THREE.DirectionalLight(0xF472B6, 0.25);
+        back.position.set(0, 3, -10);
         scene.add(back);
+        const rim = new THREE.DirectionalLight(0xA78BFA, 0.15);
+        rim.position.set(0, -5, 0);
+        scene.add(rim);
 
         // ---- Ground ----
-        const grid = new THREE.GridHelper(14, 20, 0x1a1420, 0x1a1420);
+        const grid = new THREE.GridHelper(14, 20, 0x2a1a3a, 0x1a1028);
         grid.position.y = -0.5;
         scene.add(grid);
         const gGeo = new THREE.PlaneGeometry(16, 16);
-        const gMat = new THREE.ShadowMaterial({ opacity: 0.25, color: 0x0a080c });
+        const gMat = new THREE.ShadowMaterial({ opacity: 0.3, color: 0x0a080c });
         const ground = new THREE.Mesh(gGeo, gMat);
         ground.rotation.x = -Math.PI / 2;
         ground.position.y = -0.5;
         ground.receiveShadow = true;
         scene.add(ground);
 
-        // ---- Params ----
+        // ---- Params (原始值) ----
         const params = { A: 0.85, B: 0.75, C: 0.90, M: 0.80, P: 0.60 };
         let modelGroup = new THREE.Group();
         scene.add(modelGroup);
@@ -422,11 +763,11 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.shadowColor = color;
-            ctx.shadowBlur = 40;
+            ctx.shadowBlur = 60;
             ctx.fillStyle = color;
             ctx.fillText(text, 256, 64);
             ctx.shadowBlur = 0;
-            ctx.fillStyle = '#0a080c';
+            ctx.fillStyle = 'rgba(10,8,12,0.3)';
             ctx.fillText(text, 256, 64);
             ctx.fillStyle = color;
             ctx.fillText(text, 256, 64);
@@ -437,14 +778,14 @@
                 transparent: true,
                 depthWrite: false,
                 blending: THREE.AdditiveBlending,
-                opacity: 0.85,
+                opacity: 0.9,
             });
             const sprite = new THREE.Sprite(mat);
             sprite.scale.set(size * 3, size * 0.75, 1);
             return sprite;
         }
 
-        // ---- Build model ----
+        // ---- Build model (核心逻辑完全保留：等权平均) ----
         function buildModel() {
             while (modelGroup.children.length) {
                 const c = modelGroup.children[0];
@@ -454,19 +795,20 @@
             }
 
             const { A, B, C, M, P } = params;
-            const F = (A + B + C + M + P) / 5;
+            const F = (A + B + C + M + P) / 5; // 等权，不变
 
             // Core sphere
             const r = 0.6 + F * 1.6;
             const sphereMat = new THREE.MeshPhysicalMaterial({
-                color: new THREE.Color().setHSL(0.72 - F * 0.25, 0.75, 0.12 + F * 0.38),
-                metalness: 0.4,
-                roughness: 0.3,
+                color: new THREE.Color().setHSL(0.72 - F * 0.25, 0.7, 0.12 + F * 0.38),
+                metalness: 0.5,
+                roughness: 0.2,
                 transparent: true,
-                opacity: 0.65 + F * 0.35,
-                emissive: new THREE.Color().setHSL(0.72 - F * 0.25, 0.6, 0.03 + F * 0.15),
-                emissiveIntensity: 0.4 + F * 0.5,
-                clearcoat: 0.15,
+                opacity: 0.7 + F * 0.3,
+                emissive: new THREE.Color().setHSL(0.72 - F * 0.25, 0.6, 0.05 + F * 0.2),
+                emissiveIntensity: 0.5 + F * 0.6,
+                clearcoat: 0.2,
+                clearcoatRoughness: 0.3,
             });
             const sphere = new THREE.Mesh(new THREE.SphereGeometry(r, 48, 48), sphereMat);
             sphere.position.set(0, 1.5 + F * 0.9, 0);
@@ -475,12 +817,12 @@
 
             // Glow ring
             const glowMat = new THREE.MeshBasicMaterial({
-                color: new THREE.Color().setHSL(0.72 - F * 0.25, 0.6, 0.4),
+                color: new THREE.Color().setHSL(0.72 - F * 0.25, 0.6, 0.5),
                 transparent: true,
-                opacity: 0.04 + F * 0.08,
+                opacity: 0.05 + F * 0.1,
                 wireframe: true,
             });
-            const glow = new THREE.Mesh(new THREE.SphereGeometry(r * 1.2, 32, 32), glowMat);
+            const glow = new THREE.Mesh(new THREE.SphereGeometry(r * 1.25, 32, 32), glowMat);
             glow.position.copy(sphere.position);
             modelGroup.add(glow);
 
@@ -498,34 +840,46 @@
                 const boxMat = new THREE.MeshPhysicalMaterial({
                     color: new THREE.Color(p.color),
                     transparent: true,
-                    opacity: 0.2 + p.value * 0.6,
-                    metalness: 0.35,
-                    roughness: 0.4,
+                    opacity: 0.25 + p.value * 0.6,
+                    metalness: 0.4,
+                    roughness: 0.35,
                     emissive: new THREE.Color(p.color),
-                    emissiveIntensity: 0.08 + p.value * 0.2,
+                    emissiveIntensity: 0.1 + p.value * 0.25,
+                    clearcoat: 0.1,
                 });
                 const box = new THREE.Mesh(new THREE.BoxGeometry(0.55, h, 0.55), boxMat);
                 box.position.set(p.pos[0], 0.1 + h / 2, p.pos[2]);
                 box.castShadow = true;
                 modelGroup.add(box);
 
+                const glowCap = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.25 + p.value * 0.2, 8, 8),
+                    new THREE.MeshBasicMaterial({
+                        color: new THREE.Color(p.color),
+                        transparent: true,
+                        opacity: 0.15 + p.value * 0.25,
+                    })
+                );
+                glowCap.position.set(p.pos[0], 0.1 + h + 0.05, p.pos[2]);
+                modelGroup.add(glowCap);
+
                 const dot = new THREE.Mesh(
                     new THREE.SphereGeometry(0.2 + p.value * 0.25, 8, 8),
                     new THREE.MeshBasicMaterial({
                         color: new THREE.Color(p.color),
                         transparent: true,
-                        opacity: 0.35 + p.value * 0.55,
+                        opacity: 0.4 + p.value * 0.5,
                     })
                 );
-                dot.position.set(p.pos[0], 0.1 + h + 0.1, p.pos[2]);
+                dot.position.set(p.pos[0], 0.1 + h + 0.15, p.pos[2]);
                 modelGroup.add(dot);
 
-                const lbl = makeLabel(p.label, p.color, 0.38);
-                lbl.position.set(p.pos[0], -0.2, p.pos[2]);
+                const lbl = makeLabel(p.label, p.color, 0.4);
+                lbl.position.set(p.pos[0], -0.3, p.pos[2]);
                 modelGroup.add(lbl);
 
-                const valLbl = makeLabel(p.value.toFixed(2), p.color, 0.28);
-                valLbl.position.set(p.pos[0], h + 0.7, p.pos[2]);
+                const valLbl = makeLabel(p.value.toFixed(2), p.color, 0.3);
+                valLbl.position.set(p.pos[0], h + 0.9, p.pos[2]);
                 modelGroup.add(valLbl);
 
                 const pts = [
@@ -536,20 +890,39 @@
                 const tubeMat = new THREE.MeshBasicMaterial({
                     color: new THREE.Color(p.color),
                     transparent: true,
-                    opacity: 0.06 + p.value * 0.08,
+                    opacity: 0.08 + p.value * 0.1,
                 });
-                const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 14, 0.03, 6, false), tubeMat);
+                const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 14, 0.04, 6, false), tubeMat);
                 modelGroup.add(tube);
+
+                const flowCount = 6;
+                for (let i = 0; i < flowCount; i++) {
+                    const t = i / flowCount;
+                    const flowPos = curve.getPoint(t);
+                    const flowMat = new THREE.MeshBasicMaterial({
+                        color: new THREE.Color(p.color),
+                        transparent: true,
+                        opacity: 0.2 + p.value * 0.3,
+                    });
+                    const flowDot = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.035, 4, 4),
+                        flowMat
+                    );
+                    flowDot.position.copy(flowPos);
+                    flowDot.userData = { curve: curve, t: t, speed: 0.002 + p.value * 0.004 };
+                    modelGroup.add(flowDot);
+                }
             }
 
-            // Main formula
-            const formula = `F(x) = (${A.toFixed(2)} + ${B.toFixed(2)} + ${C.toFixed(2)} + ${M.toFixed(2)} + ${P.toFixed(2)}) / 5 = ${F.toFixed(3)}`;
+            // Main formula (等权)
+            const formula =
+                `F(x) = (${A.toFixed(2)} + ${B.toFixed(2)} + ${C.toFixed(2)} + ${M.toFixed(2)} + ${P.toFixed(2)}) / 5 = ${F.toFixed(3)}`;
             const fl = makeLabel(formula, '#A78BFA', 0.95);
-            fl.position.set(0, 4.2 + F * 1.2, 0);
+            fl.position.set(0, 4.4 + F * 1.2, 0);
             modelGroup.add(fl);
 
             const footer = makeLabel('🧠 直觉驱动 · 系统架构 · 跨域迁移', '#A78BFA', 0.55);
-            footer.position.set(0, -0.8, 0);
+            footer.position.set(0, -0.9, 0);
             modelGroup.add(footer);
 
             // Orbit ring
@@ -566,46 +939,50 @@
             const ringMat = new THREE.LineBasicMaterial({
                 color: 0xA78BFA,
                 transparent: true,
-                opacity: 0.06 + F * 0.06,
+                opacity: 0.08 + F * 0.08,
             });
             const ring = new THREE.Line(ringGeo, ringMat);
             modelGroup.add(ring);
 
             // Floating particles
-            const particleCount = 150;
+            const particleCount = 220;
             const pGeo = new THREE.BufferGeometry();
             const pPos = [];
             const pColors = [];
             for (let i = 0; i < particleCount; i++) {
                 const theta = Math.random() * Math.PI * 2;
                 const phi = Math.random() * Math.PI;
-                const r2 = 2.5 + Math.random() * 4.5 + F * 1.5;
+                const r2 = 2.5 + Math.random() * 5.0 + F * 1.5;
                 pPos.push(
                     Math.cos(theta) * Math.sin(phi) * r2,
                     Math.cos(phi) * r2 * 0.5 + 1.5,
                     Math.sin(theta) * Math.sin(phi) * r2
                 );
-                const col = new THREE.Color().setHSL(0.72 + Math.random() * 0.12, 0.6, 0.25 + Math.random() * 0.25);
+                const col = new THREE.Color().setHSL(0.72 + Math.random() * 0.12, 0.6, 0.3 + Math.random() * 0.3);
                 pColors.push(col.r, col.g, col.b);
             }
             pGeo.setAttribute('position', new THREE.Float32BufferAttribute(pPos, 3));
             pGeo.setAttribute('color', new THREE.Float32BufferAttribute(pColors, 3));
             const pMat = new THREE.PointsMaterial({
-                size: 0.045 + F * 0.035,
+                size: 0.05 + F * 0.04,
                 transparent: true,
-                opacity: 0.3,
+                opacity: 0.4,
                 vertexColors: true,
                 blending: THREE.AdditiveBlending,
+                depthWrite: false,
             });
             const particles = new THREE.Points(pGeo, pMat);
             modelGroup.add(particles);
 
-            // Update bottom formula
+            // Update bottom formula (等权)
             formulaDisplay.textContent =
                 `(${A.toFixed(2)}·A + ${B.toFixed(2)}·B + ${C.toFixed(2)}·C + ${M.toFixed(2)}·M + ${P.toFixed(2)}·P) / 5 = ${F.toFixed(3)}`;
+
+            // 同步更新模拟器（含权重）
+            updateSimulator();
         }
 
-        // ---- Slider bindings ----
+        // ---- Slider bindings (主参数) ----
         const sliders = {
             A: document.getElementById('paramA'),
             B: document.getElementById('paramB'),
@@ -648,23 +1025,271 @@
         function animate() {
             requestAnimationFrame(animate);
             time += 0.005;
+
             if (modelGroup.children.length > 0) {
                 const sphere = modelGroup.children[0];
                 if (sphere && sphere.geometry && sphere.geometry.type === 'SphereGeometry') {
-                    const s = 1 + Math.sin(time * 0.5) * 0.01;
+                    const s = 1 + Math.sin(time * 0.5) * 0.012;
                     sphere.scale.set(s, s, s);
                 }
             }
+
+            modelGroup.children.forEach(child => {
+                if (child.userData && child.userData.curve) {
+                    const data = child.userData;
+                    data.t += data.speed;
+                    if (data.t > 1) data.t = 0;
+                    const pos = data.curve.getPoint(data.t);
+                    child.position.copy(pos);
+                }
+            });
+
             controls.update();
             renderer.render(scene, camera);
         }
 
-        // ---- Init ----
+        // ================================================================
+        //  🆕 函数模拟器 + 权重调节器 (完全不影响 3D 核心)
+        // ================================================================
+        const COLORS = {
+            A: '#22D3EE',
+            B: '#FBBF24',
+            C: '#A78BFA',
+            M: '#F472B6',
+            P: '#34D399'
+        };
+        const LABELS = { A: '艺术', B: '商业', C: '代码', M: '元系统', P: '脉冲' };
+
+        // 权重状态 (默认全 1.0)
+        const weights = { A: 1.0, B: 1.0, C: 1.0, M: 1.0, P: 1.0 };
+        const weightedHistory = [];
+        const MAX_HISTORY = 50;
+
+        // DOM 元素
+        const overlay = document.getElementById('simOverlay');
+        const toggleBtn = document.getElementById('simToggle');
+        const closeBtn = document.getElementById('simClose');
+        const simBarsEl = document.getElementById('simBars');
+        const weightControlsEl = document.getElementById('weightControls');
+        const weightedFormulaEl = document.getElementById('weightedFormula');
+        const chartCanvas = document.getElementById('simChart');
+        const ctx = chartCanvas.getContext('2d');
+        const simCurrentF = document.getElementById('simCurrentF');
+        const simSampleCount = document.getElementById('simSampleCount');
+
+        // ---- 打开/关闭 ----
+        function openSim() {
+            overlay.classList.add('open');
+            toggleBtn.classList.add('active');
+            updateSimulator();
+        }
+
+        function closeSim() {
+            overlay.classList.remove('open');
+            toggleBtn.classList.remove('active');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            if (overlay.classList.contains('open')) closeSim();
+            else openSim();
+        });
+        closeBtn.addEventListener('click', closeSim);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeSim();
+        });
+
+        // ---- 计算加权 F ----
+        function calcWeightedF() {
+            const { A, B, C, M, P } = params;
+            const w = weights;
+            const sum = w.A + w.B + w.C + w.M + w.P;
+            if (sum === 0) return 0;
+            return (w.A * A + w.B * B + w.C * C + w.M * M + w.P * P) / sum;
+        }
+
+        // ---- 渲染权重控件 ----
+        function renderWeightControls() {
+            const keys = ['A', 'B', 'C', 'M', 'P'];
+            let html = '';
+            for (const k of keys) {
+                html += `
+                    <div class="sim-weight-row">
+                        <span class="wlabel" style="color:${COLORS[k]};">${k}</span>
+                        <input type="range" class="wslider" id="wSlider_${k}" min="0.5" max="2.0" step="0.05" value="${weights[k]}" style="accent-color:${COLORS[k]};" />
+                        <span class="wval" id="wVal_${k}" style="color:${COLORS[k]};">${weights[k].toFixed(2)}</span>
+                    </div>
+                `;
+            }
+            weightControlsEl.innerHTML = html;
+
+            // 绑定事件
+            for (const k of keys) {
+                const slider = document.getElementById(`wSlider_${k}`);
+                const valSpan = document.getElementById(`wVal_${k}`);
+                slider.addEventListener('input', () => {
+                    weights[k] = parseFloat(slider.value);
+                    valSpan.textContent = weights[k].toFixed(2);
+                    updateSimulator();
+                });
+            }
+        }
+
+        // ---- 主更新函数 ----
+        function updateSimulator() {
+            const { A, B, C, M, P } = params;
+            const F_weighted = calcWeightedF();
+
+            // 记录历史 (加权)
+            weightedHistory.push(F_weighted);
+            if (weightedHistory.length > MAX_HISTORY) weightedHistory.shift();
+
+            // 更新统计
+            simCurrentF.textContent = F_weighted.toFixed(4);
+            simSampleCount.textContent = weightedHistory.length;
+
+            // 1. 条形图 (显示原始值)
+            const items = [
+                { key: 'A', value: A, color: COLORS.A, label: LABELS.A },
+                { key: 'B', value: B, color: COLORS.B, label: LABELS.B },
+                { key: 'C', value: C, color: COLORS.C, label: LABELS.C },
+                { key: 'M', value: M, color: COLORS.M, label: LABELS.M },
+                { key: 'P', value: P, color: COLORS.P, label: LABELS.P },
+            ];
+            let html = '';
+            for (const item of items) {
+                const pct = (item.value * 100).toFixed(1);
+                html += `
+                    <div class="sim-bar-row">
+                        <span class="sim-bar-label" style="color:${item.color};">${item.key}</span>
+                        <div class="sim-bar-track">
+                            <div class="sim-bar-fill" style="width:${pct}%; background:${item.color}; color:${item.color};"></div>
+                        </div>
+                        <span class="sim-bar-value">${pct}%</span>
+                    </div>
+                `;
+            }
+            simBarsEl.innerHTML = html;
+
+            // 2. 加权公式拆解
+            const w = weights;
+            const sumW = (w.A + w.B + w.C + w.M + w.P).toFixed(2);
+            const formulaText =
+                `F_weighted = (${w.A.toFixed(2)}·${A.toFixed(2)} + ${w.B.toFixed(2)}·${B.toFixed(2)} + ${w.C.toFixed(2)}·${C.toFixed(2)} + ${w.M.toFixed(2)}·${M.toFixed(2)} + ${w.P.toFixed(2)}·${P.toFixed(2)}) / ${sumW} = <span class="f-highlight">${F_weighted.toFixed(4)}</span>`;
+            weightedFormulaEl.innerHTML = formulaText;
+
+            // 3. 折线图
+            drawChart(F_weighted);
+        }
+
+        // ---- 绘制折线图 ----
+        function drawChart(currentF) {
+            const w = chartCanvas.width;
+            const h = chartCanvas.height;
+            ctx.clearRect(0, 0, w, h);
+
+            ctx.fillStyle = 'rgba(0,0,0,0.2)';
+            ctx.fillRect(0, 0, w, h);
+
+            const padding = { top: 10, bottom: 20, left: 10, right: 10 };
+            const chartW = w - padding.left - padding.right;
+            const chartH = h - padding.top - padding.bottom;
+
+            ctx.strokeStyle = 'rgba(167,139,250,0.04)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = padding.top + (chartH / 4) * i;
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(w - padding.right, y);
+                ctx.stroke();
+            }
+
+            if (weightedHistory.length < 2) {
+                ctx.fillStyle = '#a7b0c866';
+                ctx.font = '12px "Courier New", monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText('等待更多数据点...', w / 2, h / 2 + 4);
+                return;
+            }
+
+            const minVal = Math.min(0, ...weightedHistory) - 0.05;
+            const maxVal = Math.max(1, ...weightedHistory) + 0.05;
+            const range = maxVal - minVal || 0.1;
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#A78BFA';
+            ctx.lineWidth = 2;
+            ctx.shadowColor = '#A78BFA';
+            ctx.shadowBlur = 10;
+
+            for (let i = 0; i < weightedHistory.length; i++) {
+                const x = padding.left + (i / (MAX_HISTORY - 1)) * chartW;
+                const y = padding.top + chartH - ((weightedHistory[i] - minVal) / range) * chartH;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            if (weightedHistory.length > 0) {
+                const lastIdx = weightedHistory.length - 1;
+                const x = padding.left + (lastIdx / (MAX_HISTORY - 1)) * chartW;
+                const y = padding.top + chartH - ((weightedHistory[lastIdx] - minVal) / range) * chartH;
+
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#A78BFA';
+                ctx.shadowColor = '#A78BFA';
+                ctx.shadowBlur = 20;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.fillStyle = '#c4b5fd';
+                ctx.font = '10px "Courier New", monospace';
+                ctx.textAlign = 'left';
+                ctx.fillText(`F=${weightedHistory[lastIdx].toFixed(3)}`, x + 8, y + 3);
+            }
+
+            const midY = padding.top + chartH - ((0.5 - minVal) / range) * chartH;
+            if (midY > padding.top && midY < padding.top + chartH) {
+                ctx.strokeStyle = 'rgba(167,139,250,0.1)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([3, 4]);
+                ctx.beginPath();
+                ctx.moveTo(padding.left, midY);
+                ctx.lineTo(w - padding.right, midY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillStyle = 'rgba(167,139,250,0.15)';
+                ctx.font = '8px "Courier New", monospace';
+                ctx.textAlign = 'left';
+                ctx.fillText('0.5', padding.left + 2, midY - 2);
+            }
+        }
+
+        // ================================================================
+        //  Init
+        // ================================================================
+        renderWeightControls();
         buildModel();
         animate();
 
-        console.log('🧠 3D 思维建模台 · 视觉统一版已启动');
-        console.log('📊 5 个参数：艺术直觉 · 商业逻辑 · 代码能力 · 元系统架构 · 社交脉冲');
+        // 预填充历史数据
+        for (let i = 0; i < 10; i++) {
+            const f = calcWeightedF();
+            weightedHistory.push(f);
+        }
+        while (weightedHistory.length > MAX_HISTORY) weightedHistory.shift();
+        setTimeout(() => {
+            const f = calcWeightedF();
+            weightedHistory.push(f);
+            if (weightedHistory.length > MAX_HISTORY) weightedHistory.shift();
+            updateSimulator();
+        }, 100);
+
+        console.log('🧠 3D 思维建模台 · 权重调节器已启动');
+        console.log('📊 打开模拟器，拖拽权重滑块体验优先级排列');
+        console.log('⚡ 3D核心逻辑仍为等权平均，完全不受影响');
     </script>
 </body>
 </html>
