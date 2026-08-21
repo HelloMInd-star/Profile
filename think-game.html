@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>冰火双人闯关 · 思维彩蛋</title>
+    <title>冰火双人闯关 · 思维联动版</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* ===== 样式基本不变，仅调整部分尺寸 ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #0a080c;
             font-family: 'Georgia', 'Times New Roman', serif;
@@ -23,7 +20,6 @@
             left: 0;
         }
 
-        /* ===== 返回按钮 ===== */
         .back-btn {
             position: fixed;
             top: 20px;
@@ -42,12 +38,8 @@
             border-radius: 2px;
             backdrop-filter: blur(8px);
         }
-        .back-btn:hover {
-            border-color: #c4b5fd;
-            color: #a7b0c8;
-        }
+        .back-btn:hover { border-color: #c4b5fd; color: #a7b0c8; }
 
-        /* ===== 说明书侧边标签 ===== */
         .manual-tab {
             position: fixed;
             top: 50%;
@@ -67,13 +59,7 @@
             backdrop-filter: blur(8px);
             transition: 0.25s;
         }
-        .manual-tab:hover {
-            background: rgba(167, 139, 250, 0.18);
-            color: #e8ecff;
-            padding-right: 16px;
-        }
-
-        /* ===== 说明书滑出面板 ===== */
+        .manual-tab:hover { background: rgba(167, 139, 250, 0.18); color: #e8ecff; padding-right: 16px; }
         .manual-panel {
             position: fixed;
             top: 0;
@@ -104,18 +90,8 @@
             font-size: 14px;
         }
         .manual-close:hover { color: #fff; border-color: #c4b5fd; }
-        .manual-panel h2 {
-            font-size: 16px;
-            color: #c4b5fd;
-            letter-spacing: 2px;
-            margin: 0 0 4px;
-        }
-        .manual-panel .m-sub {
-            font-size: 11px;
-            color: #78829e;
-            letter-spacing: 1px;
-            margin-bottom: 18px;
-        }
+        .manual-panel h2 { font-size: 16px; color: #c4b5fd; letter-spacing: 2px; margin: 0 0 4px; }
+        .manual-panel .m-sub { font-size: 11px; color: #78829e; letter-spacing: 1px; margin-bottom: 18px; }
         .manual-sec {
             margin-bottom: 16px;
             padding: 12px 14px;
@@ -123,18 +99,8 @@
             border: 1px solid rgba(167, 139, 250, 0.15);
             border-radius: 8px;
         }
-        .manual-sec h3 {
-            font-size: 12px;
-            color: #fbbf24;
-            letter-spacing: 1px;
-            margin: 0 0 8px;
-        }
-        .manual-sec p, .manual-sec li {
-            font-size: 12px;
-            line-height: 1.8;
-            color: #c8cfdd;
-            margin: 0;
-        }
+        .manual-sec h3 { font-size: 12px; color: #fbbf24; letter-spacing: 1px; margin: 0 0 8px; }
+        .manual-sec p, .manual-sec li { font-size: 12px; line-height: 1.8; color: #c8cfdd; margin: 0; }
         .manual-sec ul { margin: 0; padding-left: 16px; }
         .manual-sec kbd {
             background: rgba(255,255,255,0.08);
@@ -144,13 +110,7 @@
             font-size: 10px;
             font-family: monospace;
         }
-        .frag-tag {
-            display: inline-block;
-            padding: 0 6px;
-            border-radius: 3px;
-            font-size: 11px;
-            margin-right: 2px;
-        }
+        .frag-tag { display: inline-block; padding: 0 6px; border-radius: 3px; font-size: 11px; margin-right: 2px; }
         .manual-overlay {
             position: fixed;
             inset: 0;
@@ -162,7 +122,6 @@
         }
         .manual-overlay.open { opacity: 1; pointer-events: auto; }
 
-        /* ===== 标题 ===== */
         .page-title {
             position: fixed;
             top: 20px;
@@ -186,7 +145,6 @@
             margin-top: 2px;
         }
 
-        /* ===== 游戏画布容器 ===== */
         .game-wrapper {
             position: fixed;
             top: 0;
@@ -198,14 +156,16 @@
             justify-content: center;
             z-index: 1;
             padding: 60px 20px 80px 20px;
+            gap: 16px;
+            flex-wrap: wrap;
         }
-
-        canvas {
+        .canvas-wrap { position: relative; flex-shrink: 0; }
+        .canvas-wrap canvas {
             display: block;
             width: min(100%, 900px);
             height: auto;
             aspect-ratio: 900 / 500;
-            max-height: 80vh;
+            max-height: 75vh;
             background: #0e0b10;
             border: 1px solid rgba(167, 139, 250, 0.04);
             border-radius: 4px;
@@ -215,7 +175,143 @@
             touch-action: none;
         }
 
-        /* ===== 底部信息栏 ===== */
+        /* 思维副脑面板 */
+        .brain-panel {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 15;
+            width: 260px;
+            max-width: 90vw;
+            background: rgba(10, 8, 12, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(167, 139, 250, 0.06);
+            border-radius: 12px;
+            padding: 16px 16px 14px;
+            box-shadow: 0 8px 60px rgba(0, 0, 0, 0.5);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .brain-panel.collapsed {
+            transform: translateY(-50%) translateX(calc(100% + 20px));
+            opacity: 0;
+            pointer-events: none;
+        }
+        .brain-panel::-webkit-scrollbar { width: 2px; }
+        .brain-panel::-webkit-scrollbar-thumb { background: rgba(167, 139, 250, 0.08); border-radius: 2px; }
+
+        .brain-panel .bp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.03);
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+        .brain-panel .bp-header .bp-title { font-size: 10px; color: #c4b5fd; letter-spacing: 3px; text-transform: uppercase; opacity: 0.5; }
+        .brain-panel .bp-header .bp-actions { display: flex; gap: 6px; align-items: center; }
+        .brain-panel .bp-header .bp-actions button {
+            background: none;
+            border: none;
+            color: #a7b0c8;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 0 3px;
+            transition: 0.2s;
+            opacity: 0.3;
+            font-family: 'Georgia', serif;
+        }
+        .brain-panel .bp-header .bp-actions button:hover { opacity: 0.8; color: #f0e8d8; }
+        .brain-panel .bp-header .bp-actions .btn-expand { font-size: 14px; }
+
+        .expand-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(6, 10, 31, 0.92);
+            backdrop-filter: blur(20px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            animation: expandFadeIn 0.3s ease;
+        }
+        .expand-overlay.open { display: flex; }
+        @keyframes expandFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        .expand-content {
+            width: 100%;
+            max-width: 640px;
+            background: rgba(10, 8, 12, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(167, 139, 250, 0.06);
+            border-radius: 16px;
+            padding: 24px 28px 22px;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .expand-content .exp-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(167, 139, 250, 0.03); padding-bottom: 12px; margin-bottom: 16px; }
+        .expand-content .exp-header .exp-title { font-size: 14px; color: #c4b5fd; letter-spacing: 4px; text-transform: uppercase; opacity: 0.6; }
+        .expand-content .exp-header .exp-close { background: none; border: 1px solid rgba(167, 139, 250, 0.06); color: #a7b0c8; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 16px; transition: 0.2s; }
+        .expand-content .exp-header .exp-close:hover { border-color: rgba(167, 139, 250, 0.15); color: #f0e8d8; }
+
+        .expand-content #mini3d-expand { width: 100%; height: 240px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(167, 139, 250, 0.03); overflow: hidden; margin-bottom: 14px; position: relative; }
+        .expand-content #mini3d-expand .mini-label { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 8px; color: #a7b0c8; opacity: 0.2; letter-spacing: 2px; pointer-events: none; white-space: nowrap; }
+
+        .expand-content .exp-params { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+        .expand-content .exp-params .param { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .expand-content .exp-params .param .p-label { font-size: 12px; font-weight: 700; font-family: 'Courier New', monospace; opacity: 0.4; transition: 0.3s; }
+        .expand-content .exp-params .param .p-label.active { opacity: 1; }
+        .expand-content .exp-params .param .p-bar { width: 100%; height: 4px; background: rgba(167, 139, 250, 0.04); border-radius: 2px; overflow: hidden; }
+        .expand-content .exp-params .param .p-bar .p-fill { height: 100%; width: 0%; border-radius: 2px; transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+
+        .expand-content .exp-flowchart { background: rgba(0,0,0,0.2); border-radius: 8px; padding: 10px; border: 1px solid rgba(167, 139, 250, 0.02); }
+        .expand-content .exp-flowchart .fc-label { font-size: 8px; color: #a7b0c8; opacity: 0.2; letter-spacing: 2px; margin-bottom: 6px; text-align: center; }
+        .expand-content .exp-flowchart canvas { width: 100%; height: auto; display: block; border-radius: 4px; }
+
+        #mini3d { width: 100%; height: 130px; border-radius: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(167, 139, 250, 0.03); overflow: hidden; margin-bottom: 10px; position: relative; }
+        #mini3d .mini-label { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); font-size: 7px; color: #a7b0c8; opacity: 0.2; letter-spacing: 2px; pointer-events: none; white-space: nowrap; }
+
+        .bp-params { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 4px; margin-bottom: 10px; }
+        .bp-params .param { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .bp-params .param .p-label { font-size: 9px; font-weight: 700; font-family: 'Courier New', monospace; opacity: 0.4; transition: 0.3s; }
+        .bp-params .param .p-label.active { opacity: 1; }
+        .bp-params .param .p-bar { width: 100%; height: 3px; background: rgba(167, 139, 250, 0.04); border-radius: 2px; overflow: hidden; }
+        .bp-params .param .p-bar .p-fill { height: 100%; width: 0%; border-radius: 2px; transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+
+        .bp-flowchart { background: rgba(0,0,0,0.2); border-radius: 6px; padding: 6px; border: 1px solid rgba(167, 139, 250, 0.02); min-height: 50px; }
+        .bp-flowchart .fc-label { font-size: 7px; color: #a7b0c8; opacity: 0.2; letter-spacing: 2px; margin-bottom: 4px; text-align: center; }
+        .bp-flowchart canvas { width: 100%; height: auto; display: block; border-radius: 4px; }
+
+        .bp-float-toggle {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 16;
+            background: rgba(10, 8, 12, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(167, 139, 250, 0.06);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            color: #c4b5fd;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .bp-float-toggle.visible { opacity: 1; pointer-events: auto; }
+        .bp-float-toggle:hover { border-color: rgba(167, 139, 250, 0.15); color: #f0e8d8; transform: translateY(-50%) scale(1.05); }
+
         .info-bar {
             position: fixed;
             bottom: clamp(12px, 2vh, 24px);
@@ -246,26 +342,36 @@
             font-family: 'Courier New', monospace;
             border-radius: 2px;
         }
-        .info-bar .status {
-            color: #a7b0c8;
-            text-align: center;
-        }
+        .info-bar .status { color: #a7b0c8; text-align: center; }
+        .info-bar .brain-indicator { font-size: 9px; color: #a7b0c8; opacity: 0.3; letter-spacing: 2px; cursor: pointer; pointer-events: auto; transition: 0.2s; }
+        .info-bar .brain-indicator:hover { opacity: 0.8; color: #c4b5fd; }
 
-        @media (max-width: 700px) {
-            .game-wrapper {
-                padding: 40px 8px 80px 8px;
-            }
-            .info-bar {
-                bottom: 8px;
-                padding: 6px 12px;
-                gap: 8px;
-                font-size: 9px;
-                flex-wrap: wrap;
-            }
-            .info-bar .keys kbd {
-                font-size: 8px;
-                padding: 1px 6px;
-            }
+        @media (max-width: 820px) {
+            .game-wrapper { padding: 40px 8px 80px 8px; }
+            .brain-panel { right: 8px; width: 200px; padding: 12px 12px 10px; max-height: 70vh; }
+            #mini3d { height: 90px; }
+            .bp-params { gap: 2px; }
+            .bp-params .param .p-label { font-size: 7px; }
+            .bp-flowchart { min-height: 40px; padding: 4px; }
+            .bp-float-toggle { width: 36px; height: 36px; font-size: 14px; right: 8px; }
+            .expand-content { padding: 16px 16px 14px; max-width: 95vw; }
+            .expand-content #mini3d-expand { height: 160px; }
+            .expand-content .exp-params .param .p-label { font-size: 10px; }
+            .info-bar { bottom: 6px; padding: 4px 10px; gap: 6px; font-size: 8px; flex-wrap: wrap; }
+            .info-bar .keys kbd { font-size: 7px; padding: 1px 5px; }
+            .canvas-wrap canvas { max-height: 60vh; }
+        }
+        @media (max-width: 480px) {
+            .brain-panel { width: 160px; padding: 8px 8px 8px; right: 4px; }
+            #mini3d { height: 60px; }
+            .bp-params .param .p-bar { height: 2px; }
+            .bp-flowchart { min-height: 30px; }
+            .bp-flowchart .fc-label { font-size: 5px; }
+            .bp-float-toggle { width: 30px; height: 30px; font-size: 12px; right: 4px; }
+            .brain-panel .bp-header .bp-title { font-size: 7px; letter-spacing: 2px; }
+            .expand-content { padding: 12px 12px 10px; }
+            .expand-content #mini3d-expand { height: 120px; }
+            .expand-content .exp-params .param .p-label { font-size: 8px; }
         }
     </style>
 </head>
@@ -274,32 +380,22 @@
     <!-- 返回按钮 -->
     <a href="index.html" class="back-btn">← 返回首页</a>
 
-    <!-- 说明书侧边标签 -->
+    <!-- 说明书 -->
     <div class="manual-tab" id="manualTab">📖 说明书</div>
-
-    <!-- 说明书遮罩 -->
     <div class="manual-overlay" id="manualOverlay"></div>
-
-    <!-- 说明书滑出面板 -->
     <div class="manual-panel" id="manualPanel">
         <button class="manual-close" id="manualClose">✕</button>
         <h2>📖 游戏说明书</h2>
         <div class="m-sub">FIRE & ICE · 思维函数协作游戏</div>
-
-        <div class="manual-sec">
-            <h3>🎯 目标</h3>
-            <p>双人协作收集 <b>5 枚思维碎片</b>，在中央机关处合成「思维函数」，解锁通关输出。这个游戏本身就是用「3D 思维模型」做出来的——通关过程就是模型运行的过程。</p>
-        </div>
-
+        <div class="manual-sec"><h3>🎯 目标</h3><p>双人协作收集 <b>5 枚思维碎片</b>，在中央机关处合成「思维函数」。</p></div>
         <div class="manual-sec">
             <h3>🕹 操作</h3>
             <ul>
-                <li><b style="color:#34d399">绿色 · 直觉感知</b>：<kbd>W A S D</kbd> 移动</li>
+                <li><b style="color:#34d399">绿色 · 直觉感知</b>：<kbd>W A S D</kbd> 移动，<b>鼠标/触屏点击</b>也可控制</li>
                 <li><b style="color:#a78bfa">紫色 · 系统输出</b>：<kbd>↑ ← ↓ →</kbd> 移动</li>
                 <li><kbd>R</kbd> 重置本局</li>
             </ul>
         </div>
-
         <div class="manual-sec">
             <h3>💎 五枚思维碎片</h3>
             <ul>
@@ -310,16 +406,8 @@
                 <li><span class="frag-tag" style="background:rgba(52,211,153,.15);color:#34d399">P</span>脉冲执行 · FeedbackLock</li>
             </ul>
         </div>
-
-        <div class="manual-sec">
-            <h3>🔒 中央机关</h3>
-            <p>集齐碎片后，两名玩家需<b>同时站进中央机关</b>（反馈锁），思维函数才会启动合成。一个人踩不动——协作是这个游戏的核心机制。</p>
-        </div>
-
-        <div class="manual-sec">
-            <h3>🥚 隐藏彩蛋</h3>
-            <p>地图里藏着彩蛋入口，和冰块一起找找看。通关后还有完整的「输入 → 运行 → 输出」函数面板等你验收。</p>
-        </div>
+        <div class="manual-sec"><h3>🔒 中央机关</h3><p>集齐碎片后，两名玩家需<b>同时站进中央机关</b>，思维函数才会启动合成。</p></div>
+        <div class="manual-sec"><h3>🥚 隐藏彩蛋</h3><p>地图里藏着彩蛋入口，和冰块一起找找看。</p></div>
     </div>
 
     <!-- 标题 -->
@@ -328,64 +416,126 @@
         <div class="sub">双人协作 · 收集碎片 · 触发彩蛋</div>
     </div>
 
-    <!-- 游戏画布 -->
+    <!-- 游戏 -->
     <div class="game-wrapper">
-        <canvas id="gameCanvas" width="800" height="500"></canvas>
+        <div class="canvas-wrap">
+            <canvas id="gameCanvas" width="900" height="500"></canvas>
+        </div>
+
+        <!-- 思维副脑 -->
+        <div class="brain-panel" id="brainPanel">
+            <div class="bp-header">
+                <span class="bp-title">🧠 思维副脑</span>
+                <div class="bp-actions">
+                    <button class="btn-expand" id="bpExpandBtn" title="放大查看思维映射">⛶</button>
+                    <button class="bp-toggle" id="bpToggle">✕</button>
+                </div>
+            </div>
+            <div id="mini3d"><div class="mini-label">3D 思维建模台 · 实时映射</div></div>
+            <div class="bp-params" id="paramBars">
+                <div class="param"><span class="p-label" style="color:#22D3EE;" data-param="A">A</span><div class="p-bar"><div class="p-fill" style="background:#22D3EE;width:0%;"></div></div></div>
+                <div class="param"><span class="p-label" style="color:#FBBF24;" data-param="B">B</span><div class="p-bar"><div class="p-fill" style="background:#FBBF24;width:0%;"></div></div></div>
+                <div class="param"><span class="p-label" style="color:#A78BFA;" data-param="C">C</span><div class="p-bar"><div class="p-fill" style="background:#A78BFA;width:0%;"></div></div></div>
+                <div class="param"><span class="p-label" style="color:#F472B6;" data-param="M">M</span><div class="p-bar"><div class="p-fill" style="background:#F472B6;width:0%;"></div></div></div>
+                <div class="param"><span class="p-label" style="color:#34D399;" data-param="P">P</span><div class="p-bar"><div class="p-fill" style="background:#34D399;width:0%;"></div></div></div>
+            </div>
+            <div class="bp-flowchart">
+                <div class="fc-label">⚡ 思维函数 · 运行链路</div>
+                <canvas id="flowchartCanvas" width="420" height="110"></canvas>
+            </div>
+        </div>
+
+        <!-- 折叠浮标 -->
+        <button class="bp-float-toggle" id="bpFloatToggle">🧠</button>
+
+        <!-- 放大模态框 -->
+        <div class="expand-overlay" id="expandOverlay">
+            <div class="expand-content">
+                <div class="exp-header"><span class="exp-title">🧠 思维副脑 · 沉浸视图</span><button class="exp-close" id="expandClose">✕</button></div>
+                <div id="mini3d-expand"><div class="mini-label">3D 思维建模台 · 实时映射</div></div>
+                <div class="exp-params" id="expParamBars">
+                    <div class="param"><span class="p-label" style="color:#22D3EE;" data-param="A">A</span><div class="p-bar"><div class="p-fill" style="background:#22D3EE;width:0%;"></div></div></div>
+                    <div class="param"><span class="p-label" style="color:#FBBF24;" data-param="B">B</span><div class="p-bar"><div class="p-fill" style="background:#FBBF24;width:0%;"></div></div></div>
+                    <div class="param"><span class="p-label" style="color:#A78BFA;" data-param="C">C</span><div class="p-bar"><div class="p-fill" style="background:#A78BFA;width:0%;"></div></div></div>
+                    <div class="param"><span class="p-label" style="color:#F472B6;" data-param="M">M</span><div class="p-bar"><div class="p-fill" style="background:#F472B6;width:0%;"></div></div></div>
+                    <div class="param"><span class="p-label" style="color:#34D399;" data-param="P">P</span><div class="p-bar"><div class="p-fill" style="background:#34D399;width:0%;"></div></div></div>
+                </div>
+                <div class="exp-flowchart"><div class="fc-label">⚡ 思维函数 · 运行链路</div><canvas id="flowchartCanvasExpand" width="620" height="160"></canvas></div>
+            </div>
+        </div>
     </div>
 
     <!-- 底部信息栏 -->
     <div class="info-bar">
-        <span class="keys">
-            <kbd>W A S D</kbd> 绿 · <kbd>↑ ← ↓ →</kbd> 紫
-        </span>
+        <span class="keys"><kbd>W A S D</kbd> 绿 · <kbd>↑ ← ↓ →</kbd> 紫</span>
         <span class="status" id="statusText">⚡ 收集碎片 · 合成函数</span>
-        <span class="keys">
-            <kbd>R</kbd> 重置 · 双人协作
-        </span>
+        <span class="keys"><kbd>R</kbd> 重置</span>
+        <span class="brain-indicator" id="brainIndicator">🧠 思维副脑</span>
     </div>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
+    </script>
 
     <script>
         // ================================================================
-        //  冰火双人闯关 · 思维彩蛋（视觉统一版）
-        //  — 绿色 = 直觉感知 (Art + PatternMatch)
-        //  — 紫色 = 系统输出 (Model + MVP)
-        //  — 中央 = 反馈锁机关
-        //  — 双彩蛋隐藏入口
+        //  🧠 思维副脑 + 游戏联动引擎（优化版）
         // ================================================================
 
-        // ---- 说明书开关 ----
-        (function () {
-            const tab = document.getElementById('manualTab');
-            const panel = document.getElementById('manualPanel');
-            const overlay = document.getElementById('manualOverlay');
-            const closeBtn = document.getElementById('manualClose');
-            function setManual(open) {
-                panel.classList.toggle('open', open);
-                overlay.classList.toggle('open', open);
-            }
-            tab.addEventListener('click', () => setManual(true));
-            closeBtn.addEventListener('click', () => setManual(false));
-            overlay.addEventListener('click', () => setManual(false));
-            window.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') setManual(false);
-            });
-        })();
-
+        // ---- DOM ----
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        const W = 800,
+        const W = 900,
             H = 500;
+        const statusText = document.getElementById('statusText');
+        const brainPanel = document.getElementById('brainPanel');
+        const bpToggle = document.getElementById('bpToggle');
+        const bpExpandBtn = document.getElementById('bpExpandBtn');
+        const bpFloatToggle = document.getElementById('bpFloatToggle');
+        const brainIndicator = document.getElementById('brainIndicator');
+        const flowCanvas = document.getElementById('flowchartCanvas');
+        const fctx = flowCanvas.getContext('2d');
+        const expandOverlay = document.getElementById('expandOverlay');
+        const expandClose = document.getElementById('expandClose');
+        const flowCanvasExpand = document.getElementById('flowchartCanvasExpand');
+        const fctxExpand = flowCanvasExpand.getContext('2d');
+
+        // ---- 面板控制 ----
+        let panelOpen = true;
+
+        function togglePanel(open) {
+            panelOpen = open !== undefined ? open : !panelOpen;
+            brainPanel.classList.toggle('collapsed', !panelOpen);
+            bpFloatToggle.classList.toggle('visible', !panelOpen);
+        }
+        bpToggle.addEventListener('click', () => togglePanel(false));
+        bpFloatToggle.addEventListener('click', () => togglePanel(true));
+        brainIndicator.addEventListener('click', () => togglePanel(true));
+
+        let expandOpen = false;
+
+        function toggleExpand(open) {
+            expandOpen = open !== undefined ? open : !expandOpen;
+            expandOverlay.classList.toggle('open', expandOpen);
+            if (expandOpen) {
+                updateBrainUI();
+                setTimeout(() => {
+                    resizeMini3DExpand();
+                    drawFlowchartExpand();
+                }, 100);
+            }
+        }
+        bpExpandBtn.addEventListener('click', () => toggleExpand(true));
+        expandClose.addEventListener('click', () => toggleExpand(false));
+        expandOverlay.addEventListener('click', (e) => { if (e.target === expandOverlay) toggleExpand(false); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && expandOpen) toggleExpand(false); });
 
         // ---- 游戏状态 ----
         const game = {
-            state: 'playing', // playing | win | egg1 | egg2
-            level: 1,
-            maxLevel: 3,
+            state: 'playing',
             fragments: 0,
             totalFragments: 5,
-            feedbackLock: false,
-            pulseActive: false,
-            pulseTimer: 0,
+            collected: { A: false, B: false, C: false, M: false, P: false },
             eggTimer: 0,
         };
 
@@ -395,46 +545,49 @@
             keys[e.key] = true;
             if (e.key === 'r' || e.key === 'R') resetGame();
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) e.preventDefault();
+            // 按下键盘时清除鼠标目标（键盘优先）
+            if (['w', 'W', 'a', 'A', 's', 'S', 'd', 'D'].includes(e.key)) {
+                green.targetX = null;
+                green.targetY = null;
+            }
         });
         document.addEventListener('keyup', (e) => { keys[e.key] = false; });
 
         // ---- 玩家 ----
         const green = {
-            x: 60,
+            x: 70,
             y: 300,
             w: 20,
             h: 28,
             vx: 0,
             vy: 0,
-            speed: 3.2,
-            jumpPower: -6,
+            speed: 3.8, // 提高速度
+            jumpPower: -6.8,
             onGround: false,
             color: '#22D3EE',
-            glow: 'rgba(34,211,238,0.15)',
             facing: 1,
             collected: [],
+            targetX: null, // 鼠标点击目标
+            targetY: null,
         };
-
         const purple = {
-            x: 740,
+            x: 830,
             y: 300,
             w: 20,
             h: 28,
             vx: 0,
             vy: 0,
-            speed: 3.2,
-            jumpPower: -6,
+            speed: 3.8,
+            jumpPower: -6.8,
             onGround: false,
             color: '#A78BFA',
-            glow: 'rgba(167,139,250,0.15)',
             facing: -1,
             collected: [],
         };
-
-        const gravity = 0.35;
+        const gravity = 0.38;
         const floorY = 460;
 
-        // ---- 平台 / 机关 ----
+        // ---- 平台 / 碎片 / 机关 ----
         let platforms = [];
         let fragments = [];
         let locks = [];
@@ -442,37 +595,38 @@
 
         function initLevel() {
             platforms = [
-                { x: 0, y: floorY, w: 800, h: 10, type: 'floor' },
-                { x: 120, y: 380, w: 100, h: 10, type: 'platform' },
-                { x: 340, y: 320, w: 120, h: 10, type: 'platform' },
-                { x: 580, y: 380, w: 100, h: 10, type: 'platform' },
-                { x: 370, y: 230, w: 60, h: 10, type: 'lock_platform' },
+                { x: 0, y: floorY, w: 900, h: 10, type: 'floor' },
+                { x: 130, y: 380, w: 110, h: 10, type: 'platform' },
+                { x: 360, y: 320, w: 130, h: 10, type: 'platform' },
+                { x: 660, y: 380, w: 110, h: 10, type: 'platform' },
+                { x: 410, y: 230, w: 60, h: 10, type: 'lock_platform' },
             ];
 
             fragments = [
-                { x: 150, y: 355, w: 12, h: 12, collected: false, type: 'art', label: 'A', color: '#22D3EE' },
-                { x: 230, y: 355, w: 12, h: 12, collected: false, type: 'business', label: 'B', color: '#FBBF24' },
-                { x: 380, y: 295, w: 12, h: 12, collected: false, type: 'code', label: 'C', color: '#A78BFA' },
-                { x: 460, y: 295, w: 12, h: 12, collected: false, type: 'meta', label: 'M', color: '#F472B6' },
-                { x: 620, y: 355, w: 12, h: 12, collected: false, type: 'pulse', label: 'P', color: '#34D399' },
+                { x: 160, y: 355, w: 12, h: 12, collected: false, type: 'A', label: 'A', color: '#22D3EE' },
+                { x: 240, y: 355, w: 12, h: 12, collected: false, type: 'B', label: 'B', color: '#FBBF24' },
+                { x: 410, y: 295, w: 12, h: 12, collected: false, type: 'C', label: 'C', color: '#A78BFA' },
+                { x: 490, y: 295, w: 12, h: 12, collected: false, type: 'M', label: 'M', color: '#F472B6' },
+                { x: 700, y: 355, w: 12, h: 12, collected: false, type: 'P', label: 'P', color: '#34D399' },
             ];
 
-            locks = [
-                { x: 385, y: 200, w: 30, h: 30, active: false, glow: 0 },
-            ];
+            locks = [{ x: 425, y: 200, w: 30, h: 30, active: false }];
 
             particles = [];
             game.fragments = 0;
+            game.collected = { A: false, B: false, C: false, M: false, P: false };
             green.collected = [];
             purple.collected = [];
-            green.x = 60;
+            green.x = 70;
             green.y = 300;
-            purple.x = 740;
+            purple.x = 830;
             purple.y = 300;
-            game.feedbackLock = false;
+            green.targetX = null;
+            green.targetY = null;
             game.state = 'playing';
             game.eggTimer = 0;
-            document.getElementById('statusText').textContent = '⚡ 收集碎片 · 合成函数';
+            statusText.textContent = '⚡ 收集碎片 · 合成函数';
+            updateBrainUI();
         }
 
         // ---- 物理 ----
@@ -480,6 +634,27 @@
             player.vy += gravity;
             player.x += player.vx;
             player.y += player.vy;
+
+            // 鼠标目标移动（仅绿色）
+            if (player === green && player.targetX !== null && player.targetY !== null) {
+                const dx = player.targetX - (player.x + player.w / 2);
+                const dy = player.targetY - (player.y + player.h / 2);
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist > 5) {
+                    const speed = player.speed * 0.9;
+                    player.vx = (dx / dist) * speed;
+                    // 不直接修改 vy，保持物理
+                    // 但为了有跳跃效果，如果目标在角色上方，可以触发跳跃？简单起见，只水平移动
+                } else {
+                    player.vx = 0;
+                    // 到达目标后清除目标
+                    player.targetX = null;
+                    player.targetY = null;
+                }
+                // 面向目标
+                if (dx > 0) player.facing = 1;
+                else if (dx < 0) player.facing = -1;
+            }
 
             if (player.y + player.h > floorY) {
                 player.y = floorY - player.h;
@@ -505,8 +680,7 @@
 
             if (player.x < 0) player.x = 0;
             if (player.x + player.w > W) player.x = W - player.w;
-            if (player.y > H) resetGame();
-
+            if (player.y > H + 50) resetGame();
             player.vx *= 0.85;
         }
 
@@ -524,17 +698,18 @@
                 if (rectCollide(pRect, rect)) {
                     f.collected = true;
                     game.fragments++;
+                    game.collected[f.type] = true;
                     player.collected.push(f.type);
-                    spawnParticles(f.x + 6, f.y + 6, f.color || player.color);
-                    document.getElementById('statusText').textContent =
-                        `📦 已收集 ${game.fragments}/${game.totalFragments}`;
-
+                    spawnParticles(f.x + 6, f.y + 6, f.color);
+                    statusText.textContent = `📦 已收集 ${game.fragments}/${game.totalFragments}`;
+                    updateBrainUI();
                     if (game.fragments === game.totalFragments) {
                         game.state = 'win';
-                        document.getElementById('statusText').textContent = '✨ 思维函数已合成！按 R 重启';
-                        spawnParticles(W / 2, H / 2, '#FBBF24');
-                        spawnParticles(W / 2 - 40, H / 2, '#A78BFA');
-                        spawnParticles(W / 2 + 40, H / 2, '#22D3EE');
+                        statusText.textContent = '✨ 思维函数已合成！按 R 重启';
+                        spawnParticles(W / 2, H / 2, '#FBBF24', 50);
+                        spawnParticles(W / 2 - 50, H / 2, '#A78BFA', 40);
+                        spawnParticles(W / 2 + 50, H / 2, '#22D3EE', 40);
+                        updateBrainUI();
                     }
                 }
             }
@@ -546,25 +721,22 @@
             const gRect = { x: green.x, y: green.y, w: green.w, h: green.h };
             const pRect = { x: purple.x, y: purple.y, w: purple.w, h: purple.h };
             const lRect = { x: lock.x, y: lock.y, w: lock.w, h: lock.h };
-
             const gOnLock = rectCollide(gRect, lRect);
             const pOnLock = rectCollide(pRect, lRect);
-
             if (gOnLock && pOnLock && !lock.active) {
                 lock.active = true;
-                game.feedbackLock = true;
                 if (game.fragments >= 3) {
                     game.state = 'egg1';
-                    document.getElementById('statusText').textContent = '🥚 彩蛋① · 反馈锁已激活！';
-                    spawnParticles(lock.x + 15, lock.y + 15, '#FBBF24');
-                    spawnParticles(lock.x + 5, lock.y + 5, '#22D3EE');
-                    spawnParticles(lock.x + 25, lock.y + 25, '#A78BFA');
+                    statusText.textContent = '🥚 彩蛋① · 反馈锁已激活！';
+                    spawnParticles(lock.x + 15, lock.y + 15, '#FBBF24', 40);
+                    spawnParticles(lock.x + 5, lock.y + 5, '#22D3EE', 30);
+                    spawnParticles(lock.x + 25, lock.y + 25, '#A78BFA', 30);
+                    updateBrainUI();
                 }
             }
         }
 
-        // ---- 粒子 ----
-        function spawnParticles(x, y, color, count = 18) {
+        function spawnParticles(x, y, color, count = 20) {
             for (let i = 0; i < count; i++) {
                 const angle = Math.random() * Math.PI * 2;
                 const speed = 1 + Math.random() * 3;
@@ -588,21 +760,27 @@
                 p.y += p.vy;
                 p.vy += 0.05;
                 p.life--;
-                if (p.life <= 0) {
-                    particles.splice(i, 1);
-                }
+                if (p.life <= 0) particles.splice(i, 1);
             }
         }
 
         // ---- 输入 ----
         function handleInput() {
+            // 绿色键盘
             if (keys['w'] || keys['W']) { if (green.onGround) { green.vy = green.jumpPower;
-                    green.onGround = false; } }
+                    green.onGround = false;
+                    green.targetX = null;
+                    green.targetY = null; } }
             if (keys['a'] || keys['A']) { green.vx = -green.speed;
-                green.facing = -1; }
+                green.facing = -1;
+                green.targetX = null;
+                green.targetY = null; }
             if (keys['d'] || keys['D']) { green.vx = green.speed;
-                green.facing = 1; }
+                green.facing = 1;
+                green.targetX = null;
+                green.targetY = null; }
 
+            // 紫色键盘
             if (keys['ArrowUp']) { if (purple.onGround) { purple.vy = purple.jumpPower;
                     purple.onGround = false; } }
             if (keys['ArrowLeft']) { purple.vx = -purple.speed;
@@ -610,99 +788,442 @@
             if (keys['ArrowRight']) { purple.vx = purple.speed;
                 purple.facing = 1; }
 
+            // 彩蛋2
             if (keys[' '] && keys['r']) {
                 if (game.state !== 'egg2') {
                     game.state = 'egg2';
-                    document.getElementById('statusText').textContent = '🥚 彩蛋② · 脉冲爆发！系统正在收敛…';
-                    spawnParticles(W / 2, H / 2, '#F472B6', 40);
-                    spawnParticles(W / 2 - 60, H / 2 - 40, '#FBBF24', 30);
-                    spawnParticles(W / 2 + 60, H / 2 + 40, '#22D3EE', 30);
+                    statusText.textContent = '🥚 彩蛋② · 脉冲爆发！系统正在收敛…';
+                    spawnParticles(W / 2, H / 2, '#F472B6', 50);
+                    spawnParticles(W / 2 - 60, H / 2 - 40, '#FBBF24', 35);
+                    spawnParticles(W / 2 + 60, H / 2 + 40, '#22D3EE', 35);
+                    updateBrainUI();
                 }
             }
         }
 
+        // ---- 鼠标/触摸控制 ----
+        function handleCanvasClick(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            let clientX, clientY;
+            if (e.touches) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+                e.preventDefault();
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            const canvasX = (clientX - rect.left) * scaleX;
+            const canvasY = (clientY - rect.top) * scaleY;
+            // 限制范围
+            const targetX = Math.max(0, Math.min(W, canvasX));
+            const targetY = Math.max(0, Math.min(H, canvasY));
+            green.targetX = targetX;
+            green.targetY = targetY;
+        }
+
+        canvas.addEventListener('click', handleCanvasClick);
+        canvas.addEventListener('touchstart', handleCanvasClick, { passive: false });
+
         // ---- 重置 ----
         function resetGame() {
             initLevel();
-            document.getElementById('statusText').textContent = '⚡ 收集碎片 · 合成函数';
+            statusText.textContent = '⚡ 收集碎片 · 合成函数';
             game.state = 'playing';
+            updateBrainUI();
         }
 
-        // ---- 绘制 ----
+        // ================================================================
+        //  🧠 思维副脑 UI
+        // ================================================================
+
+        function updateParamBars(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const fills = container.querySelectorAll('.p-fill');
+            const labels = container.querySelectorAll('.p-label');
+            const order = ['A', 'B', 'C', 'M', 'P'];
+            fills.forEach((fill, i) => {
+                const key = order[i];
+                const active = game.collected[key];
+                fill.style.width = active ? '100%' : '0%';
+            });
+            labels.forEach((label, i) => {
+                const key = order[i];
+                label.classList.toggle('active', game.collected[key]);
+            });
+        }
+
+        function updateBrainUI() {
+            updateParamBars('paramBars');
+            updateParamBars('expParamBars');
+            drawFlowchart();
+            drawFlowchartExpand();
+            // 立即更新缩略图柱子高度（不依赖动画）
+            if (typeof updateMini3D === 'function') {
+                updateMini3D(game.collected);
+                updateMini3DExpand(game.collected);
+            }
+        }
+
+        // ================================================================
+        //  📊 流程图
+        // ================================================================
+
+        const FLOW_NODES = [
+            { id: 'start', label: '输入', x: 20, y: 30, color: '#a7b0c8', active: true },
+            { id: 'A', label: 'A', x: 80, y: 16, color: '#22D3EE', active: false },
+            { id: 'B', label: 'B', x: 80, y: 44, color: '#FBBF24', active: false },
+            { id: 'C', label: 'C', x: 80, y: 72, color: '#A78BFA', active: false },
+            { id: 'M', label: 'M', x: 80, y: 100, color: '#F472B6', active: false },
+            { id: 'P', label: 'P', x: 80, y: 128, color: '#34D399', active: false },
+            { id: 'run', label: '运行', x: 140, y: 72, color: '#FBBF24', active: false },
+            { id: 'output', label: '输出', x: 220, y: 72, color: '#34D399', active: false },
+        ];
+        const FLOW_EDGES = [
+            { from: 'start', to: 'A' }, { from: 'start', to: 'B' },
+            { from: 'start', to: 'C' }, { from: 'start', to: 'M' },
+            { from: 'start', to: 'P' },
+            { from: 'A', to: 'run' }, { from: 'B', to: 'run' },
+            { from: 'C', to: 'run' }, { from: 'M', to: 'run' },
+            { from: 'P', to: 'run' }, { from: 'run', to: 'output' },
+        ];
+        let flowTime = 0;
+
+        function drawFlowchartGeneric(ctx, cw, ch, isExpand) {
+            ctx.clearRect(0, 0, cw, ch);
+            ctx.fillStyle = 'rgba(0,0,0,0.15)';
+            ctx.fillRect(0, 0, cw, ch);
+
+            for (const node of FLOW_NODES) {
+                if (node.id === 'start') node.active = true;
+                else if (node.id === 'run') {
+                    const count = Object.values(game.collected).filter(v => v).length;
+                    node.active = count >= 2;
+                } else if (node.id === 'output') {
+                    node.active = game.state === 'win';
+                } else {
+                    node.active = game.collected[node.id] || false;
+                }
+            }
+
+            const scale = isExpand ? 1.5 : 1;
+            const offsetX = isExpand ? 20 : 0;
+            const offsetY = isExpand ? 10 : 0;
+
+            for (const edge of FLOW_EDGES) {
+                const from = FLOW_NODES.find(n => n.id === edge.from);
+                const to = FLOW_NODES.find(n => n.id === edge.to);
+                if (!from || !to) continue;
+                const active = from.active && to.active;
+                const x1 = from.x * scale + 25 + offsetX,
+                    y1 = from.y * scale + 8 + offsetY;
+                const x2 = to.x * scale + offsetX,
+                    y2 = to.y * scale + 8 + offsetY;
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.strokeStyle = active ? 'rgba(167,139,250,0.3)' : 'rgba(167,139,250,0.04)';
+                ctx.lineWidth = active ? (isExpand ? 2 : 1.5) : (isExpand ? 1 : 0.5);
+                if (active) {
+                    const dash = 4 + Math.sin(flowTime + edge.from.length) * 2;
+                    ctx.setLineDash([dash, 8]);
+                    ctx.lineDashOffset = -flowTime * 20;
+                } else {
+                    ctx.setLineDash([]);
+                }
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            for (const node of FLOW_NODES) {
+                const active = node.active;
+                const r = isExpand ? 22 : 14;
+                const x = node.x * scale + offsetX,
+                    y = node.y * scale + offsetY;
+                if (active) {
+                    ctx.shadowColor = node.color;
+                    ctx.shadowBlur = isExpand ? 30 : 16;
+                } else {
+                    ctx.shadowBlur = 0;
+                }
+                ctx.beginPath();
+                ctx.arc(x + 8, y + 8, r, 0, Math.PI * 2);
+                ctx.fillStyle = active ? node.color + '22' : 'rgba(167,139,250,0.02)';
+                ctx.fill();
+                ctx.strokeStyle = active ? node.color : 'rgba(167,139,250,0.04)';
+                ctx.lineWidth = active ? (isExpand ? 2 : 1.5) : (isExpand ? 1 : 0.5);
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = active ? node.color : '#4a5580';
+                ctx.font = active ? (isExpand ? 'bold 11px monospace' : 'bold 7px monospace') : (isExpand ?
+                    '11px monospace' : '7px monospace');
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(node.label, x + 8, y + 8);
+                if (node.id === 'start') {
+                    ctx.fillStyle = active ? '#a7b0c8' : '#4a5580';
+                    ctx.font = isExpand ? '8px monospace' : '5px monospace';
+                    ctx.fillText('🧩', x + 8, y + (isExpand ? 30 : 24));
+                }
+                if (node.id === 'run') {
+                    ctx.fillStyle = active ? '#FBBF24' : '#4a5580';
+                    ctx.font = isExpand ? '8px monospace' : '5px monospace';
+                    ctx.fillText('⚙️', x + 8, y + (isExpand ? 30 : 24));
+                }
+                if (node.id === 'output') {
+                    ctx.fillStyle = active ? '#34D399' : '#4a5580';
+                    ctx.font = isExpand ? '8px monospace' : '5px monospace';
+                    ctx.fillText('🎁', x + 8, y + (isExpand ? 30 : 24));
+                }
+            }
+        }
+
+        function drawFlowchart() {
+            drawFlowchartGeneric(fctx, flowCanvas.width, flowCanvas.height, false);
+        }
+
+        function drawFlowchartExpand() {
+            if (!fctxExpand) return;
+            drawFlowchartGeneric(fctxExpand, flowCanvasExpand.width, flowCanvasExpand.height, true);
+        }
+
+        // ================================================================
+        //  🎮 Three.js 缩略图
+        // ================================================================
+
+        let mini3dData = null;
+        let mini3dExpandData = null;
+        let miniAnimId = null;
+
+        function initMini3DBase(containerId, isExpand) {
+            const container = document.getElementById(containerId);
+            if (!container) return null;
+            const w = container.clientWidth || (isExpand ? 600 : 240);
+            const h = container.clientHeight || (isExpand ? 240 : 130);
+
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x060a1f);
+
+            const camera = new THREE.PerspectiveCamera(35, w / h, 0.1, 100);
+            camera.position.set(3.5, 2.5, 4.5);
+            camera.lookAt(0, 0.8, 0);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(w, h);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+
+            const ambient = new THREE.AmbientLight(0x1a1420, 0.5);
+            scene.add(ambient);
+            const dir = new THREE.DirectionalLight(0xA78BFA, 0.6);
+            dir.position.set(3, 6, 4);
+            dir.castShadow = true;
+            scene.add(dir);
+            const fill = new THREE.DirectionalLight(0x22D3EE, 0.2);
+            fill.position.set(-3, 2, -3);
+            scene.add(fill);
+
+            const grid = new THREE.GridHelper(6, 10, 0x2a1a3a, 0x1a1028);
+            grid.position.y = -0.1;
+            scene.add(grid);
+
+            const colors = ['#22D3EE', '#FBBF24', '#A78BFA', '#F472B6', '#34D399'];
+            const positions = [
+                [-1.6, 0, -0.8],
+                [0.8, 0, -0.8],
+                [-1.6, 0, 0.8],
+                [0.8, 0, 0.8],
+                [0, 0, -1.8]
+            ];
+            const group = new THREE.Group();
+            scene.add(group);
+            const pillars = [];
+            for (let i = 0; i < 5; i++) {
+                const geo = new THREE.BoxGeometry(0.3, 0.05, 0.3);
+                const mat = new THREE.MeshPhysicalMaterial({
+                    color: new THREE.Color(colors[i]),
+                    metalness: 0.3,
+                    roughness: 0.4,
+                    transparent: true,
+                    opacity: 0.08,
+                    emissive: new THREE.Color(colors[i]),
+                    emissiveIntensity: 0.02,
+                });
+                const pillar = new THREE.Mesh(geo, mat);
+                pillar.position.set(positions[i][0], 0.05, positions[i][2]);
+                pillar.userData = { idx: i, color: colors[i], targetHeight: 0.05, label: ['A', 'B', 'C', 'M', 'P'][
+                    i] };
+                pillar.castShadow = true;
+                group.add(pillar);
+                pillars.push(pillar);
+            }
+            return { scene, camera, renderer, group, pillars, container, isExpand };
+        }
+
+        function initMini3D() {
+            if (mini3dData) return;
+            mini3dData = initMini3DBase('mini3d', false);
+            if (mini3dData) updateMini3D(game.collected);
+        }
+
+        function initMini3DExpand() {
+            if (mini3dExpandData) return;
+            mini3dExpandData = initMini3DBase('mini3d-expand', true);
+            if (mini3dExpandData) updateMini3DExpand(game.collected);
+        }
+
+        function updateMini3DBase(data, collected) {
+            if (!data) return;
+            const order = ['A', 'B', 'C', 'M', 'P'];
+            for (let i = 0; i < data.pillars.length; i++) {
+                const p = data.pillars[i];
+                const active = collected[order[i]] || false;
+                const target = active ? 1.0 : 0.05;
+                p.userData.targetHeight = target;
+                // 立即变化
+                const targetScale = target / 0.3;
+                p.scale.y = Math.max(0.05, targetScale);
+                p.position.y = p.scale.y * 0.15 + 0.05;
+                p.material.opacity = active ? 0.6 : 0.08;
+                p.material.emissiveIntensity = active ? 0.15 : 0.02;
+            }
+        }
+
+        function updateMini3D(collected) {
+            updateMini3DBase(mini3dData, collected);
+        }
+
+        function updateMini3DExpand(collected) {
+            updateMini3DBase(mini3dExpandData, collected);
+        }
+
+        function animateMini3D() {
+            miniAnimId = requestAnimationFrame(animateMini3D);
+            const animData = [mini3dData, mini3dExpandData];
+            for (const data of animData) {
+                if (!data) continue;
+                // 平滑过渡
+                for (const p of data.pillars) {
+                    const current = p.scale.y;
+                    const target = p.userData.targetHeight / 0.3;
+                    const next = current + (target - current) * 0.12;
+                    p.scale.y = Math.max(0.05, next);
+                    p.position.y = p.scale.y * 0.15 + 0.05;
+                }
+                if (data.group) {
+                    data.group.rotation.y += 0.002;
+                }
+                if (data.renderer && data.scene && data.camera) {
+                    data.renderer.render(data.scene, data.camera);
+                }
+            }
+        }
+
+        function resizeMini3D() {
+            if (!mini3dData) return;
+            const container = mini3dData.container;
+            const w = container.clientWidth || 240;
+            const h = container.clientHeight || 130;
+            mini3dData.renderer.setSize(w, h);
+            mini3dData.camera.aspect = w / h;
+            mini3dData.camera.updateProjectionMatrix();
+        }
+
+        function resizeMini3DExpand() {
+            if (!mini3dExpandData) return;
+            const container = mini3dExpandData.container;
+            const w = container.clientWidth || 600;
+            const h = container.clientHeight || 240;
+            mini3dExpandData.renderer.setSize(w, h);
+            mini3dExpandData.camera.aspect = w / h;
+            mini3dExpandData.camera.updateProjectionMatrix();
+        }
+
+        window.addEventListener('resize', () => {
+            resizeMini3D();
+            resizeMini3DExpand();
+        });
+
+        // ================================================================
+        //  🎨 游戏绘制
+        // ================================================================
+
         function draw() {
             ctx.clearRect(0, 0, W, H);
+            ctx.fillStyle = '#0e0b10';
+            ctx.fillRect(0, 0, W, H);
 
-            // 背景网格
             ctx.strokeStyle = 'rgba(167,139,250,0.02)';
             ctx.lineWidth = 0.5;
-            for (let x = 0; x < W; x += 40) {
-                ctx.beginPath();
+            for (let x = 0; x < W; x += 40) { ctx.beginPath();
                 ctx.moveTo(x, 0);
                 ctx.lineTo(x, H);
-                ctx.stroke();
-            }
-            for (let y = 0; y < H; y += 40) {
-                ctx.beginPath();
+                ctx.stroke(); }
+            for (let y = 0; y < H; y += 40) { ctx.beginPath();
                 ctx.moveTo(0, y);
                 ctx.lineTo(W, y);
-                ctx.stroke();
-            }
+                ctx.stroke(); }
 
-            // 平台
             for (let p of platforms) {
-                ctx.fillStyle = p.type === 'floor' ? 'rgba(167,139,250,0.03)' :
-                    p.type === 'lock_platform' ? 'rgba(251,191,36,0.06)' :
-                    'rgba(167,139,250,0.04)';
+                ctx.fillStyle = p.type === 'floor' ? 'rgba(167,139,250,0.02)' :
+                    p.type === 'lock_platform' ? 'rgba(251,191,36,0.04)' :
+                    'rgba(167,139,250,0.03)';
                 ctx.fillRect(p.x, p.y, p.w, p.h);
-                ctx.strokeStyle = p.type === 'lock_platform' ? 'rgba(251,191,36,0.08)' : 'rgba(167,139,250,0.04)';
+                ctx.strokeStyle = p.type === 'lock_platform' ? 'rgba(251,191,36,0.06)' : 'rgba(167,139,250,0.03)';
                 ctx.lineWidth = 1;
                 ctx.strokeRect(p.x, p.y, p.w, p.h);
             }
 
-            // 碎片
             for (let f of fragments) {
                 if (f.collected) continue;
-                const col = f.color || '#8a7a6a';
-                ctx.fillStyle = col;
+                const col = f.color;
+                const pulse = 1 + Math.sin(Date.now() / 300 + f.x) * 0.06;
                 ctx.shadowColor = col;
-                ctx.shadowBlur = 12;
+                ctx.shadowBlur = 16;
+                ctx.fillStyle = col;
+                ctx.globalAlpha = 0.8;
                 ctx.beginPath();
-                ctx.moveTo(f.x + f.w / 2, f.y);
-                ctx.lineTo(f.x + f.w, f.y + f.h / 2);
-                ctx.lineTo(f.x + f.w / 2, f.y + f.h);
-                ctx.lineTo(f.x, f.y + f.h / 2);
+                const cx = f.x + f.w / 2,
+                    cy = f.y + f.h / 2;
+                const size = f.w / 2 * pulse;
+                ctx.moveTo(cx, cy - size);
+                ctx.lineTo(cx + size, cy);
+                ctx.lineTo(cx, cy + size);
+                ctx.lineTo(cx - size, cy);
                 ctx.closePath();
                 ctx.fill();
                 ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
                 ctx.fillStyle = '#0a080c';
-                ctx.font = '8px monospace';
+                ctx.font = '7px monospace';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(f.label, f.x + f.w / 2, f.y + f.h / 2 + 1);
+                ctx.fillText(f.label, cx, cy + 0.5);
             }
 
-            // 反馈锁
             const lock = locks[0];
             const glowIntensity = lock.active ? 1 : (game.fragments / game.totalFragments);
-            ctx.shadowColor = `rgba(251,191,36,${glowIntensity * 0.15})`;
-            ctx.shadowBlur = lock.active ? 30 : 10;
-            ctx.strokeStyle = lock.active ? 'rgba(251,191,36,0.4)' : 'rgba(167,139,250,0.06)';
-            ctx.lineWidth = 2;
+            ctx.shadowColor = `rgba(251,191,36,${glowIntensity * 0.12})`;
+            ctx.shadowBlur = lock.active ? 40 : 10;
+            ctx.strokeStyle = lock.active ? 'rgba(251,191,36,0.3)' : 'rgba(167,139,250,0.04)';
+            ctx.lineWidth = 1.5;
             ctx.strokeRect(lock.x, lock.y, lock.w, lock.h);
             ctx.shadowBlur = 0;
-            ctx.fillStyle = lock.active ? 'rgba(251,191,36,0.04)' : 'rgba(167,139,250,0.02)';
+            ctx.fillStyle = lock.active ? 'rgba(251,191,36,0.03)' : 'rgba(167,139,250,0.01)';
             ctx.fillRect(lock.x + 2, lock.y + 2, lock.w - 4, lock.h - 4);
             ctx.fillStyle = 'rgba(167,139,250,0.02)';
-            ctx.font = '10px monospace';
+            ctx.font = '12px monospace';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('🔒', lock.x + lock.w / 2, lock.y + lock.h / 2 + 1);
+            ctx.fillText(lock.active ? '🔓' : '🔒', lock.x + lock.w / 2, lock.y + lock.h / 2);
 
-            // 玩家
             drawPlayer(green, '🌱', '直觉');
             drawPlayer(purple, '⚡', '系统');
 
-            // 粒子
             for (let p of particles) {
                 const alpha = p.life / p.maxLife;
                 ctx.globalAlpha = alpha * 0.7;
@@ -716,133 +1237,127 @@
             }
             ctx.globalAlpha = 1;
 
-            // 状态文字
             if (game.state === 'win') {
                 ctx.fillStyle = 'rgba(6,10,31,0.92)';
                 ctx.fillRect(0, 0, W, H);
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-
                 ctx.fillStyle = '#FBBF24';
                 ctx.font = '24px "Georgia", serif';
                 ctx.shadowColor = 'rgba(251,191,36,0.4)';
                 ctx.shadowBlur = 40;
                 ctx.fillText('⚡ 思维函数 · 合成完成', W / 2, H / 2 - 90);
                 ctx.shadowBlur = 0;
-
-                ctx.font = '13px monospace';
-                ctx.fillStyle = '#a7b0c8';
-                ctx.fillText('输入  A 艺术直觉 · B 商业嗅觉 · C 代码能力 · M 元认知 · P 脉冲执行', W / 2, H / 2 - 50);
-                ctx.fillText('运行  PatternMatch → CrossDomain → Model → FeedbackLock', W / 2, H / 2 - 26);
-
-                ctx.fillStyle = '#22D3EE';
-                ctx.font = 'bold 15px monospace';
-                ctx.fillText('输出  🎁 一个看得见、摸得着、可交互的作品', W / 2, H / 2 + 6);
-                ctx.fillStyle = '#e8edff';
-                ctx.font = '13px monospace';
-                ctx.fillText('—— 就像你现在正玩着的这座网站', W / 2, H / 2 + 30);
-
-                ctx.fillStyle = '#78829e';
                 ctx.font = '12px monospace';
-                ctx.fillText('按 R 重新挑战', W / 2, H / 2 + 72);
+                ctx.fillStyle = '#a7b0c8';
+                ctx.fillText('输入: A 艺术直觉 · B 商业嗅觉 · C 代码能力 · M 元认知 · P 脉冲执行', W / 2, H / 2 - 48);
+                ctx.fillText('运行: PatternMatch → CrossDomain → Model → FeedbackLock', W / 2, H / 2 - 24);
+                ctx.fillStyle = '#22D3EE';
+                ctx.font = 'bold 14px monospace';
+                ctx.fillText('输出: 🎁 一个看得见、摸得着、可交互的作品', W / 2, H / 2 + 8);
+                ctx.fillStyle = '#e8edff';
+                ctx.font = '12px monospace';
+                ctx.fillText('—— 就像你现在正玩着的这座网站', W / 2, H / 2 + 32);
+                ctx.fillStyle = '#78829e';
+                ctx.font = '10px monospace';
+                ctx.fillText('按 R 重新挑战', W / 2, H / 2 + 68);
+                ctx.fillStyle = 'rgba(167,139,250,0.06)';
+                ctx.font = '8px monospace';
+                ctx.fillText('🧠 右侧思维副脑 · 3D建模台已同步映射', W / 2, H - 20);
             }
 
             if (game.state === 'egg1') {
-                ctx.fillStyle = 'rgba(251,191,36,0.03)';
+                ctx.fillStyle = 'rgba(251,191,36,0.02)';
                 ctx.fillRect(0, 0, W, H);
                 ctx.fillStyle = '#FBBF24';
-                ctx.font = '20px "Georgia", serif';
+                ctx.font = '18px "Georgia", serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.shadowColor = 'rgba(251,191,36,0.12)';
                 ctx.shadowBlur = 30;
-                ctx.fillText('🥚 彩蛋 · 反馈锁协议已激活', W / 2, H / 2 - 20);
+                ctx.fillText('🥚 彩蛋 · 反馈锁协议已激活', W / 2, H / 2 - 16);
                 ctx.shadowBlur = 0;
                 ctx.fillStyle = 'rgba(167,139,250,0.04)';
-                ctx.font = '11px monospace';
-                ctx.fillText('“先存，不急着分析” · 思维已锁定', W / 2, H / 2 + 28);
+                ctx.font = '10px monospace';
+                ctx.fillText('“先存，不急着分析” · 思维已锁定', W / 2, H / 2 + 24);
             }
 
             if (game.state === 'egg2') {
-                ctx.fillStyle = 'rgba(244,114,182,0.03)';
+                ctx.fillStyle = 'rgba(244,114,182,0.02)';
                 ctx.fillRect(0, 0, W, H);
                 ctx.fillStyle = '#F472B6';
-                ctx.font = '20px "Georgia", serif';
+                ctx.font = '18px "Georgia", serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.shadowColor = 'rgba(244,114,182,0.12)';
                 ctx.shadowBlur = 30;
-                ctx.fillText('🥚 彩蛋 · 脉冲爆发', W / 2, H / 2 - 20);
+                ctx.fillText('🥚 彩蛋 · 脉冲爆发', W / 2, H / 2 - 16);
                 ctx.shadowBlur = 0;
                 ctx.fillStyle = 'rgba(167,139,250,0.04)';
-                ctx.font = '11px monospace';
-                ctx.fillText('ENTJ / ESFP 切换 · 系统正在收敛', W / 2, H / 2 + 28);
+                ctx.font = '10px monospace';
+                ctx.fillText('ENTJ / ESFP 切换 · 系统正在收敛', W / 2, H / 2 + 24);
             }
 
-            // 进度条
             const barX = 20,
-                barY = 18,
-                barW = 160,
-                barH = 4;
+                barY = 16,
+                barW = 180,
+                barH = 3;
             ctx.fillStyle = 'rgba(167,139,250,0.02)';
             ctx.fillRect(barX, barY, barW, barH);
             const progress = game.fragments / game.totalFragments;
             if (progress > 0) {
                 const grad = ctx.createLinearGradient(barX, barY, barX + barW, barY);
-                grad.addColorStop(0, 'rgba(34,211,238,0.15)');
-                grad.addColorStop(0.5, 'rgba(167,139,250,0.2)');
-                grad.addColorStop(1, 'rgba(251,191,36,0.2)');
+                grad.addColorStop(0, 'rgba(34,211,238,0.1)');
+                grad.addColorStop(0.5, 'rgba(167,139,250,0.15)');
+                grad.addColorStop(1, 'rgba(251,191,36,0.15)');
                 ctx.fillStyle = grad;
                 ctx.fillRect(barX, barY, barW * progress, barH);
             }
             ctx.fillStyle = 'rgba(167,139,250,0.02)';
-            ctx.font = '9px monospace';
+            ctx.font = '8px monospace';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
-            ctx.fillText(`碎片 ${game.fragments}/${game.totalFragments}`, barX, barY + 8);
-
-            ctx.textAlign = 'right';
-            ctx.textBaseline = 'top';
-            ctx.fillStyle = 'rgba(167,139,250,0.02)';
-            ctx.font = '9px monospace';
-            ctx.fillText(`A=${green.collected.length} B=${purple.collected.length}`, W - 20, 18);
+            ctx.fillText(`碎片 ${game.fragments}/${game.totalFragments}`, barX, barY + 6);
         }
 
         function drawPlayer(player, emoji, label) {
             ctx.shadowColor = player.color;
             ctx.shadowBlur = 12;
             ctx.fillStyle = player.color;
-            ctx.globalAlpha = 0.08;
+            ctx.globalAlpha = 0.06;
             ctx.fillRect(player.x - 4, player.y - 4, player.w + 8, player.h + 8);
             ctx.globalAlpha = 1;
             ctx.shadowBlur = 0;
-
-            ctx.fillStyle = 'rgba(14,11,16,0.6)';
+            ctx.fillStyle = 'rgba(14,11,16,0.5)';
             ctx.strokeStyle = player.color;
             ctx.lineWidth = 1.5;
             ctx.fillRect(player.x, player.y, player.w, player.h);
             ctx.strokeRect(player.x, player.y, player.w, player.h);
-
             ctx.fillStyle = player.color;
-            ctx.globalAlpha = 0.15;
+            ctx.globalAlpha = 0.12;
             const eyeX = player.facing > 0 ? player.x + player.w - 6 : player.x + 2;
             ctx.fillRect(eyeX, player.y + 6, 4, 4);
             ctx.fillRect(eyeX, player.y + 16, 4, 4);
             ctx.globalAlpha = 1;
-
             ctx.fillStyle = 'rgba(167,139,250,0.02)';
-            ctx.font = '8px monospace';
+            ctx.font = '7px monospace';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'bottom';
             ctx.fillText(label, player.x + player.w / 2, player.y - 4);
-
-            ctx.font = '14px serif';
+            ctx.font = '13px serif';
             ctx.textBaseline = 'bottom';
-            ctx.fillText(emoji, player.x + player.w / 2 - 7, player.y - 10);
+            ctx.fillText(emoji, player.x + player.w / 2 - 6, player.y - 10);
         }
 
-        // ---- 更新 ----
-        function update() {
+        // ================================================================
+        //  🔄 游戏循环
+        // ================================================================
+
+        let frameCount = 0;
+
+        function gameLoop() {
+            frameCount++;
+
             if (game.state === 'playing' || game.state === 'egg1' || game.state === 'egg2') {
                 handleInput();
                 applyPhysics(green);
@@ -852,34 +1367,73 @@
                 checkLock();
                 updateParticles();
 
+                if (frameCount % 10 === 0) {
+                    drawFlowchart();
+                    drawFlowchartExpand();
+                }
+
                 if (game.state === 'egg1' || game.state === 'egg2') {
                     game.eggTimer++;
                     if (game.eggTimer > 120) {
                         game.state = 'playing';
                         game.eggTimer = 0;
-                        document.getElementById('statusText').textContent = '⚡ 继续收集碎片 · 合成函数';
+                        statusText.textContent = '⚡ 继续收集碎片 · 合成函数';
+                        updateBrainUI();
                     }
                 }
             }
-        }
 
-        // ---- 循环 ----
-        function gameLoop() {
-            update();
             draw();
             requestAnimationFrame(gameLoop);
         }
 
-        // ---- 启动 ----
+        // ================================================================
+        //  📖 说明书
+        // ================================================================
+
+        (function() {
+            const tab = document.getElementById('manualTab');
+            const panel = document.getElementById('manualPanel');
+            const overlay = document.getElementById('manualOverlay');
+            const closeBtn = document.getElementById('manualClose');
+
+            function setManual(open) {
+                panel.classList.toggle('open', open);
+                overlay.classList.toggle('open', open);
+            }
+            tab.addEventListener('click', () => setManual(true));
+            closeBtn.addEventListener('click', () => setManual(false));
+            overlay.addEventListener('click', () => setManual(false));
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') setManual(false);
+            });
+        })();
+
+        // ================================================================
+        //  🚀 启动
+        // ================================================================
+
         initLevel();
+
+        setTimeout(() => {
+            initMini3D();
+            initMini3DExpand();
+            animateMini3D();
+        }, 300);
+
+        // 每帧更新脑图
+        setInterval(() => {
+            if (panelOpen) {
+                updateBrainUI();
+            }
+        }, 200);
+
         gameLoop();
 
-        console.log('🎮 冰火双人闯关 · 思维彩蛋 (视觉统一版)');
-        console.log('🌱 绿色 = 直觉感知 (WASD)');
-        console.log('⚡ 紫色 = 系统输出 (方向键)');
-        console.log('🥚 彩蛋1: 双人同时站在反馈锁上');
-        console.log('🥚 彩蛋2: 同时按 Space + R');
-        console.log('📦 收集全部 5 个碎片通关');
+        console.log('🎮 冰火双人闯关 · 优化版');
+        console.log('🖱️ 支持鼠标/触屏点击控制绿色角色');
+        console.log('⚡ 操作灵敏度已提升');
+        console.log('🧠 数据实时同步（缩略图、进度条、流程图）');
     </script>
 </body>
 </html>
