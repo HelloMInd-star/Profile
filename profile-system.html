@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>个人系统说明书 · 交互增强版</title>
+    <title>个人系统说明书 · 沉浸版</title>
     <style>
         /* ================================================================
-           🎨 视觉 · MindArena 暗黑紫蓝体系
+           🎨 视觉 · MindArena 暗黑紫蓝 + 极光光晕
            ================================================================ */
         :root {
             --bg-deep: #060a1f;
@@ -38,49 +38,201 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             color: var(--t1);
             min-height: 100vh;
-            padding: 24px 20px;
-            position: relative;
             overflow-x: hidden;
         }
 
-        /* ===== 动态星空背景 ===== */
-        #stars {
+        /* ================================================================
+           🆕 1. 动态背景光晕（极光 Aurora）
+           ================================================================ */
+        #aurora {
             position: fixed;
             inset: 0;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.5;
+            overflow: hidden;
+        }
+        #aurora .aurora-item {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            will-change: transform;
+            animation: auroraFloat 12s ease-in-out infinite alternate;
+        }
+        #aurora .aurora-item:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            top: -10%;
+            left: -10%;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.2), transparent);
+            animation-duration: 14s;
+        }
+        #aurora .aurora-item:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            bottom: -10%;
+            right: -10%;
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.12), transparent);
+            animation-duration: 16s;
+            animation-delay: -3s;
+        }
+        #aurora .aurora-item:nth-child(3) {
+            width: 400px;
+            height: 400px;
+            top: 30%;
+            left: 50%;
+            background: radial-gradient(circle, rgba(244, 114, 182, 0.08), transparent);
+            animation-duration: 18s;
+            animation-delay: -6s;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
+        @keyframes auroraFloat {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            33% {
+                transform: translate(60px, -40px) scale(1.1) rotate(5deg);
+            }
+            66% {
+                transform: translate(-40px, 60px) scale(0.9) rotate(-3deg);
+            }
+            100% {
+                transform: translate(30px, -20px) scale(1.05) rotate(2deg);
+            }
+        }
+
+        /* ================================================================
+           🆕 2. 全屏 Hero 区
+           ================================================================ */
+        #hero {
             position: relative;
             z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 24px;
+            will-change: transform;
         }
 
-        /* ===== 返回链接 ===== */
-        .back-link {
-            display: inline-block;
-            margin-bottom: 14px;
-            color: var(--t2);
+        /* 返回链接（固定在 Hero 左上角） */
+        .back-link-hero {
+            position: absolute;
+            top: 28px;
+            left: 28px;
+            z-index: 10;
+            color: rgba(255, 255, 255, 0.3);
             text-decoration: none;
-            font-size: 11px;
+            font-size: 12px;
             letter-spacing: 3px;
-            transition: var(--transition-smooth);
             padding: 4px 14px;
-            border: 1px solid rgba(167, 139, 250, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             border-radius: 999px;
-            background: rgba(10, 8, 12, 0.4);
+            background: rgba(10, 8, 12, 0.3);
             backdrop-filter: blur(8px);
+            transition: var(--transition-smooth);
         }
-        .back-link:hover {
+        .back-link-hero:hover {
             color: var(--cyan);
             border-color: rgba(34, 211, 238, 0.15);
             transform: translateX(-3px);
         }
 
-        /* ===== 品牌 ===== */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            animation: heroIn 1s ease 0.4s forwards;
+        }
+        @keyframes heroIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .hero-content .hero-name {
+            font-size: clamp(48px, 8vw, 80px);
+            font-weight: 700;
+            letter-spacing: clamp(4px, 1vw, 8px);
+            background: linear-gradient(135deg, var(--t1) 30%, var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+        .hero-content .hero-title {
+            font-size: clamp(18px, 2.5vw, 28px);
+            font-weight: 300;
+            color: var(--t2);
+            letter-spacing: 6px;
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
+        .hero-content .hero-tagline {
+            font-size: clamp(14px, 1.2vw, 18px);
+            color: var(--t2);
+            letter-spacing: 3px;
+            line-height: 1.8;
+            opacity: 0.4;
+            max-width: 600px;
+            margin: 0 auto;
+            font-style: italic;
+        }
+        .hero-content .hero-tagline .hl {
+            color: var(--purple);
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 11px;
+            letter-spacing: 4px;
+            animation: bounceDown 2s ease-in-out infinite;
+            cursor: default;
+        }
+        @keyframes bounceDown {
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+                opacity: 0.2;
+            }
+            50% {
+                transform: translateX(-50%) translateY(8px);
+                opacity: 0.8;
+            }
+        }
+
+        /* ================================================================
+           🆕 3. 滚动视差（内容区）
+           ================================================================ */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .parallax-section {
+            will-change: transform;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* ===== 原有样式 ===== */
         .brand {
             text-align: center;
             padding: 24px 0 18px;
@@ -116,7 +268,6 @@
             opacity: 0.5;
         }
 
-        /* ===== 章节 ===== */
         .section {
             margin-bottom: 28px;
             opacity: 0;
@@ -140,7 +291,6 @@
             font-weight: 500;
         }
 
-        /* ===== 网格 ===== */
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -171,7 +321,6 @@
             }
         }
 
-        /* ===== 卡片基类（毛玻璃 + 悬停光效） ===== */
         .card {
             background: var(--bg-card);
             backdrop-filter: blur(16px);
@@ -224,12 +373,16 @@
             opacity: 0.7;
         }
 
-        /* ===== 🆕 环形图（交互增强） ===== */
+        /* ===== 环形图 ===== */
         .donut-wrap {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 12px;
+        }
+        .donut-relative {
+            position: relative;
+            display: inline-block;
         }
         .donut-svg {
             width: 140px;
@@ -264,7 +417,6 @@
             stroke-width: 22;
             filter: drop-shadow(0 0 16px currentColor);
         }
-
         .donut-center {
             position: absolute;
             top: 50%;
@@ -283,11 +435,6 @@
             color: var(--t1);
             opacity: 0.8;
         }
-        .donut-wrap .donut-relative {
-            position: relative;
-            display: inline-block;
-        }
-
         .donut-label {
             display: flex;
             justify-content: center;
@@ -323,7 +470,129 @@
             transform: scale(1.3);
         }
 
-        /* ===== 条形图（数值跳动） ===== */
+        /* ================================================================
+           🆕 范数卡片样式
+           ================================================================ */
+        .norm-card {
+            background: rgba(167, 139, 250, 0.03);
+            border: 1px solid rgba(167, 139, 250, 0.06);
+            border-radius: 12px;
+            padding: 12px 18px 14px;
+            min-width: 80px;
+            flex: 0 1 auto;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+        .norm-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        .norm-card:hover {
+            transform: translateY(-4px);
+        }
+        .norm-card .norm-icon {
+            font-size: 20px;
+            line-height: 1.2;
+            margin-bottom: 2px;
+        }
+        .norm-card .norm-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--t1);
+            letter-spacing: 1px;
+        }
+        .norm-card .norm-symbol {
+            font-size: 9px;
+            font-family: 'Courier New', monospace;
+            opacity: 0.6;
+            letter-spacing: 1px;
+            margin: 2px 0 4px;
+        }
+        .norm-card .norm-bar {
+            height: 3px;
+            border-radius: 99px;
+            overflow: hidden;
+            margin: 4px 0 6px;
+        }
+        .norm-card .norm-bar .norm-fill {
+            height: 100%;
+            border-radius: 99px;
+        }
+        .norm-card .norm-value {
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+        .norm-card .norm-label {
+            font-size: 7px;
+            opacity: 0.2;
+            letter-spacing: 2px;
+            margin-top: 2px;
+        }
+
+        /* ===== 各范数卡片主题色 ===== */
+        .norm-card.art {
+            border-color: rgba(167, 139, 250, 0.06);
+        }
+        .norm-card.art:hover {
+            border-color: rgba(167, 139, 250, 0.2);
+            background: rgba(167, 139, 250, 0.05);
+            box-shadow: 0 8px 30px rgba(167, 139, 250, 0.04);
+        }
+        .norm-card.art .norm-symbol {
+            color: var(--purple);
+        }
+        .norm-card.art .norm-fill {
+            background: linear-gradient(90deg, #A78BFA, #c4b5fd);
+        }
+        .norm-card.art .norm-value {
+            color: var(--purple);
+        }
+
+        .norm-card.dance {
+            border-color: rgba(244, 114, 182, 0.06);
+        }
+        .norm-card.dance:hover {
+            border-color: rgba(244, 114, 182, 0.2);
+            background: rgba(244, 114, 182, 0.05);
+            box-shadow: 0 8px 30px rgba(244, 114, 182, 0.04);
+        }
+        .norm-card.dance .norm-symbol {
+            color: var(--pink);
+        }
+        .norm-card.dance .norm-fill {
+            background: linear-gradient(90deg, #F472B6, #f9a8d4);
+        }
+        .norm-card.dance .norm-value {
+            color: var(--pink);
+        }
+
+        .norm-card.music {
+            border-color: rgba(34, 211, 238, 0.06);
+        }
+        .norm-card.music:hover {
+            border-color: rgba(34, 211, 238, 0.2);
+            background: rgba(34, 211, 238, 0.05);
+            box-shadow: 0 8px 30px rgba(34, 211, 238, 0.04);
+        }
+        .norm-card.music .norm-symbol {
+            color: var(--cyan);
+        }
+        .norm-card.music .norm-fill {
+            background: linear-gradient(90deg, #22D3EE, #67e8f9);
+        }
+        .norm-card.music .norm-value {
+            color: var(--cyan);
+        }
+
+        /* ===== 条形图 ===== */
         .bar-group {
             display: flex;
             flex-direction: column;
@@ -424,7 +693,7 @@
             color: var(--t1);
         }
 
-        /* ===== MBTI 卡片（点击展开） ===== */
+        /* ===== MBTI 卡片 ===== */
         .mbti-card {
             background: var(--bg-card);
             backdrop-filter: blur(16px);
@@ -468,7 +737,6 @@
             letter-spacing: 1px;
             transition: var(--transition-smooth);
         }
-        /* 🆕 展开内容 */
         .mbti-card .m-expand {
             max-height: 0;
             overflow: hidden;
@@ -488,12 +756,21 @@
         .mbti-card.expanded {
             padding-bottom: 16px;
         }
-        .mbti-card.expanded .m-tag {
+        .mbti-card .click-hint {
+            font-size: 7px;
+            color: var(--t3);
+            opacity: 0.2;
+            letter-spacing: 1px;
+            margin-top: 4px;
+            transition: var(--transition-smooth);
+        }
+        .mbti-card:hover .click-hint {
             opacity: 0.5;
-            border-color: rgba(167, 139, 250, 0.08);
+        }
+        .mbti-card.expanded .click-hint {
+            opacity: 0;
         }
 
-        /* 各类型呼吸颜色 */
         .mbti-card.type-intj {
             border-color: rgba(167, 139, 250, 0.08);
             animation: breathe-purple 3s ease-in-out infinite;
@@ -566,22 +843,6 @@
                 border-color: rgba(34, 211, 238, 0.15);
                 box-shadow: 0 0 40px rgba(34, 211, 238, 0.04);
             }
-        }
-
-        /* 🆕 点击展开提示 */
-        .mbti-card .click-hint {
-            font-size: 7px;
-            color: var(--t3);
-            opacity: 0.2;
-            letter-spacing: 1px;
-            margin-top: 4px;
-            transition: var(--transition-smooth);
-        }
-        .mbti-card:hover .click-hint {
-            opacity: 0.5;
-        }
-        .mbti-card.expanded .click-hint {
-            opacity: 0;
         }
 
         /* ===== 脉轮 ===== */
@@ -695,7 +956,6 @@
             font-weight: 500;
         }
 
-        /* ===== 底部 ===== */
         .footer {
             margin-top: 28px;
             border-top: 1px solid rgba(167, 139, 250, 0.02);
@@ -708,9 +968,31 @@
         }
 
         /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .back-link-hero {
+                top: 16px;
+                left: 16px;
+                font-size: 10px;
+                padding: 3px 10px;
+            }
+            .hero-content .hero-name {
+                font-size: 36px;
+                letter-spacing: 2px;
+            }
+            .hero-content .hero-title {
+                font-size: 16px;
+                letter-spacing: 3px;
+            }
+            .scroll-indicator {
+                display: none;
+            }
+        }
         @media (max-width: 600px) {
             body {
-                padding: 16px 12px;
+                padding: 0;
+            }
+            .container {
+                padding: 0 12px 30px;
             }
             .brand h1 {
                 font-size: 22px;
@@ -736,11 +1018,24 @@
                 padding: 8px 14px;
                 font-size: 11px;
             }
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .norm-card {
+                padding: 10px 14px 12px;
+                min-width: 60px;
+            }
+            .norm-card .norm-icon {
+                font-size: 18px;
+            }
+            .norm-card .norm-name {
+                font-size: 11px;
+            }
         }
         @media (max-width: 400px) {
-            body {
-                padding: 10px 8px;
-            }
             .brand h1 {
                 font-size: 18px;
                 letter-spacing: 2px;
@@ -760,27 +1055,72 @@
                 font-size: 8px;
                 min-width: 20px;
             }
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .norm-card {
+                padding: 8px 10px 10px;
+                min-width: 50px;
+            }
+            .norm-card .norm-icon {
+                font-size: 16px;
+            }
+            .norm-card .norm-name {
+                font-size: 10px;
+            }
+            .norm-card .norm-symbol {
+                font-size: 7px;
+            }
+            .norm-card .norm-value {
+                font-size: 13px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== 动态星空背景 ===== -->
-    <canvas id="stars"></canvas>
+    <!-- ================================================================
+    动态背景光晕（极光）
+    ================================================================ -->
+    <div id="aurora">
+        <div class="aurora-item"></div>
+        <div class="aurora-item"></div>
+        <div class="aurora-item"></div>
+    </div>
 
-    <div class="container">
+    <!-- ================================================================
+    全屏 Hero 区
+    ================================================================ -->
+    <section id="hero" class="parallax-hero">
+        <!-- ✅ 返回链接（固定在左上角） -->
+        <a href="index.html" class="back-link-hero">← 返回首页</a>
 
-        <!-- ===== 返回链接 ===== -->
-        <a href="index.html" class="back-link">← 返回首页</a>
-
-        <!-- ===== 品牌 ===== -->
-        <div class="brand">
-            <h1>⚡ 个人系统说明书</h1>
-            <div class="sub">能力图谱 · 交互增强版</div>
+        <div class="hero-content">
+            <div class="hero-name">⚡ 罗煜</div>
+            <div class="hero-title">系统架构 · 产品孵化</div>
+            <div class="hero-tagline">
+                “在模糊中捕捉结构，<br />
+                翻译成 <span class="hl">可运行的跨域系统</span>”
+            </div>
         </div>
 
-        <!-- ===== 1. 能力分布（交互环形图） ===== -->
-        <div class="section" id="sec-donut">
+        <div class="scroll-indicator">▼ 向下探索</div>
+    </section>
+
+    <!-- ================================================================
+    内容区
+    ================================================================ -->
+    <div class="container">
+
+        <div class="brand parallax-section" data-speed="0.05">
+            <h1>⚡ 个人系统说明书</h1>
+            <div class="sub">能力图谱 · 沉浸版</div>
+        </div>
+
+        <!-- ===== 1. 能力分布（含艺术维度 · 范数度量） ===== -->
+        <div class="section parallax-section" data-speed="0.1" id="sec-donut">
             <div class="section-label">⚡ 能力分布</div>
             <div class="card">
                 <div class="donut-wrap">
@@ -808,6 +1148,7 @@
                             <div>能力</div>
                         </div>
                     </div>
+
                     <div class="donut-label" id="donutLabels">
                         <span class="item" data-target="艺术"><span class="dot" style="background:#A78BFA;"></span> 艺术 <span style="font-size:8px;opacity:0.3;">40%</span></span>
                         <span class="item" data-target="商业"><span class="dot" style="background:#FBBF24;"></span> 商业 <span style="font-size:8px;opacity:0.3;">20%</span></span>
@@ -815,12 +1156,53 @@
                         <span class="item" data-target="元系统"><span class="dot" style="background:#F472B6;"></span> 元系统 <span style="font-size:8px;opacity:0.3;">15%</span></span>
                         <span class="item" data-target="脉冲"><span class="dot" style="background:#34D399;"></span> 脉冲 <span style="font-size:8px;opacity:0.3;">5%</span></span>
                     </div>
+
+                    <!-- 🆕 艺术维度 · 范数度量 -->
+                    <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(167,139,250,0.03); width: 100%;">
+                        <div style="font-size: 8px; color: var(--t2); letter-spacing: 3px; text-transform: uppercase; text-align: center; margin-bottom: 10px; opacity: 0.2;">
+                            艺术维度 · 范数度量
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+
+                            <!-- 美术范数卡片 -->
+                            <div class="norm-card art">
+                                <div class="norm-icon">🎨</div>
+                                <div class="norm-name">美术</div>
+                                <div class="norm-symbol">∥x∥<sub>art</sub></div>
+                                <div class="norm-bar"><div class="norm-fill" style="width:85%;"></div></div>
+                                <div class="norm-value">0.85</div>
+                                <div class="norm-label">L₂ 范数</div>
+                            </div>
+
+                            <!-- 舞蹈范数卡片 -->
+                            <div class="norm-card dance">
+                                <div class="norm-icon">💃</div>
+                                <div class="norm-name">舞蹈</div>
+                                <div class="norm-symbol">∥x∥<sub>dan</sub></div>
+                                <div class="norm-bar"><div class="norm-fill" style="width:72%;"></div></div>
+                                <div class="norm-value">0.72</div>
+                                <div class="norm-label">L₂ 范数</div>
+                            </div>
+
+                            <!-- 音乐范数卡片 -->
+                            <div class="norm-card music">
+                                <div class="norm-icon">🎵</div>
+                                <div class="norm-name">音乐</div>
+                                <div class="norm-symbol">∥x∥<sub>mus</sub></div>
+                                <div class="norm-bar"><div class="norm-fill" style="width:78%;"></div></div>
+                                <div class="norm-value">0.78</div>
+                                <div class="norm-label">L₂ 范数</div>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
 
         <!-- ===== 2. 星盘 · 学术 · 实践 ===== -->
-        <div class="section" id="sec-info">
+        <div class="section parallax-section" data-speed="0.12" id="sec-info">
             <div class="section-label">🌌 配置 · 框架 · 实践</div>
             <div class="grid-3">
                 <div class="card">
@@ -841,8 +1223,8 @@
             </div>
         </div>
 
-        <!-- ===== 3. 工具能力（动态条形图 + 数值跳动） ===== -->
-        <div class="section" id="sec-bars">
+        <!-- ===== 3. 工具能力 ===== -->
+        <div class="section parallax-section" data-speed="0.15" id="sec-bars">
             <div class="section-label">🛠️ 工具能力</div>
             <div class="card">
                 <div class="bar-group" id="barGroup">
@@ -870,8 +1252,8 @@
             </div>
         </div>
 
-        <!-- ===== 4. MBTI 四态（点击展开） ===== -->
-        <div class="section" id="sec-mbti">
+        <!-- ===== 4. MBTI 四态 ===== -->
+        <div class="section parallax-section" data-speed="0.18" id="sec-mbti">
             <div class="section-label">🧠 MBTI 状态</div>
             <div class="grid-4">
                 <div class="mbti-card type-intj" data-expand="系统架构师型：擅长从混沌中建立秩序，用模型理解世界。">
@@ -910,7 +1292,7 @@
         </div>
 
         <!-- ===== 5. 项目矩阵 ===== -->
-        <div class="section" id="sec-projects">
+        <div class="section parallax-section" data-speed="0.2" id="sec-projects">
             <div class="section-label">📂 项目矩阵</div>
             <div class="grid-4">
                 <div class="card" style="border-color:rgba(167,139,250,0.06);">
@@ -942,7 +1324,7 @@
         </div>
 
         <!-- ===== 6. 工具链 ===== -->
-        <div class="section" id="sec-tools">
+        <div class="section parallax-section" data-speed="0.22" id="sec-tools">
             <div class="section-label">⚙️ 自研工具</div>
             <div class="grid-4">
                 <div class="card">
@@ -969,7 +1351,7 @@
         </div>
 
         <!-- ===== 7. 脉轮 ===== -->
-        <div class="section" id="sec-chakra">
+        <div class="section parallax-section" data-speed="0.25" id="sec-chakra">
             <div class="section-label">🌀 能力脉轮</div>
             <div class="card">
                 <div class="chakra">
@@ -987,7 +1369,7 @@
         </div>
 
         <!-- ===== 8. 工作流 ===== -->
-        <div class="section" id="sec-flow">
+        <div class="section parallax-section" data-speed="0.28" id="sec-flow">
             <div class="section-label">🔄 工作流</div>
             <div class="card">
                 <div class="flow-bar">
@@ -1005,7 +1387,7 @@
         </div>
 
         <!-- ===== 金句 ===== -->
-        <div class="quote-box" id="sec-quote">
+        <div class="quote-box parallax-section" data-speed="0.3" id="sec-quote">
             <div class="text">
                 “在模糊中捕捉结构，<br />
                 翻译成 <span class="hl">可运行的跨域系统</span>”
@@ -1023,7 +1405,15 @@
         //  ✨ 动态星空背景
         // ================================================================
         (function() {
-            const c = document.getElementById('stars');
+            const canvas = document.createElement('canvas');
+            canvas.style.position = 'fixed';
+            canvas.style.inset = '0';
+            canvas.style.zIndex = '0';
+            canvas.style.pointerEvents = 'none';
+            canvas.style.opacity = '0.5';
+            document.body.prepend(canvas);
+
+            const c = canvas;
             const x = c.getContext('2d');
             let stars = [];
 
@@ -1062,22 +1452,60 @@
         })();
 
         // ================================================================
-        //  🎯 交互增强引擎
+        //  🆕 滚动视差引擎
         // ================================================================
+        (function() {
+            const hero = document.getElementById('hero');
+            const heroContent = hero.querySelector('.hero-content');
+            const scrollIndicator = hero.querySelector('.scroll-indicator');
+            const parallaxElements = document.querySelectorAll('.parallax-section');
 
+            function updateParallax() {
+                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                const windowHeight = window.innerHeight;
+
+                if (heroContent) {
+                    const heroProgress = Math.min(scrollY / windowHeight, 1);
+                    heroContent.style.transform =
+                        `translateY(${scrollY * 0.25}px) scale(${1 - heroProgress * 0.02})`;
+                    heroContent.style.opacity = 1 - heroProgress * 0.6;
+                }
+
+                if (scrollIndicator) {
+                    const progress = Math.min(scrollY / (windowHeight * 0.5), 1);
+                    scrollIndicator.style.opacity = 1 - progress;
+                }
+
+                parallaxElements.forEach(el => {
+                    const speed = parseFloat(el.dataset.speed) || 0.1;
+                    const rect = el.getBoundingClientRect();
+                    const center = rect.top + rect.height / 2;
+                    const viewportCenter = windowHeight / 2;
+                    const offset = (center - viewportCenter) / windowHeight;
+                    const yShift = offset * speed * 40;
+                    el.style.transform = `translateY(${yShift}px)`;
+                });
+            }
+
+            window.addEventListener('scroll', updateParallax);
+            window.addEventListener('resize', updateParallax);
+            updateParallax();
+        })();
+
+        // ================================================================
+        //  🎯 交互增强
+        // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
 
-            // ---- 1. 环形图：悬停高亮 + 标签联动 ----
+            // ---- 1. 环形图：悬停高亮 ----
             const segments = document.querySelectorAll('.donut-svg .seg');
             const labelItems = document.querySelectorAll('.donut-label .item');
 
-            // 清除所有高亮
             function clearSegHighlights() {
                 segments.forEach(seg => seg.classList.remove('active'));
                 labelItems.forEach(item => item.style.opacity = '0.4');
             }
 
-            // 高亮特定段
             function highlightSegment(index) {
                 clearSegHighlights();
                 if (index >= 0 && index < segments.length) {
@@ -1086,22 +1514,15 @@
                 }
             }
 
-            // 悬停段
             segments.forEach((seg, i) => {
-                seg.addEventListener('mouseenter', () => {
-                    highlightSegment(i);
-                });
+                seg.addEventListener('mouseenter', () => highlightSegment(i));
                 seg.addEventListener('mouseleave', () => {
                     clearSegHighlights();
                     labelItems.forEach(item => item.style.opacity = '0.6');
                 });
             });
-
-            // 悬停标签
             labelItems.forEach((item, i) => {
-                item.addEventListener('mouseenter', () => {
-                    highlightSegment(i);
-                });
+                item.addEventListener('mouseenter', () => highlightSegment(i));
                 item.addEventListener('mouseleave', () => {
                     clearSegHighlights();
                     labelItems.forEach(item => item.style.opacity = '0.6');
@@ -1126,7 +1547,6 @@
                             return;
                         }
                         const progress = Math.min(elapsed / duration, 1);
-                        // easeOutQuart
                         const eased = 1 - Math.pow(1 - progress, 4);
                         const current = Math.round(eased * target);
                         valSpan.textContent = current;
@@ -1137,8 +1557,6 @@
                         }
                     }
                     requestAnimationFrame(updateValue);
-
-                    // 标记加载完成（触发进度条动画）
                     setTimeout(() => {
                         row.classList.add('loaded');
                     }, 200 + index * 150);
@@ -1147,13 +1565,10 @@
 
             // ---- 3. MBTI 卡片：点击展开 ----
             const mbtiCards = document.querySelectorAll('.mbti-card');
-
             mbtiCards.forEach(card => {
                 card.addEventListener('click', function(e) {
-                    // 如果点击的是内部链接或按钮，不触发
                     if (e.target.closest('a') || e.target.closest('button')) return;
                     this.classList.toggle('expanded');
-                    // 点击后自动滚动到卡片位置（如果展开）
                     if (this.classList.contains('expanded')) {
                         setTimeout(() => {
                             this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1162,13 +1577,11 @@
                 });
             });
 
-            // ---- 4. 滚动触发动画（Intersection Observer） ----
+            // ---- 4. 滚动触发动画 ----
             const sections = document.querySelectorAll('.section');
-
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach((entry, index) => {
                     if (entry.isIntersecting) {
-                        // 延迟触发，形成波次效果
                         setTimeout(() => {
                             entry.target.classList.add('visible');
                         }, index * 80);
@@ -1179,12 +1592,9 @@
                 threshold: 0.15,
                 rootMargin: '0px 0px -30px 0px'
             });
-
             sections.forEach(section => {
                 observer.observe(section);
             });
-
-            // 如果某些 section 已经可见（比如首屏），直接标记
             setTimeout(() => {
                 sections.forEach(section => {
                     const rect = section.getBoundingClientRect();
@@ -1194,20 +1604,11 @@
                 });
             }, 300);
 
-            // ---- 5. 触发动画 ----
-            // 条形图数值跳动在页面加载后触发
+            // ---- 5. 触发 ----
             setTimeout(animateBarValues, 500);
-
-            // ---- 6. 环形图入场 ----
-            // 已有的环形图动画在 CSS 中通过 transition 控制
-            // 这里额外触发标签的初始状态
             labelItems.forEach(item => item.style.opacity = '0.6');
 
-            console.log('🎯 交互增强已加载');
-            console.log('   - 环形图：悬停高亮');
-            console.log('   - 条形图：数值跳动');
-            console.log('   - MBTI：点击展开');
-            console.log('   - 滚动触发：渐入动画');
+            console.log('🎯 沉浸版已加载：Hero + 极光 + 视差 + 范数卡片');
         });
     </script>
 
