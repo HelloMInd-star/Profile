@@ -3,426 +3,1706 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Code Interpreter · 代码解释器</title>
+    <title>Code Interpreter · 对话版</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ================================================================
+           🎨 视觉 · MindArena 暗黑紫蓝体系
+           ================================================================ */
+        :root {
+            --bg-deep: #060a1f;
+            --bg-mid: #0a0f2c;
+            --bg-card: rgba(10, 8, 12, 0.55);
+            --border-glow: rgba(167, 139, 250, 0.06);
+            --border-active: rgba(167, 139, 250, 0.12);
+            --cyan: #22d3ee;
+            --purple: #a78bfa;
+            --gold: #e3b341;
+            --pink: #f472b6;
+            --t1: #e8edff;
+            --t2: #94a3b8;
+            --t3: #4a5580;
+            --shadow-card: 0 8px 60px rgba(0, 0, 0, 0.4);
+            --radius-card: 14px;
+            --transition-smooth: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: #0a080c;
-            font-family: 'Georgia', 'Times New Roman', serif;
-            color: #b8a08a;
+            background: var(--bg-deep);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--t1);
             min-height: 100vh;
-            padding: 24px;
+            padding: 16px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             font-size: 17px;
             line-height: 1.7;
+            position: relative;
+            overflow-x: hidden;
         }
-        .app {
-            max-width: 1100px;
+
+        #stars {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 100;
+            font-size: 12px;
+            color: var(--t2);
+            text-decoration: none;
+            border: 1px solid rgba(167, 139, 250, 0.06);
+            padding: 6px 16px;
+            border-radius: 999px;
+            background: rgba(10, 8, 12, 0.6);
+            backdrop-filter: blur(12px);
+            transition: var(--transition-smooth);
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 1px;
+        }
+        .back-btn:hover {
+            color: var(--cyan);
+            border-color: rgba(34, 211, 238, 0.2);
+            transform: translateX(-3px);
+        }
+
+        /* ===== 设置触发器 ===== */
+        .settings-trigger {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            font-size: 18px;
+            color: var(--t2);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid rgba(167, 139, 250, 0.06);
+            background: rgba(10, 8, 12, 0.6);
+            backdrop-filter: blur(12px);
+            transition: var(--transition-smooth);
+        }
+        .settings-trigger:hover {
+            border-color: rgba(167, 139, 250, 0.15);
+            color: var(--t1);
+            transform: rotate(60deg);
+        }
+
+        /* ===== 设置弹窗 ===== */
+        .settings-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .settings-overlay.open {
+            display: flex;
+        }
+        .settings-modal {
+            background: var(--bg-card);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(167, 139, 250, 0.06);
+            border-radius: 16px;
+            padding: 24px 28px 20px;
+            max-width: 520px;
+            width: 92%;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
+            animation: fadeUp 0.3s ease;
+        }
+        .settings-modal .sm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.04);
+            padding-bottom: 12px;
+        }
+        .settings-modal .sm-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--t1);
+        }
+        .settings-modal .sm-header .close-btn {
+            background: none;
+            border: none;
+            color: var(--t2);
+            font-size: 22px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        .settings-modal .sm-header .close-btn:hover {
+            color: var(--t1);
+            transform: rotate(90deg);
+        }
+        .settings-modal .sm-row {
+            margin-bottom: 12px;
+        }
+        .settings-modal .sm-row label {
+            display: block;
+            font-size: 10px;
+            color: var(--t2);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+            opacity: 0.5;
+        }
+        .settings-modal .sm-row input,
+        .settings-modal .sm-row select {
             width: 100%;
-            background: rgba(14,11,16,0.6);
-            border: 1px solid rgba(167,139,250,0.08);
-            padding: 28px 32px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(167, 139, 250, 0.04);
+            border-radius: 8px;
+            color: var(--t1);
+            padding: 8px 12px;
+            font-size: 13px;
+            font-family: 'Segoe UI', sans-serif;
+            outline: none;
+            transition: var(--transition-smooth);
         }
+        .settings-modal .sm-row input:focus,
+        .settings-modal .sm-row select:focus {
+            border-color: rgba(167, 139, 250, 0.12);
+        }
+        .settings-modal .sm-row input::placeholder {
+            color: var(--t3);
+            opacity: 0.4;
+        }
+        .settings-modal .sm-row select option {
+            background: var(--bg-mid);
+            color: var(--t1);
+        }
+        .settings-modal .sm-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            justify-content: flex-end;
+        }
+        .settings-modal .sm-actions .btn {
+            padding: 6px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(167, 139, 250, 0.04);
+            background: rgba(167, 139, 250, 0.02);
+            color: var(--t2);
+            cursor: pointer;
+            font-size: 11px;
+            letter-spacing: 2px;
+            transition: var(--transition-smooth);
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .settings-modal .sm-actions .btn:hover {
+            border-color: rgba(167, 139, 250, 0.12);
+            color: var(--t1);
+        }
+        .settings-modal .sm-actions .btn-primary {
+            border-color: rgba(167, 139, 250, 0.08);
+            color: var(--purple);
+        }
+        .settings-modal .sm-actions .btn-primary:hover {
+            border-color: var(--purple);
+            color: var(--purple);
+        }
+
+        /* ===== 主应用 ===== */
+        .app {
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(167, 139, 250, 0.04);
+            border-radius: var(--radius-card);
+            padding: 20px 24px 16px;
+            box-shadow: var(--shadow-card);
+            margin-top: 8px;
+            animation: fadeUp 0.6s ease;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== 头部 ===== */
         .header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-end;
-            border-bottom: 1px solid rgba(167,139,250,0.06);
-            padding-bottom: 16px;
-            margin-bottom: 24px;
+            align-items: center;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.04);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 8px;
         }
         .header h1 {
-            font-weight: 300;
-            font-size: 28px;
-            letter-spacing: 8px;
-            color: #d4c0a8;
+            font-weight: 600;
+            font-size: 24px;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--t1) 40%, var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .header .sub {
-            font-size: 15px;
-            color: #c4b5fd;
-            letter-spacing: 3px;
+            font-size: 12px;
+            color: var(--t2);
+            letter-spacing: 2px;
+            opacity: 0.5;
         }
+
+        /* ===== 左右网格 ===== */
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 24px;
+            gap: 18px;
+            min-height: 420px;
         }
-        @media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } }
+        @media (max-width: 820px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+        }
 
+        /* ===== 面板通用 ===== */
         .panel {
-            background: rgba(8,6,12,0.4);
-            border: 1px solid rgba(167,139,250,0.04);
-            padding: 20px 22px;
+            background: rgba(8, 6, 12, 0.25);
+            border: 1px solid rgba(167, 139, 250, 0.03);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            min-height: 380px;
         }
         .panel-title {
-            font-size: 15px;
-            color: #c4b5fd;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 14px;
-            border-bottom: 1px solid rgba(167,139,250,0.02);
-            padding-bottom: 10px;
-        }
-
-        textarea {
-            width: 100%;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(167,139,250,0.06);
-            color: #d4c0a8;
-            padding: 14px 16px;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            line-height: 1.9;
-            resize: vertical;
-            min-height: 200px;
-            transition: 0.2s;
-        }
-        textarea:focus {
-            outline: none;
-            border-color: #c4b5fd;
-        }
-
-        .output-box {
-            background: rgba(0,0,0,0.2);
-            border: 1px solid rgba(167,139,250,0.04);
-            padding: 16px 20px;
-            min-height: 200px;
-            max-height: 400px;
-            overflow: auto;
-            font-size: 15px;
-            line-height: 1.9;
-            color: #b8a08a;
-            font-family: 'Courier New', monospace;
-            white-space: pre-wrap;
-        }
-        .output-box .placeholder {
-            color: #c4b5fd;
-            font-style: italic;
-        }
-
-        .quick-examples {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        .quick-examples button {
-            background: rgba(20,16,24,0.3);
-            border: 1px solid rgba(167,139,250,0.02);
-            color: #c4b5fd;
-            padding: 6px 16px;
-            font-size: 14px;
-            font-family: 'Courier New', monospace;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .quick-examples button:hover {
-            border-color: #c4b5fd;
-            color: #c4b5fd;
-        }
-
-        .toolbar {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 14px;
-        }
-        .btn {
-            background: none;
-            border: 1px solid rgba(167,139,250,0.04);
-            color: #c4b5fd;
-            padding: 8px 20px;
-            cursor: pointer;
-            font-size: 14px;
+            font-size: 11px;
+            color: var(--t2);
             letter-spacing: 3px;
-            transition: 0.2s;
-            font-family: 'Georgia', serif;
-        }
-        .btn:hover {
-            border-color: #c4b5fd;
-            color: #c4b5fd;
-        }
-        .btn-primary {
-            border-color: #c4b5fd;
-            color: #c4b5fd;
-        }
-        .btn-primary:hover {
-            border-color: #c4b5fd;
-            color: #c4b5fd;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.02);
+            padding-bottom: 8px;
+            opacity: 0.5;
+            font-weight: 500;
+            flex-shrink: 0;
         }
 
-        .status-msg {
-            font-size: 14px;
-            color: #c4b5fd;
-            margin-top: 10px;
+        /* ===== 左侧：输入区 ===== */
+        .input-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .input-area .control-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        .input-area .control-row .ctrl-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            padding: 2px 8px 2px 10px;
+            border: 1px solid rgba(167, 139, 250, 0.03);
+        }
+        .input-area .control-row .ctrl-group label {
+            font-size: 8px;
+            color: var(--t3);
             letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .input-area .control-row .ctrl-group select {
+            background: transparent;
+            border: none;
+            color: var(--t1);
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 12px;
+            padding: 4px 2px;
+            outline: none;
+            min-width: 70px;
+        }
+        .input-area .control-row .ctrl-group select option {
+            background: var(--bg-mid);
+            color: var(--t1);
+        }
+
+        .input-area textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(167, 139, 250, 0.03);
+            border-radius: 8px;
+            color: var(--t1);
+            padding: 10px 12px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            resize: vertical;
+            min-height: 150px;
+            flex: 1;
+            transition: var(--transition-smooth);
+            outline: none;
+        }
+        .input-area textarea:focus {
+            border-color: rgba(167, 139, 250, 0.12);
+        }
+        .input-area textarea::placeholder {
+            color: var(--t3);
+            opacity: 0.3;
+        }
+
+        .input-area .quick-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .input-area .quick-row button {
+            background: rgba(167, 139, 250, 0.02);
+            border: 1px solid rgba(167, 139, 250, 0.03);
+            border-radius: 4px;
+            color: var(--t2);
+            padding: 3px 10px;
+            font-size: 10px;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        .input-area .quick-row button:hover {
+            border-color: rgba(167, 139, 250, 0.1);
+            color: var(--t1);
+        }
+
+        .input-area .tool-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            margin-top: 4px;
+        }
+        .input-area .tool-row .btn {
+            background: rgba(167, 139, 250, 0.02);
+            border: 1px solid rgba(167, 139, 250, 0.04);
+            border-radius: 4px;
+            color: var(--t2);
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 10px;
+            letter-spacing: 2px;
+            transition: var(--transition-smooth);
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 500;
+        }
+        .input-area .tool-row .btn:hover {
+            border-color: rgba(167, 139, 250, 0.1);
+            color: var(--t1);
+        }
+        .input-area .tool-row .btn-primary {
+            border-color: rgba(167, 139, 250, 0.08);
+            color: var(--purple);
+        }
+        .input-area .tool-row .btn-primary:hover {
+            border-color: var(--purple);
+            color: var(--purple);
+        }
+        .input-area .tool-row .btn-api {
+            border-color: rgba(34, 211, 238, 0.05);
+            color: var(--cyan);
+        }
+        .input-area .tool-row .btn-api:hover {
+            border-color: rgba(34, 211, 238, 0.12);
+            color: var(--cyan);
+        }
+
+        /* ===== 右侧：对话区 ===== */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+            min-height: 200px;
+            max-height: 340px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .chat-messages::-webkit-scrollbar {
+            width: 2px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.06);
+            border-radius: 2px;
+        }
+
+        /* 消息气泡 */
+        .msg {
+            display: flex;
+            gap: 8px;
+            animation: msgIn 0.25s ease;
+            max-width: 92%;
+        }
+        .msg.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        .msg.assistant {
+            align-self: flex-start;
+        }
+        @keyframes msgIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .msg .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            background: rgba(167, 139, 250, 0.04);
+            border: 1px solid rgba(167, 139, 250, 0.04);
+        }
+        .msg.user .avatar {
+            background: rgba(34, 211, 238, 0.04);
+            border-color: rgba(34, 211, 238, 0.04);
+        }
+
+        .msg .bubble {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(167, 139, 250, 0.03);
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--t2);
+            word-break: break-word;
+            white-space: pre-wrap;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        .msg.user .bubble {
+            background: rgba(34, 211, 238, 0.02);
+            border-color: rgba(34, 211, 238, 0.04);
+            color: var(--t1);
+        }
+        .msg.assistant .bubble {
+            background: rgba(167, 139, 250, 0.02);
+            border-color: rgba(167, 139, 250, 0.03);
+        }
+        .msg .bubble .msg-label {
+            font-size: 9px;
+            color: var(--t3);
+            opacity: 0.3;
+            letter-spacing: 2px;
+            margin-bottom: 2px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .msg.user .bubble .msg-label {
+            color: var(--cyan);
+            opacity: 0.4;
+            text-align: right;
+        }
+
+        .msg .bubble .mermaid-wrap {
+            margin: 6px 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            padding: 8px;
+            border: 1px solid rgba(167, 139, 250, 0.02);
+        }
+        .msg .bubble .mermaid-wrap svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 对话底部 */
+        .chat-input-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+        .chat-input-row input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(167, 139, 250, 0.03);
+            border-radius: 8px;
+            color: var(--t1);
+            padding: 8px 12px;
+            font-size: 13px;
+            font-family: 'Segoe UI', sans-serif;
+            outline: none;
+            transition: var(--transition-smooth);
+            min-width: 60px;
+        }
+        .chat-input-row input:focus {
+            border-color: rgba(167, 139, 250, 0.1);
+        }
+        .chat-input-row input::placeholder {
+            color: var(--t3);
+            opacity: 0.3;
+        }
+        .chat-input-row .btn-send {
+            background: rgba(167, 139, 250, 0.04);
+            border: 1px solid rgba(167, 139, 250, 0.04);
+            border-radius: 8px;
+            color: var(--t2);
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: var(--transition-smooth);
+            font-family: 'Segoe UI', sans-serif;
+            white-space: nowrap;
+        }
+        .chat-input-row .btn-send:hover {
+            border-color: rgba(167, 139, 250, 0.1);
+            color: var(--t1);
+        }
+
+        .chat-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .chat-footer .chat-tools {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .chat-footer .chat-tools .btn {
+            background: rgba(167, 139, 250, 0.02);
+            border: 1px solid rgba(167, 139, 250, 0.03);
+            border-radius: 4px;
+            color: var(--t2);
+            padding: 3px 10px;
+            cursor: pointer;
+            font-size: 9px;
+            letter-spacing: 2px;
+            transition: var(--transition-smooth);
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .chat-footer .chat-tools .btn:hover {
+            border-color: rgba(167, 139, 250, 0.08);
+            color: var(--t1);
+        }
+        .chat-footer .chat-status {
+            font-size: 9px;
+            color: var(--t3);
+            opacity: 0.3;
+            letter-spacing: 2px;
+        }
+        .chat-footer .chat-status .highlight {
+            color: var(--cyan);
+            opacity: 0.5;
+        }
+
+        /* ===== 底部状态 ===== */
+        .status-bar {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(167, 139, 250, 0.02);
+            font-size: 11px;
+            color: var(--t3);
+            letter-spacing: 2px;
+            opacity: 0.3;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .status-bar .status-msg {
+            opacity: 1;
+            transition: var(--transition-smooth);
+        }
+        .status-bar .status-msg.success {
+            color: var(--cyan);
+        }
+        .status-bar .status-msg.warning {
+            color: var(--gold);
+        }
+        .status-bar .status-msg.error {
+            color: #f87171;
+        }
+        .status-bar .status-msg.loading {
+            color: var(--purple);
+            animation: pulseText 1s ease-in-out infinite;
+        }
+        @keyframes pulseText {
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* ===== 导出下拉 ===== */
+        .export-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .export-dropdown .dropdown-menu {
+            position: absolute;
+            bottom: calc(100% + 4px);
+            left: 0;
+            background: var(--bg-card);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(167, 139, 250, 0.06);
+            border-radius: 8px;
+            padding: 4px 0;
+            min-width: 120px;
+            display: none;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            z-index: 50;
+        }
+        .export-dropdown .dropdown-menu.open {
+            display: block;
+        }
+        .export-dropdown .dropdown-menu .d-item {
+            padding: 6px 14px;
+            font-size: 10px;
+            color: var(--t2);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            letter-spacing: 1px;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .export-dropdown .dropdown-menu .d-item:hover {
+            background: rgba(167, 139, 250, 0.04);
+            color: var(--t1);
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 600px) {
+            body {
+                padding: 8px;
+            }
+            .app {
+                padding: 12px 12px 12px;
+                border-radius: 12px;
+            }
+            .header h1 {
+                font-size: 18px;
+                letter-spacing: 2px;
+            }
+            .header .sub {
+                font-size: 10px;
+            }
+            .panel {
+                padding: 10px 12px;
+                min-height: 260px;
+            }
+            .input-area textarea {
+                min-height: 100px;
+                font-size: 12px;
+            }
+            .chat-messages {
+                max-height: 220px;
+                min-height: 120px;
+            }
+            .msg .bubble {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+            .back-btn {
+                font-size: 10px;
+                padding: 4px 12px;
+                top: 10px;
+                left: 10px;
+            }
+            .settings-trigger {
+                top: 10px;
+                right: 10px;
+                width: 34px;
+                height: 34px;
+                font-size: 15px;
+            }
+            .settings-modal {
+                padding: 16px 16px;
+                margin: 10px;
+            }
+            .grid-2 {
+                gap: 12px;
+            }
+            .chat-input-row input {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+            .chat-input-row .btn-send {
+                font-size: 10px;
+                padding: 6px 12px;
+            }
+        }
+        @media (max-width: 400px) {
+            .app {
+                padding: 8px 8px;
+                margin-top: 24px;
+            }
+            .header h1 {
+                font-size: 15px;
+            }
+            .panel-title {
+                font-size: 9px;
+            }
+            .input-area .control-row .ctrl-group select {
+                font-size: 10px;
+                min-width: 50px;
+            }
+            .input-area .tool-row .btn {
+                font-size: 8px;
+                padding: 3px 8px;
+            }
+            .chat-footer .chat-tools .btn {
+                font-size: 7px;
+                padding: 2px 6px;
+            }
         }
     </style>
 </head>
 <body>
-<a href="index.html" style="position:fixed;top:18px;left:18px;z-index:999;font-size:13px;color:#a7b0c8;text-decoration:none;border:1px solid rgba(129,140,248,0.25);padding:6px 16px;border-radius:999px;background:rgba(10,15,44,0.85);backdrop-filter:blur(6px);font-family:system-ui,sans-serif;" onmouseover="this.style.color='#22d3ee';this.style.borderColor='#22d3ee'" onmouseout="this.style.color='#a7b0c8';this.style.borderColor='rgba(129,140,248,0.25)'">← 返回首页</a>
 
-<div class="app">
+    <!-- ===== 星空背景 ===== -->
+    <canvas id="stars"></canvas>
 
-    <div class="header">
-        <h1>🧠 Code Interpreter</h1>
-        <span class="sub">粘贴代码 · 逐行拆解</span>
+    <!-- ===== 返回按钮 ===== -->
+    <a href="index.html" class="back-btn">← 返回首页</a>
+
+    <!-- ===== 设置按钮 ===== -->
+    <div class="settings-trigger" id="settingsTrigger">⚙️</div>
+
+    <!-- ===== 设置弹窗 ===== -->
+    <div class="settings-overlay" id="settingsOverlay">
+        <div class="settings-modal">
+            <div class="sm-header">
+                <h2>⚙️ API 设置</h2>
+                <button class="close-btn" id="settingsClose">✕</button>
+            </div>
+
+            <div class="sm-row">
+                <label>引擎</label>
+                <select id="engineSelectModal">
+                    <option value="local">⚡ 本地解释器</option>
+                    <option value="api">🌐 DeepSeek API</option>
+                    <option value="custom">🔌 自定义 API</option>
+                </select>
+            </div>
+
+            <div class="sm-row">
+                <label>API Key</label>
+                <input type="password" id="apiKeyModal" placeholder="sk-... 输入你的 API Key" />
+            </div>
+
+            <div class="sm-row">
+                <label>API 端点</label>
+                <input type="text" id="apiEndpointModal" value="https://api.deepseek.com/v1/chat/completions" />
+            </div>
+
+            <div class="sm-row">
+                <label>模型</label>
+                <select id="modelSelectModal">
+                    <option value="deepseek-chat">deepseek-chat</option>
+                    <option value="deepseek-coder">deepseek-coder</option>
+                    <option value="gpt-4o">gpt-4o</option>
+                    <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+                    <option value="claude-3.5-sonnet">claude-3.5-sonnet</option>
+                    <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+                    <option value="custom">自定义</option>
+                </select>
+            </div>
+
+            <div class="sm-actions">
+                <button class="btn" id="settingsCancel">取消</button>
+                <button class="btn btn-primary" id="settingsSave">💾 保存设置</button>
+            </div>
+        </div>
     </div>
 
-    <div class="grid-2">
-        <div class="panel">
-            <div class="panel-title">📝 输入代码</div>
-            <textarea id="codeInput" placeholder="粘贴一段 JavaScript / TypeScript / Python 代码，点击「解释代码」"></textarea>
+    <!-- ===== 主应用 ===== -->
+    <div class="app">
 
-            <div class="quick-examples">
-                <button data-example="game">🎮 游戏主循环</button>
-                <button data-example="particle">✨ 粒子系统</button>
-                <button data-example="canvas">🖌️ Canvas 绘制</button>
-                <button data-example="collision">💥 碰撞检测</button>
-            </div>
-
-            <div class="toolbar">
-                <button class="btn btn-primary" id="explainBtn">📖 解释代码</button>
-                <button class="btn" id="clearBtn">清空</button>
-                <button class="btn" id="copyOutputBtn">📋 复制</button>
-            </div>
-            <div class="status-msg" id="statusMsg">就绪</div>
+        <div class="header">
+            <h1>🧠 Code Interpreter</h1>
+            <span class="sub">对话式 · 多语言 · 导出报告</span>
         </div>
 
-        <div class="panel">
-            <div class="panel-title">📖 解释结果</div>
-            <div class="output-box" id="outputBox">
-                <span class="placeholder">粘贴代码，点击「解释代码」…</span>
+        <div class="grid-2">
+
+            <!-- ===== 左侧：输入区 ===== -->
+            <div class="panel">
+                <div class="panel-title">📝 输入代码</div>
+                <div class="input-area">
+                    <div class="control-row">
+                        <div class="ctrl-group">
+                            <label>语言</label>
+                            <select id="langSelect">
+                                <option value="auto">🔍 自动</option>
+                                <option value="javascript">JavaScript</option>
+                                <option value="typescript">TypeScript</option>
+                                <option value="python">Python</option>
+                                <option value="java">Java</option>
+                                <option value="cpp">C++</option>
+                                <option value="go">Go</option>
+                                <option value="rust">Rust</option>
+                            </select>
+                        </div>
+                        <div class="ctrl-group">
+                            <label>引擎</label>
+                            <select id="engineSelect">
+                                <option value="local">⚡ 本地</option>
+                                <option value="api">🌐 DeepSeek</option>
+                                <option value="custom">🔌 自定义</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <textarea id="codeInput" placeholder="粘贴代码，点击「解释代码」"></textarea>
+
+                    <div class="quick-row">
+                        <button data-example="game">🎮 游戏循环</button>
+                        <button data-example="particle">✨ 粒子系统</button>
+                        <button data-example="canvas">🖌️ Canvas</button>
+                        <button data-example="collision">💥 碰撞检测</button>
+                        <button data-example="java">☕ Java</button>
+                        <button data-example="rust">🦀 Rust</button>
+                    </div>
+
+                    <div class="tool-row">
+                        <button class="btn btn-primary" id="explainBtn">📖 解释代码</button>
+                        <button class="btn btn-api" id="apiTestBtn">🔌 测试 API</button>
+                        <button class="btn" id="clearBtn">清空输入</button>
+                    </div>
+                </div>
             </div>
+
+            <!-- ===== 右侧：对话区 ===== -->
+            <div class="panel">
+                <div class="panel-title">💬 对话</div>
+                <div class="chat-area">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="msg assistant">
+                            <div class="avatar">🧠</div>
+                            <div class="bubble">
+                                <div class="msg-label">助手</div>
+                                粘贴代码到左侧，点击「解释代码」开始对话。<br />
+                                支持 7 种语言 · 可追问 · 限 10 轮（本地模式）
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-row">
+                        <input type="text" id="chatInput" placeholder="追问代码逻辑…" />
+                        <button class="btn-send" id="chatSendBtn">发送</button>
+                    </div>
+
+                    <div class="chat-footer">
+                        <div class="chat-tools">
+                            <button class="btn" id="copyChatBtn">📋 复制对话</button>
+                            <div class="export-dropdown">
+                                <button class="btn" id="exportChatBtn">📤 导出对话 ▼</button>
+                                <div class="dropdown-menu" id="exportChatMenu">
+                                    <div class="d-item" data-format="html">🌐 HTML 报告</div>
+                                    <div class="d-item" data-format="markdown">📝 Markdown</div>
+                                    <div class="d-item" data-format="txt">📄 纯文本</div>
+                                </div>
+                            </div>
+                            <button class="btn" id="clearChatBtn">🗑️ 清空</button>
+                        </div>
+                        <div class="chat-status" id="chatStatus">轮次: 0/10 · 引擎: 本地</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+        <!-- ===== 底部状态 ===== -->
+        <div class="status-bar">
+            <span class="status-msg" id="statusMsg">就绪</span>
+            <span>⌘+Enter 快速解释</span>
+        </div>
+
     </div>
 
-</div>
+    <script>
+        // ================================================================
+        //  🧠 Code Interpreter · 对话引擎
+        // ================================================================
 
-<script>
-    // ================================================================
-    //  Code Interpreter · 代码解释器（字体已调大）
-    // ================================================================
+        // ---- DOM refs ----
+        const codeInput = document.getElementById('codeInput');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatSendBtn = document.getElementById('chatSendBtn');
+        const explainBtn = document.getElementById('explainBtn');
+        const apiTestBtn = document.getElementById('apiTestBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const clearChatBtn = document.getElementById('clearChatBtn');
+        const copyChatBtn = document.getElementById('copyChatBtn');
+        const exportChatBtn = document.getElementById('exportChatBtn');
+        const exportChatMenu = document.getElementById('exportChatMenu');
+        const statusMsg = document.getElementById('statusMsg');
+        const chatStatus = document.getElementById('chatStatus');
+        const langSelect = document.getElementById('langSelect');
+        const engineSelect = document.getElementById('engineSelect');
 
-    const codeInput = document.getElementById('codeInput');
-    const outputBox = document.getElementById('outputBox');
-    const explainBtn = document.getElementById('explainBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const copyOutputBtn = document.getElementById('copyOutputBtn');
-    const statusMsg = document.getElementById('statusMsg');
+        // ---- 设置弹窗 ----
+        const settingsTrigger = document.getElementById('settingsTrigger');
+        const settingsOverlay = document.getElementById('settingsOverlay');
+        const settingsClose = document.getElementById('settingsClose');
+        const settingsCancel = document.getElementById('settingsCancel');
+        const settingsSave = document.getElementById('settingsSave');
+        const engineSelectModal = document.getElementById('engineSelectModal');
+        const apiKeyModal = document.getElementById('apiKeyModal');
+        const apiEndpointModal = document.getElementById('apiEndpointModal');
+        const modelSelectModal = document.getElementById('modelSelectModal');
 
-    const EXAMPLES = {
-        game: `
-// 游戏主循环
-function gameLoop() {
-    update();
-    render();
-    requestAnimationFrame(gameLoop);
-}
-gameLoop();`,
-        particle: `
-// 粒子系统
-class Particle {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.vx = (Math.random() - 0.5) * 4;
-        this.vy = (Math.random() - 0.5) * 4;
-        this.life = 60;
-    }
-    update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        this.life--;
-    }
-    draw(ctx) {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
-        ctx.fill();
-    }
-}`,
-        canvas: `
-// Canvas 绘制
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+        // ---- 对话状态 ----
+        let chatHistory = [];
+        let turnCount = 0;
+        const MAX_TURNS = 10;
+        let currentCode = '';
 
-ctx.fillStyle = '#0F0D1A';
-ctx.fillRect(0, 0, 800, 600);
+        // ---- 配置 ----
+        let config = {
+            engine: 'local',
+            apiKey: '',
+            endpoint: 'https://api.deepseek.com/v1/chat/completions',
+            model: 'deepseek-chat'
+        };
 
-ctx.beginPath();
-ctx.arc(400, 300, 50, 0, Math.PI * 2);
-ctx.fillStyle = '#A78BFA';
-ctx.fill();
-ctx.stroke();`,
-        collision: `
-// 碰撞检测（圆形 vs 圆形）
-function checkCollision(a, b) {
-    const dx = a.x - b.x;
-    const dy = a.y - b.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    return dist < a.radius + b.radius;
-}`
-    };
+        // ---- 加载配置 ----
+        function loadConfig() {
+            try {
+                const saved = localStorage.getItem('code_interpreter_config');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    Object.assign(config, parsed);
+                }
+            } catch (e) { /* ignore */ }
+            engineSelect.value = config.engine;
+            engineSelectModal.value = config.engine;
+            apiKeyModal.value = config.apiKey || '';
+            apiEndpointModal.value = config.endpoint || 'https://api.deepseek.com/v1/chat/completions';
+            modelSelectModal.value = config.model || 'deepseek-chat';
+            updateChatStatus();
+        }
 
-    function interpret(code) {
-        if (!code.trim()) return '⚠️ 请输入代码';
-        const lines = code.split('\n');
-        let output = '';
-        const isPython = code.includes('def ') && !code.includes('function');
-        output += `📌 语言：${isPython ? 'Python' : 'JavaScript'}\n`;
-        output += `📊 行数：${lines.length}\n`;
-        output += `═`.repeat(40) + '\n\n';
+        function saveConfig() {
+            config.engine = engineSelectModal.value;
+            config.apiKey = apiKeyModal.value;
+            config.endpoint = apiEndpointModal.value;
+            config.model = modelSelectModal.value;
+            try {
+                localStorage.setItem('code_interpreter_config', JSON.stringify(config));
+            } catch (e) { /* ignore */ }
+            engineSelect.value = config.engine;
+            setStatus('✅ 设置已保存', 'success');
+            setTimeout(() => setStatus('就绪'), 1500);
+        }
 
-        for (let i = 0; i < lines.length; i++) {
-            const raw = lines[i];
-            const trimmed = raw.trim();
-            if (!trimmed) { output += `\n`; continue; }
-            const lineNum = (i + 1).toString().padStart(3, ' ');
-            const indentStr = ' '.repeat(Math.floor((raw.search(/\S/) || 0) / 2));
+        // ---- 状态更新 ----
+        function setStatus(msg, type = '') {
+            statusMsg.textContent = msg;
+            statusMsg.className = 'status-msg' + (type ? ' ' + type : '');
+        }
 
-            let match = trimmed.match(/^function\s+(\w+)\s*\(/);
-            if (match) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    🔹 定义函数「${match[1]}」\n    💡 调用方式：${match[1]}()\n`;
-                continue;
-            }
-            match = trimmed.match(/^class\s+(\w+)/);
-            if (match) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    🔹 定义类「${match[1]}」\n    💡 用于创建对象实例\n`;
-                continue;
-            }
-            if (trimmed.includes('requestAnimationFrame')) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    🎯 requestAnimationFrame：浏览器动画循环 API\n    💡 每帧自动调用，实现流畅动画\n`;
-                continue;
-            }
-            if (trimmed.includes('getContext')) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    🖌️ getContext('2d')：获取 Canvas 2D 绘图上下文\n    💡 后续所有绘图操作都通过 ctx 调用\n`;
-                continue;
-            }
-            if (trimmed.includes('beginPath')) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    ✏️ beginPath()：开始一条新路径\n    💡 每次绘制新图形前必须调用\n`;
-                continue;
-            }
-            if (trimmed.includes('arc(')) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    ⭕ arc(x, y, radius, startAngle, endAngle)：绘制圆弧/圆形\n    💡 参数：圆心坐标、半径、起始/结束角度（弧度）\n`;
-                continue;
-            }
-            if (trimmed.includes('fillRect')) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    📦 fillRect(x, y, w, h)：填充矩形\n    💡 参数：左上角坐标、宽度、高度\n`;
-                continue;
-            }
-            if (trimmed.includes('fillStyle')) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    🎨 fillStyle：设置填充颜色\n`;
-                const cm = trimmed.match(/['"]([^'"]*)['"]/);
-                if (cm) output += `    💡 当前颜色：${cm[1]}\n`;
-                continue;
-            }
-            if (trimmed.includes('Math.random')) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    🎲 Math.random()：生成 0~1 之间的随机数\n    💡 常用于粒子位置、颜色随机化\n`;
-                continue;
-            }
-            if (trimmed.includes('Math.sqrt')) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    📐 Math.sqrt()：计算平方根\n    💡 常用于计算距离（勾股定理）\n`;
-                continue;
-            }
-            match = trimmed.match(/^(const|let|var)\s+(\w+)/);
-            if (match) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    📦 声明变量「${match[2]}」(${match[1]})\n`;
-                if (trimmed.includes('=')) output += `    💡 初始值：${trimmed.split('=')[1].trim()}\n`;
-                continue;
-            }
-            if (trimmed.match(/^(for|while)\s*\(/)) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    🔁 ${trimmed.split('(')[0]} 循环\n    💡 重复执行内部代码块\n`;
-                continue;
-            }
-            if (trimmed.match(/^if\s*\(/)) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    🔀 if 条件判断\n`;
-                const cond = trimmed.match(/\(([^)]*)\)/);
-                if (cond) output += `    💡 条件：${cond[1]}\n`;
-                continue;
-            }
-            if (trimmed.includes('new ')) {
-                const nm = trimmed.match(/new\s+(\w+)/);
-                if (nm) {
-                    output += `${lineNum} ${indentStr}${trimmed}\n    🏗️ 创建「${nm[1]}」实例\n    💡 使用 new 关键字调用构造函数\n`;
+        function updateChatStatus() {
+            const engineLabel = config.engine === 'local' ? '本地' :
+                config.engine === 'api' ? 'DeepSeek' : '自定义';
+            chatStatus.textContent = `轮次: ${turnCount}/${MAX_TURNS} · 引擎: ${engineLabel}`;
+        }
+
+        // ---- 语言检测 ----
+        function detectLanguage(code) {
+            if (!code.trim()) return 'unknown';
+            const t = code.trim();
+            if (/^import\s+java/.test(t) || /public\s+class/.test(t)) return 'java';
+            if (/^fn\s+\w+/.test(t) || /fn\s+main/.test(t) || /::/.test(t)) return 'rust';
+            if (/^package\s+main/.test(t) || /^func\s+\w+/.test(t) || /:=/.test(t)) return 'go';
+            if (/^#include\s*[<"]/.test(t) || /using namespace/.test(t) || /cout/.test(t)) return 'cpp';
+            if (/^def\s+\w+/.test(t) || /^class\s+\w+.*:/m.test(t) || /:\s*$/m.test(t)) return 'python';
+            if (/^interface\s+/.test(t) || /^type\s+/.test(t) && /{/.test(t)) return 'typescript';
+            if (/^function\s+/.test(t) || /^const\s+\w+\s*=\s*\(/.test(t) || /=>/.test(t)) return 'javascript';
+            if (/^let\s+/.test(t) || /^var\s+/.test(t) || /^console\./.test(t)) return 'javascript';
+            return 'unknown';
+        }
+
+        function getLanguageLabel(lang) {
+            const map = {
+                javascript: 'JavaScript',
+                typescript: 'TypeScript',
+                python: 'Python',
+                java: 'Java',
+                cpp: 'C++',
+                go: 'Go',
+                rust: 'Rust',
+                unknown: '未知',
+                auto: '自动检测'
+            };
+            return map[lang] || lang;
+        }
+
+        // ---- 本地解释器 ----
+        function interpretLocal(code, forcedLang) {
+            if (!code.trim()) return '⚠️ 请输入代码';
+
+            const detected = detectLanguage(code);
+            const lang = forcedLang === 'auto' ? detected : forcedLang;
+            const langLabel = getLanguageLabel(lang);
+
+            const lines = code.split('\n');
+            let output = `📌 语言：${langLabel}${lang === 'auto' ? ' (自动检测)' : ''}\n`;
+            output += `📊 行数：${lines.length}\n`;
+            output += `═`.repeat(40) + '\n\n';
+
+            for (let i = 0; i < lines.length; i++) {
+                const raw = lines[i];
+                const trimmed = raw.trim();
+                if (!trimmed) { output += `\n`; continue; }
+                const lineNum = (i + 1).toString().padStart(3, ' ');
+                const indentStr = ' '.repeat(Math.floor((raw.search(/\S/) || 0) / 2));
+
+                let match = trimmed.match(/^function\s+(\w+)\s*\(/);
+                if (match) {
+                    output += `${lineNum} ${indentStr}${trimmed}\n    🔹 定义函数「${match[1]}」\n    💡 调用方式：${match[1]}()\n`;
                     continue;
                 }
-            }
-            if (trimmed.startsWith('//') || trimmed.startsWith('#')) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    💬 注释：${trimmed.replace(/^\/\/\s*/, '').replace(/^#\s*/, '')}\n`;
-                continue;
-            }
-            if (trimmed.includes('=>')) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    ➡️ 箭头函数\n    💡 简写函数，自动绑定 this\n`;
-                continue;
-            }
-            if (trimmed.startsWith('import') || trimmed.startsWith('export')) {
-                output += `${lineNum} ${indentStr}${trimmed}\n    📦 ${trimmed.split(' ')[0]} 模块语句\n`;
-                continue;
-            }
-            if (trimmed) {
-                output += `${lineNum} ${indentStr}${trimmed}\n`;
-                const cm = trimmed.match(/^(\w+)\(/);
-                if (cm && !trimmed.includes('function') && !trimmed.includes('class')) {
-                    output += `    📞 调用函数：${cm[1]}()\n`;
-                } else {
-                    output += `    📝 执行语句\n`;
+                match = trimmed.match(/^def\s+(\w+)\s*\(/);
+                if (match) {
+                    output += `${lineNum} ${indentStr}${trimmed}\n    🔹 定义 Python 函数「${match[1]}」\n    💡 调用方式：${match[1]}()\n`;
+                    continue;
                 }
+                match = trimmed.match(/^class\s+(\w+)/);
+                if (match) {
+                    output += `${lineNum} ${indentStr}${trimmed}\n    🔹 定义类「${match[1]}」\n    💡 用于创建对象实例\n`;
+                    continue;
+                }
+                match = trimmed.match(/^(const|let|var)\s+(\w+)/);
+                if (match) {
+                    output += `${lineNum} ${indentStr}${trimmed}\n    📦 声明变量「${match[2]}」(${match[1]})\n`;
+                    if (trimmed.includes('=')) output += `    💡 初始值：${trimmed.split('=')[1].trim()}\n`;
+                    continue;
+                }
+                if (trimmed.match(/^(for|while)\s*\(/)) {
+                    output += `${lineNum} ${indentStr}${trimmed}\n    🔁 ${trimmed.split('(')[0]} 循环\n    💡 重复执行内部代码块\n`;
+                    continue;
+                }
+                if (trimmed.match(/^if\s*\(/)) {
+                    output += `${lineNum} ${indentStr}${trimmed}\n    🔀 if 条件判断\n`;
+                    const cond = trimmed.match(/\(([^)]*)\)/);
+                    if (cond) output += `    💡 条件：${cond[1]}\n`;
+                    continue;
+                }
+                if (trimmed.startsWith('//') || trimmed.startsWith('#')) {
+                    output += `${lineNum} ${indentStr}${trimmed}\n    💬 注释\n`;
+                    continue;
+                }
+                if (trimmed.includes('requestAnimationFrame')) {
+                    output += `${lineNum} ${indentStr}${trimmed}\n    🎯 requestAnimationFrame：浏览器动画循环 API\n`;
+                    continue;
+                }
+                if (trimmed.includes('getContext')) {
+                    output += `${lineNum} ${indentStr}${trimmed}\n    🖌️ getContext('2d')：Canvas 2D 绘图上下文\n`;
+                    continue;
+                }
+                if (trimmed.includes('Math.random')) {
+                    output += `${lineNum} ${indentStr}${trimmed}\n    🎲 Math.random()：生成随机数\n`;
+                    continue;
+                }
+                if (trimmed) {
+                    output += `${lineNum} ${indentStr}${trimmed}\n    📝 执行语句\n`;
+                }
+            }
+
+            output += `\n═`.repeat(40) + `\n📋 摘要\n`;
+            const fc = (code.match(/function\s+\w+/g) || []).length +
+                (code.match(/def\s+\w+/g) || []).length;
+            const cc = (code.match(/class\s+\w+/g) || []).length;
+            const vc = (code.match(/(const|let|var)\s+\w+/g) || []).length;
+            output += `   - 函数：${fc} 个\n   - 类：${cc} 个\n   - 变量声明：${vc} 个\n   - 语言：${langLabel}\n`;
+            return output;
+        }
+
+        // ---- 本地追问（简单规则） ----
+        function localFollowUp(question, code, lastAnswer) {
+            const q = question.toLowerCase();
+            if (q.includes('优化') || q.includes('改进')) {
+                return '💡 优化建议：\n- 考虑将重复逻辑封装为函数\n- 使用更高效的数据结构（如 Map/Set）\n- 注意边界条件处理\n- 可以添加注释提高可读性';
+            }
+            if (q.includes('bug') || q.includes('错误') || q.includes('问题')) {
+                return '🐛 常见问题排查：\n- 检查变量是否正确声明\n- 确认循环边界条件\n- 验证函数参数类型\n- 查看控制台错误信息';
+            }
+            if (q.includes('作用') || q.includes('做什么')) {
+                return '📖 这段代码的主要作用是：\n' + (code ? code.slice(0, 200) + '...\n' : '') +
+                    '建议查看函数定义和调用关系来理解整体逻辑。';
+            }
+            if (q.includes('复杂') || q.includes('太难')) {
+                return '🧩 理解建议：\n- 从 main 函数开始读\n- 先看输入输出\n- 忽略实现细节，关注数据流\n- 可以画流程图辅助理解';
+            }
+            return '💬 本地模式下，我可以回答简单问题。\n当前代码已解释，你可以追问：\n- “怎么优化？”\n- “有什么bug？”\n- “这段代码做什么？”\n\n💡 切换到 API 模式可获得更智能的回答。';
+        }
+
+        // ---- API 调用 ----
+        async function callAPI(messages, endpoint, key, model) {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${key}`
+                },
+                body: JSON.stringify({
+                    model: model,
+                    messages: messages,
+                    temperature: 0.3,
+                    max_tokens: 2000
+                })
+            });
+            if (!response.ok) {
+                const err = await response.text();
+                throw new Error(`API 请求失败 (${response.status}): ${err}`);
+            }
+            const data = await response.json();
+            return data.choices?.[0]?.message?.content || '⚠️ API 返回格式异常';
+        }
+
+        // ---- 添加消息到对话 ----
+        function addMessage(role, content, isMermaid = false) {
+            const div = document.createElement('div');
+            div.className = `msg ${role}`;
+
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = role === 'user' ? '👤' : '🧠';
+
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+
+            const label = document.createElement('div');
+            label.className = 'msg-label';
+            label.textContent = role === 'user' ? '你' : '助手';
+            bubble.appendChild(label);
+
+            const contentDiv = document.createElement('div');
+            contentDiv.textContent = content;
+            bubble.appendChild(contentDiv);
+
+            // 检测并渲染 Mermaid
+            if (role === 'assistant' && content.includes('```mermaid')) {
+                const mermaidMatch = content.match(/```mermaid\s*([\s\S]*?)```/);
+                if (mermaidMatch) {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'mermaid-wrap';
+                    const mermaidDiv = document.createElement('div');
+                    mermaidDiv.className = 'mermaid';
+                    mermaidDiv.textContent = mermaidMatch[1].trim();
+                    wrap.appendChild(mermaidDiv);
+                    bubble.appendChild(wrap);
+                    // 延迟渲染
+                    setTimeout(() => {
+                        if (typeof mermaid !== 'undefined') {
+                            mermaid.run({ nodes: [mermaidDiv] });
+                        }
+                    }, 100);
+                }
+            }
+
+            div.appendChild(avatar);
+            div.appendChild(bubble);
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            chatHistory.push({ role, content });
+            if (role === 'assistant') {
+                turnCount++;
+                updateChatStatus();
             }
         }
 
-        output += `\n═`.repeat(40) + `\n📋 摘要\n`;
-        const fc = (code.match(/function\s+\w+/g) || []).length;
-        const cc = (code.match(/class\s+\w+/g) || []).length;
-        const vc = (code.match(/const|let|var\s+\w+/g) || []).length;
-        output += `   - 函数：${fc} 个\n   - 类：${cc} 个\n   - 变量声明：${vc} 个\n`;
-        return output;
-    }
+        // ---- 主解释 ----
+        async function explain() {
+            const code = codeInput.value;
+            if (!code.trim()) {
+                setStatus('⚠️ 请先输入代码', 'warning');
+                return;
+            }
+            currentCode = code;
 
-    explainBtn.addEventListener('click', () => {
-        const code = codeInput.value;
-        if (!code.trim()) { statusMsg.textContent = '⚠️ 请先输入代码'; return; }
-        outputBox.innerHTML = interpret(code);
-        statusMsg.textContent = '✅ 解释完成';
-    });
+            // 如果对话轮次已满 10 轮，提示
+            if (turnCount >= MAX_TURNS && config.engine === 'local') {
+                setStatus('⚠️ 已达本地对话上限 (10轮)，请切换到 API 模式继续追问', 'warning');
+                return;
+            }
 
-    clearBtn.addEventListener('click', () => {
-        codeInput.value = '';
-        outputBox.innerHTML = '<span class="placeholder">粘贴代码，点击「解释代码」…</span>';
-        statusMsg.textContent = '已清空';
-    });
+            const lang = langSelect.value;
+            const langLabel = getLanguageLabel(lang === 'auto' ? detectLanguage(code) : lang);
+            const engine = config.engine;
 
-    copyOutputBtn.addEventListener('click', () => {
-        const text = outputBox.textContent;
-        if (!text || text.includes('placeholder')) { statusMsg.textContent = '⚠️ 没有内容可复制'; return; }
-        navigator.clipboard.writeText(text).then(() => {
-            statusMsg.textContent = '✅ 已复制到剪贴板';
-            setTimeout(() => statusMsg.textContent = '就绪', 1500);
+            // 添加用户消息
+            addMessage('user', `📝 代码 (${langLabel})\n\`\`\`\n${code}\n\`\`\``);
+
+            setStatus('⏳ 正在解释...', 'loading');
+
+            try {
+                let result = '';
+                if (engine === 'local') {
+                    result = interpretLocal(code, lang);
+                } else {
+                    // API 模式
+                    const key = config.apiKey || apiKeyModal.value;
+                    const endpoint = config.endpoint || apiEndpointModal.value;
+                    const model = config.model || modelSelectModal.value || 'deepseek-chat';
+                    if (!key || !endpoint) {
+                        setStatus('⚠️ 请配置 API Key 和端点 (点击 ⚙️)', 'warning');
+                        return;
+                    }
+                    const messages = [
+                        { role: 'system', content: '你是一个专业的代码解释器。请逐行解释代码，如果可能，生成 Mermaid 流程图。' },
+                        { role: 'user', content: `请解释以下 ${langLabel} 代码，逐行说明作用，并生成 Mermaid 流程图：\n\`\`\`\n${code}\n\`\`\`` }
+                    ];
+                    result = await callAPI(messages, endpoint, key, model);
+                }
+                addMessage('assistant', result);
+                setStatus('✅ 解释完成', 'success');
+                updateChatStatus();
+            } catch (err) {
+                setStatus('⚠️ 解释失败: ' + err.message, 'error');
+                addMessage('assistant', `⚠️ 解释失败: ${err.message}`);
+            }
+        }
+
+        // ---- 追问 ----
+        async function askFollowUp(question) {
+            if (!question.trim()) return;
+            if (turnCount >= MAX_TURNS && config.engine === 'local') {
+                setStatus('⚠️ 已达本地对话上限 (10轮)，请切换到 API 模式继续追问', 'warning');
+                return;
+            }
+
+            addMessage('user', `💬 ${question}`);
+            chatInput.value = '';
+            setStatus('⏳ 思考中...', 'loading');
+
+            try {
+                let result = '';
+                if (config.engine === 'local') {
+                    const lastAnswer = chatHistory.filter(m => m.role === 'assistant').pop()?.content || '';
+                    result = localFollowUp(question, currentCode, lastAnswer);
+                } else {
+                    const key = config.apiKey || apiKeyModal.value;
+                    const endpoint = config.endpoint || apiEndpointModal.value;
+                    const model = config.model || modelSelectModal.value || 'deepseek-chat';
+                    if (!key || !endpoint) {
+                        setStatus('⚠️ 请配置 API Key 和端点', 'warning');
+                        return;
+                    }
+                    // 构建完整对话上下文
+                    const messages = [
+                        { role: 'system', content: '你是一个专业的代码解释器，请回答用户关于代码的问题。' }
+                    ];
+                    // 取最近 8 轮对话作为上下文
+                    const recent = chatHistory.slice(-8);
+                    for (const m of recent) {
+                        messages.push({ role: m.role === 'user' ? 'user' : 'assistant', content: m.content });
+                    }
+                    messages.push({ role: 'user', content: question });
+                    result = await callAPI(messages, endpoint, key, model);
+                }
+                addMessage('assistant', result);
+                setStatus('✅ 回答完成', 'success');
+                updateChatStatus();
+            } catch (err) {
+                setStatus('⚠️ 追问失败: ' + err.message, 'error');
+                addMessage('assistant', `⚠️ 追问失败: ${err.message}`);
+            }
+        }
+
+        // ---- 清空对话 ----
+        function clearChat() {
+            chatMessages.innerHTML = `
+                <div class="msg assistant">
+                    <div class="avatar">🧠</div>
+                    <div class="bubble">
+                        <div class="msg-label">助手</div>
+                        对话已清空。粘贴代码到左侧，点击「解释代码」重新开始。
+                    </div>
+                </div>
+            `;
+            chatHistory = [];
+            turnCount = 0;
+            currentCode = '';
+            updateChatStatus();
+            setStatus('对话已清空', '');
+        }
+
+        // ---- 复制对话 ----
+        function copyChat() {
+            const text = chatHistory.map(m =>
+                `${m.role === 'user' ? '👤 你' : '🧠 助手'}:\n${m.content}`
+            ).join('\n\n---\n\n');
+            if (!text) {
+                setStatus('⚠️ 没有内容可复制', 'warning');
+                return;
+            }
+            navigator.clipboard.writeText(text).then(() => {
+                setStatus('✅ 对话已复制', 'success');
+                setTimeout(() => setStatus('就绪'), 1500);
+            });
+        }
+
+        // ---- 导出对话 ----
+        function exportChat(format) {
+            const code = currentCode || '（无代码）';
+            const history = chatHistory.map(m =>
+                `${m.role === 'user' ? '👤 用户' : '🧠 助手'} (${m.role === 'user' ? '提问' : '回答'}):\n${m.content}`
+            ).join('\n\n---\n\n');
+            const timestamp = new Date().toLocaleString('zh-CN');
+            const langLabel = getLanguageLabel(langSelect.value === 'auto' ? detectLanguage(code) : langSelect.value);
+            const engineLabel = config.engine === 'local' ? '本地解释器' :
+                config.engine === 'api' ? 'DeepSeek API' : '自定义 API';
+
+            let content = '';
+            const title = 'Code Interpreter · 对话报告';
+
+            if (format === 'html') {
+                const hasMermaid = history.includes('```mermaid');
+                content = `<!DOCTYPE html>
+        <html lang="zh-CN">
+        <head><meta charset="UTF-8"><title>${title}</title>
+        ${hasMermaid ? '<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"><\/script>' : ''}
+        <style>
+        *{margin:0;padding:0;box-sizing:border-box}body{background:#060a1f;color:#e8edff;padding:32px 20px;display:flex;justify-content:center;font-family:'Segoe UI',sans-serif;min-height:100vh}
+        .report{max-width:900px;width:100%;background:rgba(10,8,12,0.55);backdrop-filter:blur(20px);border:1px solid rgba(167,139,250,0.04);border-radius:14px;padding:28px 32px}
+        .header{border-bottom:1px solid rgba(167,139,250,0.04);padding-bottom:14px;margin-bottom:20px}
+        .header h1{font-size:24px;font-weight:600;letter-spacing:3px;background:linear-gradient(135deg,#e8edff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .header .meta{font-size:12px;color:#94a3b8;opacity:0.4;letter-spacing:1px;margin-top:4px}
+        .section{margin-bottom:20px}
+        .section h2{font-size:15px;font-weight:500;color:#a78bfa;letter-spacing:2px;margin-bottom:8px;border-bottom:1px solid rgba(167,139,250,0.02);padding-bottom:4px}
+        .section pre{background:rgba(0,0,0,0.3);border:1px solid rgba(167,139,250,0.03);border-radius:8px;padding:12px 16px;font-family:'Fira Code',monospace;font-size:13px;line-height:1.8;color:#94a3b8;white-space:pre-wrap;word-break:break-word;max-height:300px;overflow:auto}
+        .section .dialogue{background:rgba(0,0,0,0.2);border:1px solid rgba(167,139,250,0.02);border-radius:8px;padding:14px 18px;font-family:'Fira Code',monospace;font-size:13px;line-height:1.9;color:#94a3b8;white-space:pre-wrap;word-break:break-word;max-height:500px;overflow:auto}
+        .footer{margin-top:20px;padding-top:12px;border-top:1px solid rgba(167,139,250,0.02);font-size:11px;color:#4a5580;text-align:center;letter-spacing:2px;opacity:0.3}
+        .mermaid-wrap{background:rgba(0,0,0,0.15);border-radius:8px;padding:12px;margin:8px 0;border:1px solid rgba(167,139,250,0.02)}
+        .mermaid-wrap svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        @media(max-width:600px){body{padding:16px 12px}.report{padding:18px 16px}.header h1{font-size:18px}}
+        </style></head>
+        <body><div class="report">
+        <div class="header"><h1>🧠 ${title}</h1><div class="meta">📅 ${timestamp} · 📌 ${langLabel} · ⚙️ ${engineLabel} · 共 ${chatHistory.length} 条消息</div></div>
+        <div class="section"><h2>📝 原始代码</h2><pre><code>${code}</code></pre></div>
+        <div class="section"><h2>💬 完整对话</h2><div class="dialogue">${history}</div></div>
+        ${hasMermaid ? `<div class="section"><h2>📊 图表</h2><div class="mermaid-wrap"><div class="mermaid">${extractMermaid(history)}</div></div></div>
+        <script>if(typeof mermaid!=='undefined'){mermaid.initialize({theme:'dark',themeVariables:{background:'#0a0f2c',primaryColor:'#1a1420',primaryBorderColor:'rgba(167,139,250,0.15)',primaryTextColor:'#e8edff',lineColor:'rgba(167,139,250,0.15)',fontFamily:'"Segoe UI",sans-serif',fontSize:'12px'}});mermaid.run({nodes:document.querySelectorAll('.mermaid')});}<\/script>` : ''}
+        <div class="footer">Generated by MindArena · Code Interpreter</div>
+        </div></body></html>`;
+            } else if (format === 'markdown') {
+                content =
+                    `# 🧠 ${title}\n\n**生成时间**：${timestamp}\n**语言**：${langLabel}\n**引擎**：${engineLabel}\n**消息数**：${chatHistory.length}\n\n---\n\n## 📝 原始代码\n\n\`\`\`\n${code}\n\`\`\`\n\n---\n\n## 💬 完整对话\n\n${history}\n\n---\n\n*Generated by MindArena · Code Interpreter*`;
+            } else {
+                content =
+                    `${'═'.repeat(60)}\n🧠 ${title}\n${'═'.repeat(60)}\n生成时间：${timestamp}\n语言：${langLabel}\n引擎：${engineLabel}\n消息数：${chatHistory.length}\n${'═'.repeat(60)}\n\n📝 原始代码\n${'═'.repeat(60)}\n${code}\n${'═'.repeat(60)}\n\n💬 完整对话\n${'═'.repeat(60)}\n${history}\n${'═'.repeat(60)}\nGenerated by MindArena · Code Interpreter`;
+            }
+
+            const ext = { html: 'html', markdown: 'md', txt: 'txt' } [format];
+            const mime = { html: 'text/html', markdown: 'text/markdown', txt: 'text/plain' } [format];
+            const blob = new Blob([content], { type: mime });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `code-interpreter-chat-${new Date().toISOString().slice(0,10)}.${ext}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            setStatus(`✅ 已导出 ${format.toUpperCase()}`, 'success');
+            setTimeout(() => setStatus('就绪'), 1500);
+        }
+
+        function extractMermaid(text) {
+            const match = text.match(/```mermaid\s*([\s\S]*?)```/);
+            return match ? match[1].trim() : 'graph TD\n    A[未找到图表]';
+        }
+
+        // ---- 设置弹窗事件 ----
+        settingsTrigger.addEventListener('click', () => {
+            settingsOverlay.classList.add('open');
+            engineSelectModal.value = config.engine;
+            apiKeyModal.value = config.apiKey || '';
+            apiEndpointModal.value = config.endpoint || 'https://api.deepseek.com/v1/chat/completions';
+            modelSelectModal.value = config.model || 'deepseek-chat';
         });
-    });
+        settingsClose.addEventListener('click', () => settingsOverlay.classList.remove('open'));
+        settingsCancel.addEventListener('click', () => settingsOverlay.classList.remove('open'));
+        settingsOverlay.addEventListener('click', (e) => {
+            if (e.target === settingsOverlay) settingsOverlay.classList.remove('open');
+        });
+        settingsSave.addEventListener('click', () => {
+            saveConfig();
+            settingsOverlay.classList.remove('open');
+            updateChatStatus();
+        });
 
-    document.querySelectorAll('.quick-examples button').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const key = this.dataset.example;
-            const code = EXAMPLES[key];
-            if (code) {
-                codeInput.value = code;
-                statusMsg.textContent = `✅ 已加载示例：${this.textContent}`;
-                outputBox.innerHTML = interpret(code);
-                statusMsg.textContent = '✅ 已解释';
+        engineSelectModal.addEventListener('change', () => {
+            const val = engineSelectModal.value;
+            if (val === 'api') {
+                apiEndpointModal.value = 'https://api.deepseek.com/v1/chat/completions';
+                modelSelectModal.value = 'deepseek-chat';
+            } else if (val === 'custom') {
+                apiEndpointModal.value = 'https://api.openai.com/v1/chat/completions';
+                modelSelectModal.value = 'gpt-3.5-turbo';
             }
         });
-    });
 
-    codeInput.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.key === 'Enter') { e.preventDefault();
-            explainBtn.click(); }
-    });
+        engineSelect.addEventListener('change', () => {
+            config.engine = engineSelect.value;
+            saveConfig();
+            updateChatStatus();
+        });
 
-    console.log('🧠 Code Interpreter 已加载');
-</script>
+        // ---- 绑定事件 ----
+        explainBtn.addEventListener('click', explain);
+
+        apiTestBtn.addEventListener('click', async () => {
+            const key = config.apiKey || apiKeyModal.value;
+            const endpoint = config.endpoint || apiEndpointModal.value;
+            const model = config.model || modelSelectModal.value || 'deepseek-chat';
+            if (!key || !endpoint) {
+                setStatus('⚠️ 请配置 API Key 和端点', 'warning');
+                return;
+            }
+            setStatus('⏳ 测试 API...', 'loading');
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+                    body: JSON.stringify({ model, messages: [{ role: 'user', content: 'Hello' }], max_tokens: 5 })
+                });
+                if (response.ok) setStatus('✅ API 连接正常', 'success');
+                else setStatus(`⚠️ API 异常 (${response.status})`, 'warning');
+            } catch (err) {
+                setStatus(`⚠️ 无法连接: ${err.message}`, 'error');
+            }
+        });
+
+        clearBtn.addEventListener('click', () => {
+            codeInput.value = '';
+            setStatus('已清空输入', '');
+        });
+
+        clearChatBtn.addEventListener('click', clearChat);
+
+        copyChatBtn.addEventListener('click', copyChat);
+
+        // ---- 导出下拉 ----
+        exportChatBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            exportChatMenu.classList.toggle('open');
+        });
+        document.addEventListener('click', () => exportChatMenu.classList.remove('open'));
+        document.querySelectorAll('#exportChatMenu .d-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                exportChat(item.dataset.format);
+                exportChatMenu.classList.remove('open');
+            });
+        });
+
+        // ---- 发送追问 ----
+        chatSendBtn.addEventListener('click', () => {
+            askFollowUp(chatInput.value);
+        });
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                askFollowUp(chatInput.value);
+            }
+        });
+
+        // ---- Ctrl+Enter 快捷键 ----
+        codeInput.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                explain();
+            }
+        });
+
+        // ---- 示例代码 ----
+        const EXAMPLES = {
+            game: `
+        function gameLoop() {
+            update();
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+        gameLoop();`,
+            particle: `
+        class Particle {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.vx = (Math.random() - 0.5) * 4;
+                this.vy = (Math.random() - 0.5) * 4;
+                this.life = 60;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                this.life--;
+            }
+            draw(ctx) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }`,
+            canvas: `
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#0F0D1A';
+        ctx.fillRect(0, 0, 800, 600);
+        ctx.beginPath();
+        ctx.arc(400, 300, 50, 0, Math.PI * 2);
+        ctx.fillStyle = '#A78BFA';
+        ctx.fill();
+        ctx.stroke();`,
+            collision: `
+        function checkCollision(a, b) {
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            return dist < a.radius + b.radius;
+        }`,
+            java: `
+        public class Person {
+            private String name;
+            private int age;
+            public Person(String name, int age) {
+                this.name = name;
+                this.age = age;
+            }
+            public void sayHello() {
+                System.out.println("Hello, " + name);
+            }
+        }`,
+            rust: `
+        fn fibonacci(n: u32) -> u32 {
+            match n {
+                0 => 0,
+                1 => 1,
+                _ => fibonacci(n - 1) + fibonacci(n - 2),
+            }
+        }
+        fn main() {
+            println!("fib(10) = {}", fibonacci(10));
+        }`
+        };
+
+        document.querySelectorAll('.quick-row button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const key = this.dataset.example;
+                const code = EXAMPLES[key];
+                if (code) {
+                    codeInput.value = code;
+                    explain();
+                }
+            });
+        });
+
+        // ================================================================
+        //  ✨ 星空背景
+        // ================================================================
+        (function() {
+            const c = document.getElementById('stars');
+            const x = c.getContext('2d');
+            let stars = [];
+
+            function rs() {
+                c.width = window.innerWidth;
+                c.height = window.innerHeight;
+                stars = Array.from({ length: 120 }, () => ({
+                    x: Math.random() * c.width,
+                    y: Math.random() * c.height,
+                    r: Math.random() * 1.2 + 0.2,
+                    a: Math.random(),
+                    s: Math.random() * 0.025 + 0.005,
+                    c: ['#ffffff', '#c7d2fe', '#93c5fd', '#c4b5fd', '#a78bfa', '#22d3ee'][Math.floor(Math.random() *
+                    6)]
+                }));
+            }
+            rs();
+            window.addEventListener('resize', rs);
+
+            (function draw() {
+                x.clearRect(0, 0, c.width, c.height);
+                stars.forEach(s => {
+                    s.a += s.s;
+                    if (s.a > 1 || s.a < 0) s.s = -s.s;
+                    x.globalAlpha = Math.max(0.08, s.a * 0.7);
+                    x.fillStyle = s.c;
+                    x.shadowColor = s.c;
+                    x.shadowBlur = 4;
+                    x.beginPath();
+                    x.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    x.fill();
+                });
+                x.shadowBlur = 0;
+                requestAnimationFrame(draw);
+            })();
+        })();
+
+        // ================================================================
+        //  Init
+        // ================================================================
+        loadConfig();
+        updateChatStatus();
+        console.log('🧠 Code Interpreter · 对话版已加载');
+        console.log('💬 支持多轮对话，本地模式限 10 轮');
+        console.log('📤 导出对话含完整历史 + Mermaid 渲染');
+    </script>
 </body>
 </html>
