@@ -120,6 +120,9 @@ footer{background:var(--navy);color:#9FB8CC;padding:30px 0;font-size:12.5px;text
 </head>
 <body>
 
+<!-- 固定返回条 -->
+<a href="../index.html" style="position:fixed;top:14px;right:14px;z-index:999;background:rgba(16,26,46,.92);color:#fff;padding:8px 16px;border-radius:22px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.3)">← 返回作品集首页</a>
+
 <!-- ============ HERO ============ -->
 <div class="hero">
   <div class="wrap">
@@ -152,7 +155,7 @@ footer{background:var(--navy);color:#9FB8CC;padding:30px 0;font-size:12.5px;text
   <a href="#s11">SWOT</a>
   <a href="#s12">合规红线</a>
   <a href="#s13">战略建议</a>
-  <a href="#s14">面试谈资</a>
+  <a href="#s14">总结与价值</a>
 </div></nav>
 
 <!-- Game-OS 上下文 / 版本信息 -->
@@ -351,13 +354,13 @@ footer{background:var(--navy);color:#9FB8CC;padding:30px 0;font-size:12.5px;text
   <div class="callout warn">
     <b>③ VaR 只有参数法（正态假设），蒙特卡洛很薄。</b> <code>computeVaR</code> 是纯 z-score 法（95%→1.645），<b>无历史模拟法、无 t 分布、未处理肥尾</b>；"蒙特卡洛"在 82KB 引擎中仅出现 1 处。对比基准 <code>benchmarkReturn</code> 默认 8% 为硬编码，非真实指数。
   </div>
-  <p style="font-size:13.5px"><b>面试应对口径：</b>"行情是实时拉取的，估值因子是演示用静态预设，接财务数据 API 在 P3 迭代计划内；参数是默认值可交互调整，分市场参数模板是我已知的改进点；VaR 目前是参数法，历史模拟法在规划中。"——<b>如实说明，不要硬撑</b>。</p>
+  <p style="font-size:13.5px"><b>当前边界与计划：</b>"行情实时拉取；估值因子为演示用静态预设，接财务数据 API 在 P3 迭代计划内；参数默认值可交互调整，分市场参数模板为已知改进点；VaR 目前为参数法，历史模拟法在规划中。"</p>
 </div></section>
 
 <!-- ============ 5 用户画像 ============ -->
 <section id="s5"><div class="wrap">
   <h2><span class="num">5</span>用户画像与洞察简报引擎</h2>
-  <p class="lead">这是产品经理视角下最该被讲出来的部分，也是原简历里被藏得最深的部分。</p>
+  <p class="lead">这部分把"用户画像 / 用户分层 / 个性化推荐 / 闭环 / 场景化风险评估"五类产品能力从代码层还原出来。</p>
 
   <p><code>insightBriefEngine.js</code> 的 <code>generateInsights()</code> 输出结构：</p>
   <pre>{
@@ -372,10 +375,10 @@ footer{background:var(--navy);color:#9FB8CC;padding:30px 0;font-size:12.5px;text
   <p>即：<b>六维向量 → 人格原型分类 → 取前 3 高分维度标为优势、后 2 低分维度标为待发展风险 → 每个风险挂一条改进建议</b>。这是一套完整的用户分层诊断引擎。</p>
 
   <div class="callout">
-    <b>简历层面的价值：</b>"用户画像""用户分层""个性化推荐""闭环""场景化风险评估"——这五个 PM 岗硬关键词，原简历一个都没命中，但代码全都做了。这是典型的<b>用技术语言掩盖了产品能力</b>。
+    <b>产品能力的代码侧证据：</b>"用户画像""用户分层""个性化推荐""闭环""场景化风险评估"五类产品能力全部在代码中落地，且以引擎化、可复用的模块形式存在。
   </div>
 
-  <h3>这不是 SWOT，别这么写</h3>
+  <h3>SWOT 与代码事实的对照</h3>
   <table>
     <thead><tr><th>SWOT 项</th><th>代码中是否存在</th><th>说明</th></tr></thead>
     <tbody>
@@ -500,17 +503,17 @@ aimPrecision        0.7</pre>
   </div>
   <p class="src">金色 = 金融与画像核心链路。<code>/ib-dashboard</code>（投研看板）确实存在，但"投行级"是自封头衔，建议改为"投研看板"。</p>
 
-  <h3>局限清单（面试前必须能自圆其说）</h3>
+  <h3>诚实的局限清单</h3>
   <table>
-    <thead><tr><th style="width:22%">局限</th><th>实情</th><th style="width:26%">应对口径</th></tr></thead>
+    <thead><tr><th style="width:22%">局限</th><th>实情</th><th style="width:26%">当前状态与计划</th></tr></thead>
     <tbody>
-      <tr><td><b>"全栈"含金量</b></td><td>Python 仅 8.1%，后端 10 个 .py（app/认证/AI引擎/行情/游戏/音乐/开发服务）。<b>金融计算全在前端 JS</b>，后端无 risk/valuation service。</td><td>说清后端做了什么：FastAPI + JWT + LLM 网关 + 行情聚合</td></tr>
-      <tr><td><b>数据持久化</b></td><td>核心数据流是 <code>localStorage</code>（<code>ymine_sandbox_v1</code>），README 待开发清单：<b>P3 后端持久化、跨设备同步</b>。</td><td>承认在迭代计划内</td></tr>
-      <tr><td><b>用户体系</b></td><td>Mock 鉴权，"任意用户名密码即可登入"。<b>无真实用户、无留存、无转化数据</b>。</td><td>埋点已选型待接；计划用种子用户做验证</td></tr>
-      <tr><td><b>已知 Bug</b></td><td>调酒模块 5 个集成测试失败（场景 2/3/4/5/7），根因 MoodDial 点击后 intensity 状态异常——<b>主流程带 bug</b>。</td><td>主流程已知问题，修复在排期</td></tr>
-      <tr><td><b>估值因子</b></td><td>静态硬编码快照，NVDA 875 / TSLA 245 已过期。</td><td>演示用预设，接财务 API 在 P3</td></tr>
-      <tr><td><b>参数口径</b></td><td>WACC 用美股参数（rf 4.2%、税率 21%）套 A 股。</td><td>默认可交互调整，分市场模板待做</td></tr>
-      <tr><td><b>VaR 方法</b></td><td>仅参数法正态假设，无历史模拟 / t 分布 / 肥尾处理。</td><td>方法学迭代项，不谎称蒙特卡洛</td></tr>
+      <tr><td><b>"全栈"含金量</b></td><td>Python 仅 8.1%，后端 10 个 .py（app/认证/AI引擎/行情/游戏/音乐/开发服务）。<b>金融计算全在前端 JS</b>，后端无 risk/valuation service。</td><td>现状：FastAPI + JWT + LLM 网关 + 行情聚合已落地，风险/估值引擎为前端实现</td></tr>
+      <tr><td><b>数据持久化</b></td><td>核心数据流是 <code>localStorage</code>（<code>ymine_sandbox_v1</code>），README 待开发清单：<b>P3 后端持久化、跨设备同步</b>。</td><td>P3 迭代计划内</td></tr>
+      <tr><td><b>用户体系</b></td><td>Mock 鉴权，"任意用户名密码即可登入"。<b>无真实用户、无留存、无转化数据</b>。</td><td>埋点已选型，计划接入种子用户验证</td></tr>
+      <tr><td><b>已知 Bug</b></td><td>调酒模块 5 个集成测试失败（场景 2/3/4/5/7），根因 MoodDial 点击后 intensity 状态异常——<b>主流程带 bug</b>。</td><td>主流程已知问题，修复已排期</td></tr>
+      <tr><td><b>估值因子</b></td><td>静态硬编码快照，NVDA 875 / TSLA 245 已过期。</td><td>演示用静态预设，接财务数据 API 在 P3 计划</td></tr>
+      <tr><td><b>参数口径</b></td><td>WACC 用美股参数（rf 4.2%、税率 21%）套 A 股。</td><td>默认可交互调整，分市场参数模板为已知改进项</td></tr>
+      <tr><td><b>VaR 方法</b></td><td>仅参数法正态假设，无历史模拟 / t 分布 / 肥尾处理。</td><td>当前为参数法，历史模拟法在规划中</td></tr>
     </tbody>
   </table>
 </div></section>
@@ -840,35 +843,35 @@ aimPrecision        0.7</pre>
   </div>
 </div></section>
 
-<!-- ============ 14 面试谈资 ============ -->
+<!-- ============ 14 总结与核心价值 ============ -->
 <section id="s14"><div class="wrap">
-  <h2><span class="num">14</span>面试谈资：三句话讲清这个项目</h2>
-  <p class="lead">产品分析最终要服务于你的求职——这是最可能被问到的四个问题及答法。</p>
+  <h2><span class="num">14</span>总结与核心价值</h2>
+  <p class="lead">这份分析的价值不在"人格金融孪生"这个叙事外壳，而在于三层可被逐行验证的硬能力。</p>
 
   <div class="card">
-    <h4 style="margin-top:0">Q1：用一句话说这个项目是什么？</h4>
+    <h4 style="margin-top:0">一句话说清：这个产品是什么</h4>
     <p style="font-size:14px;color:var(--navy2)"><b>"一个把投资者行为数据抽象成可计算人格向量、再驱动个性化投研决策的个人投资操作系统。它的核心不是荐股，而是帮人看见并约束自己的决策偏差。"</b></p>
   </div>
 
   <div class="card">
-    <h4 style="margin-top:0">Q2：你的核心差异化在哪？</h4>
+    <h4 style="margin-top:0">差异化位置：补上"我是谁 → 我该怎么决策"这一层</h4>
     <p style="font-size:14px;color:var(--navy2)"><b>"市面上的工具要么给数据（东财/Wind），要么给配置（且慢/摩羯智投），中间缺一层——把'我是谁'翻译成'我该怎么决策'。我做的是这一层：11 段流水线 + 人格向量 + 自建估值风控，且每段都可审计。"</b></p>
   </div>
 
   <div class="card">
-    <h4 style="margin-top:0">Q3：你怎么验证它有效？</h4>
+    <h4 style="margin-top:0">验证体系：三层递进</h4>
     <p style="font-size:14px;color:var(--navy2)"><b>"三层验证：底层是单元测试覆盖金融模型（WACC 四法交叉验证互相印证）；中层是 20 位投资人风格基准，用户向量与标杆做距离匹配，输出相似度和差异诊断；上层是历史行情的 VaR 回测。下一步是种子用户画像一致性验证。"</b></p>
   </div>
 
   <div class="card">
-    <h4 style="margin-top:0">Q4：最大的风险是什么？你怎么处理？</h4>
+    <h4 style="margin-top:0">风险与合规边界：前置熔断 + B2B2C 商业化</h4>
     <p style="font-size:14px;color:var(--navy2)"><b>"合规。向个人投资者输出买卖建议需要证券投资咨询牌照，人格画像也不能替代法定适当性评估。所以我的设计是：硬风险指标给出边界，人格语义只做解释和干预，相似度降为反思卡片而非配置依据。商业化走 B2B2C——引擎给我，牌照和交易给持牌机构。"</b></p>
   </div>
 
   <div class="concl" style="margin-top:26px">
-    <h4>最后一句</h4>
-    <p>这个项目的真正价值不在"人格金融孪生"这个漂亮的名字，而在于它证明了三件事：<strong>你能把金融工程真正实现出来</strong>（不是调包）、<strong>你能克制地工程化 AI</strong>（不让 LLM 算数）、<strong>你能看见合规边界</strong>（不把相似度当配置依据）。</p>
-    <p style="margin-top:10px">在应届生里，同时做到这三点的很少。<strong>这才是你该讲的故事。</strong></p>
+    <h4>核心结论</h4>
+    <p>这个项目的价值不在"人格金融孪生"这个漂亮的名字，而在于它证明了三件事：<strong>能把金融工程真正实现出来</strong>（不是调包）、<strong>能克制地工程化 AI</strong>（不让 LLM 算数）、<strong>能看见合规边界</strong>（不把相似度当配置依据）。</p>
+    <p style="margin-top:10px">同时做到这三点的同类项目并不多。</p>
   </div>
 </div></section>
 

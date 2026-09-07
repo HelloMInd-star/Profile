@@ -117,6 +117,9 @@ footer{background:var(--plum);color:#B4A3C8;padding:30px 0;font-size:12.5px;text
 </head>
 <body>
 
+<!-- 固定返回条 -->
+<a href="../index.html" style="position:fixed;top:14px;right:14px;z-index:999;background:rgba(40,16,46,.92);color:#fff;padding:8px 16px;border-radius:22px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.3)">← 返回作品集首页</a>
+
 <div class="hero">
   <div class="wrap">
     <span class="tag">PRODUCT DEEP-DIVE · COMPETITIVE ANALYSIS</span>
@@ -148,7 +151,7 @@ footer{background:var(--plum);color:#B4A3C8;padding:30px 0;font-size:12.5px;text
   <a href="#s11">SWOT</a>
   <a href="#s12">商业化路径</a>
   <a href="#s13">合规红线</a>
-  <a href="#s14">面试谈资</a>
+  <a href="#s14">总结与价值</a>
 </div></nav>
 
 <!-- Game-OS 上下文 / 版本信息 -->
@@ -455,7 +458,7 @@ footer{background:var(--plum);color:#B4A3C8;padding:30px 0;font-size:12.5px;text
     </tbody>
   </table>
   <div class="callout ok">
-    <b>这是面试时很值得讲的一点。</b>多份引擎的测试文件<b>体量超过实现本身</b>——这说明你不是在"写完能跑就行"，而是在把核心逻辑当<b>可回归的确定性资产</b>来维护。对涉及数学映射的代码，这是正确做法。
+    <b>工程方法上的一个亮点。</b>多份引擎的测试文件<b>体量超过实现本身</b>——这不是"写完能跑就行"的交付，而是把核心逻辑当作<b>可回归的确定性资产</b>来维护。对涉及数学映射的代码，这是正确的工程做法。
   </div>
 
   <h3>三个架构亮点</h3>
@@ -475,20 +478,20 @@ footer{background:var(--plum);color:#B4A3C8;padding:30px 0;font-size:12.5px;text
   <p class="lead">有多少说多少——这份报告的价值在于可信，不在于好看。</p>
 
   <table>
-    <thead><tr><th style="width:20%">局限</th><th>实情</th><th style="width:26%">应对口径</th></tr></thead>
+    <thead><tr><th style="width:20%">局限</th><th>实情</th><th style="width:26%">当前状态与计划</th></tr></thead>
     <tbody>
-      <tr><td><b>主流程有已知 Bug</b></td><td><code>BarCounterPage</code> 集成测试场景 2/3/4/5/7 失败，根因 MoodDial 点击后 <code>intensity</code> 状态异常——<b>核心体验链路当前带病</b>。</td><td>已知问题，修复在排期；<b>优先修这个</b></td></tr>
+      <tr><td><b>主流程有已知 Bug</b></td><td><code>BarCounterPage</code> 集成测试场景 2/3/4/5/7 失败，根因 MoodDial 点击后 <code>intensity</code> 状态异常——<b>核心体验链路当前带病</b>。</td><td>已知问题，修复已排期，优先级最高</td></tr>
       <tr><td><b>无后端、无持久化</b></td><td>Mock 鉴权，数据存本地。用户换设备即丢失，<b>无法支撑"跨酒吧的调酒人格护照"</b>。</td><td>纯前端降低部署成本；持久化需合作方系统配合</td></tr>
-      <tr><td><b>无真实用户数据</b></td><td>无 DAU、留存、转化。所有"有效性"仍是设计层面主张。</td><td>应届生阶段可接受；需种子样本自证</td></tr>
-      <tr><td><b>人格→风味缺乏效度验证</b></td><td>6×8 矩阵是<b>基于设计判断的权重设定</b>，不是基于用户实验的统计结果。ENT 高是否真的偏好甜？没有数据支撑。</td><td>明确称"设计假设"，不是"科学结论"</td></tr>
-      <tr><td><b>从未进过真实吧台</b></td><td>无库存约束、无调酒师编辑流程、无制作时长验证、无售罄处理。<b>这是最大的鸿沟。</b></td><td>承认原型阶段；下一步是成都清吧试点</td></tr>
-      <tr><td><b>酒库数量口径混乱</b></td><td>"30 款"是近似值，实际 32+ 且持续扩充；金酒单类规划 35 款。</td><td>统一说"30+ 款，持续扩充"</td></tr>
+      <tr><td><b>无真实用户数据</b></td><td>无 DAU、留存、转化。所有"有效性"仍是设计层面主张。</td><td>当前为设计层主张，需种子样本做验证</td></tr>
+      <tr><td><b>人格→风味缺乏效度验证</b></td><td>6×8 矩阵是<b>基于设计判断的权重设定</b>，不是基于用户实验的统计结果。ENT 高是否真的偏好甜？没有数据支撑。</td><td>定位为"设计假设"，非"科学结论"</td></tr>
+      <tr><td><b>从未进过真实吧台</b></td><td>无库存约束、无调酒师编辑流程、无制作时长验证、无售罄处理。<b>这是最大的鸿沟。</b></td><td>当前为原型阶段；下一步是成都清吧试点</td></tr>
+      <tr><td><b>酒库数量口径混乱</b></td><td>"30 款"是近似值，实际 32+ 且持续扩充；金酒单类规划 35 款。</td><td>对外口径统一为"30+ 款，持续扩充"</td></tr>
       <tr><td><b>纯前端 ≠ 免除合规</b></td><td>只要收集测评结果，就是个人信息处理者；人格向量属<b>人格推断风险数据</b>。</td><td>已规划游客模式、数据最小化、可删除</td></tr>
     </tbody>
   </table>
 
   <div class="callout risk">
-    <b>最应该优先解决的是第一条。</b>一个宣称"人格→六感官"的产品，核心交互（MoodDial 情绪调节）存在已知状态异常——如果面试官或客户真的点进去体验，会直接遇到。这比任何商业问题都紧急。
+    <b>最应该优先解决的是第一条。</b>一个宣称"人格→六感官"的产品，核心交互（MoodDial 情绪调节）存在已知状态异常——用户实际体验时会直接遇到。这比任何商业问题都紧急。
   </div>
 </div></section>
 
@@ -845,34 +848,34 @@ footer{background:var(--plum);color:#B4A3C8;padding:30px 0;font-size:12.5px;text
 
 <!-- 14 -->
 <section id="s14"><div class="wrap">
-  <h2><span class="num">14</span>面试谈资：这个项目该怎么讲</h2>
-  <p class="lead">注意：这个项目投金融科技岗时是配角，投产品/体验设计岗时才是主角。</p>
+  <h2><span class="num">14</span>总结与核心价值</h2>
+  <p class="lead">这个项目的价值不在"人格调酒"这个概念，而在于把主观体验变成可计算、可复现、可测试的确定性函数。</p>
 
   <div class="card">
-    <h4 style="margin-top:0">Q1：一句话说这是什么？</h4>
+    <h4 style="margin-top:0">一句话说清：这个产品是什么</h4>
     <p style="font-size:14px;color:var(--plum2)"><b>"一个把主观人格翻译成可计算感官参数的多感官体验编排系统。同一组六维向量，确定性地产出酒、色、香、味、音、光——不是六个独立效果，是同一次计算的六个投影。"</b></p>
   </div>
 
   <div class="card">
-    <h4 style="margin-top:0">Q2：跟普通调酒 App 的区别？</h4>
+    <h4 style="margin-top:0">差异化：与普通调酒 App 的本质区别</h4>
     <p style="font-size:14px;color:var(--plum2)"><b>"Cocktail Flow 解决'找配方'，Foodpairing 解决'风味计算'，我解决的是让多个感官通道共享同一套可解释参数。关键差异是可复现——同一输入、同一规则版本，在不同门店应得到一致体验，这是连锁部署的前提。"</b></p>
   </div>
 
   <div class="card">
-    <h4 style="margin-top:0">Q3：人格真的能决定口味吗？你怎么验证？</h4>
+    <h4 style="margin-top:0">边界认知：人格不等于口味</h4>
     <p style="font-size:14px;color:var(--plum2)"><b>"不能，我也不这么宣称。6×8 矩阵是基于设计判断的权重设定，不是统计结论。我的做法是把它定位为'体验坐标'而非'心理真理'——它降低的是选择成本和社交表达成本，不是替代饮品品质。验证上，下一步是在真实酒吧做 A/B 试点，看转化、客单、制作时长是否改善。"</b></p>
-    <p style="font-size:13px;color:var(--grey);margin-top:8px">← 这个回答比"能"更有说服力，因为它展示了<b>对产品边界的清醒认知</b>。</p>
+    
   </div>
 
   <div class="card">
-    <h4 style="margin-top:0">Q4：这个项目在金融科技简历里为什么只写一行？</h4>
-    <p style="font-size:14px;color:var(--plum2)"><b>"因为投递方向决定信息优先级。投金融科技岗时，它与岗位无直接关联，写多了会稀释定位——所以我收进作品集链接一行带过。但它的内核（人格向量作为统一数据契约）和金融平台是同一套思维，如果聊到抽象能力和跨场景复用，我可以详细展开。"</b></p>
+    <h4 style="margin-top:0">定位策略：在项目矩阵中的角色</h4>
+    <p style="font-size:14px;color:var(--plum2)"><b>"作为跨域同构的一个落地实例，它展示的是人格向量作为统一数据契约的抽象能力：同一套向量既驱动金融决策链，也驱动多感官体验编排。对金融产品而言它是感官域的旁证，对体验设计而言它是主线产品。"</b></p>
   </div>
 
   <div class="concl" style="margin-top:26px">
-    <h4>最后一句</h4>
-    <p>这个项目最值得讲的不是"人格调酒"这个概念，而是三件事：<strong>你能把主观体验抽象成可计算、可测试的确定性函数</strong>（6×8 矩阵 + 测试覆盖）；<strong>你懂什么叫"统一数据契约"</strong>（六通道同源，而非六个独立效果）；<strong>你知道边界在哪</strong>（不宣称科学效度，清楚合规红线）。</p>
-    <p style="margin-top:10px">第三点尤其少见——多数应届生会急着证明自己"什么都能做"，而你会说清楚"什么不该做"。<strong>这才是产品经理的成熟标志。</strong></p>
+    <h4>核心结论</h4>
+    <p>这个项目最值得讲的不是"人格调酒"这个概念，而是三件事：<strong>把主观体验抽象成可计算、可测试的确定性函数</strong>（6×8 矩阵 + 测试覆盖）；<strong>统一数据契约</strong>（六通道同源，而非六个独立效果）；<strong>清晰的边界认知</strong>（不宣称科学效度，清楚合规红线）。</p>
+    <p style="margin-top:10px">在同类体验类项目中，"知道什么不该做"与"能做出什么"同样稀缺。</p>
   </div>
 </div></section>
 
