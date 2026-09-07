@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数字营销知识库 · Stukent Mimic Pro 体系化</title>
+<style>
+:root{
+  --navy:#1A3A5C; --navy2:#2C5580; --gold:#C8A45C; --gold-l:#F5EEDC;
+  --text:#22272B; --grey:#6B7A88; --line:#E3E8ED; --bg:#FAFBFC; --card:#fff;
+  --ok:#2E7D5B; --warn:#B87A1E; --risk:#B23A3A; --info:#2C6E9B; --violet:#6B4FA8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Source Han Sans SC","Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.78;font-size:15px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+.hero{background:linear-gradient(135deg,var(--navy),#0F2740);color:#fff;padding:58px 0 50px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-120px;top:-120px;width:400px;height:400px;border-radius:50%;background:rgba(200,164,92,.10)}
+.hero .wrap{position:relative}
+.tag{display:inline-block;background:rgba(200,164,92,.18);color:var(--gold);padding:5px 14px;border-radius:20px;
+  font-size:12px;letter-spacing:1.8px;margin-bottom:18px;border:1px solid rgba(200,164,92,.3)}
+.hero h1{font-size:34px;font-weight:700;letter-spacing:-.5px;margin-bottom:8px;line-height:1.28}
+.hero .en{font-size:13.5px;color:#9FB8CC;font-family:ui-monospace,Menlo,monospace;margin-bottom:14px}
+.hero .sub{font-size:15.5px;color:#B8CBD9;max-width:800px}
+.meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,.14)}
+.meta div{font-size:12px;color:#8FA8BC}
+.meta strong{display:block;font-size:17px;color:#fff;font-weight:600;margin-bottom:2px}
+nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:4px;overflow-x:auto;padding:0 28px}
+nav a{padding:15px 13px;font-size:13.5px;color:var(--grey);text-decoration:none;white-space:nowrap;
+  border-bottom:2px solid transparent;transition:.18s}
+nav a:hover{color:var(--navy);border-bottom-color:var(--gold)}
+section{padding:50px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border:none}
+h2{font-size:25px;font-weight:700;color:var(--navy);margin-bottom:6px}
+h2+.lead{color:var(--grey);font-size:14.5px;margin-bottom:26px}
+h3{font-size:18px;font-weight:650;color:var(--navy2);margin:28px 0 12px;padding-left:11px;border-left:3px solid var(--gold)}
+h4{font-size:15px;font-weight:650;color:var(--text);margin:18px 0 8px}
+p{margin-bottom:12px}
+ul,ol{margin:0 0 14px 20px}li{margin-bottom:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:22px;margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:880px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:14px 0;background:var(--card)}
+th{background:var(--navy);color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12.8px}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:hover{background:#F8FAFC}
+.hi{background:var(--gold-l)!important}
+.callout{border-left:4px solid var(--info);background:#F0F6FA;padding:14px 18px;border-radius:0 8px 8px 0;margin:14px 0;font-size:14px}
+.callout.warn{border-color:var(--warn);background:#FDF6EC}
+.callout.risk{border-color:var(--risk);background:#FBEDED}
+.callout.ok{border-color:var(--ok);background:#EDF7F2}
+.callout.v{border-color:var(--violet);background:#F5F2FB}
+.callout b{color:var(--navy)}
+code{background:#F2EEF8;padding:1.5px 6px;border-radius:4px;font-size:12.8px;font-family:ui-monospace,Menlo,monospace;color:#4A3A6A}
+.tg{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11.5px;font-weight:600;margin-right:5px}
+.t-ok{background:#E3F3EA;color:var(--ok)}.t-warn{background:#FDF1E0;color:var(--warn)}
+.t-risk{background:#FBE9E9;color:var(--risk)}.t-info{background:#EDE9F8;color:var(--info)}
+.t-gold{background:var(--gold-l);color:#8A6D2F}
+.step{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
+.step .n{flex-shrink:0;width:28px;height:28px;border-radius:7px;background:var(--navy);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+.step .c{flex:1}
+.step .c b{color:var(--navy);display:block;margin-bottom:2px;font-size:14.5px}
+.step .c p{font-size:13.5px;color:#5A6875;margin:0}
+.roundgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin:16px 0}
+@media(max-width:880px){.roundgrid{grid-template-columns:repeat(2,1fr)}}
+.rnd{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:11px 10px;text-align:center;transition:.18s}
+.rnd:hover{border-color:var(--gold);transform:translateY(-2px)}
+.rnd .r{font-size:10.5px;color:var(--gold);font-weight:700;letter-spacing:.5px}
+.rnd .t{font-size:12.5px;font-weight:650;color:var(--navy);line-height:1.35;margin-top:3px}
+.rnd.p1{background:#EDF7F2}.rnd.p2{background:#F0F6FA}.rnd.p3{background:#FDF6EC}.rnd.p4{background:var(--gold-l)}
+footer{background:var(--navy);color:#9FB8CC;padding:30px 0;font-size:12.8px;text-align:center}
+footer b{color:#fff}
+</style>
+</head>
+<body>
+
+<div class="hero"><div class="wrap">
+  <span class="tag">KNOWLEDGE BASE · DIGITAL MARKETING</span>
+  <h1>数字营销知识库</h1>
+  <div class="en">Stukent Mimic Pro Simulation · Methodological Systematization</div>
+  <p class="sub">把一门 MBA 课程（GSBS6014 数字营销 + Mimic Pro 模拟）体系化为可长期复用的方法论资产。
+    本知识库<b style="color:var(--gold)">记录方法论本身，不记录个人成绩</b>——它回答的是"这套体系怎么运转"，而非"我当时做得怎样"。</p>
+  <div class="meta">
+    <div><strong>10</strong>模拟轮次</div>
+    <div><strong>$50,000</strong>总管理预算</div>
+    <div><strong>3</strong>广告类型</div>
+    <div><strong>6</strong>维 KPI 加权</div>
+    <div><strong>2026.09</strong>整理日期</div>
+  </div>
+</div></div>
+
+<nav><div class="wrap">
+  <a href="#s1">定位说明</a>
+  <a href="#s2">十轮进阶</a>
+  <a href="#s3">指标体系</a>
+  <a href="#s4">评分模型</a>
+  <a href="#s5">A/B 测试</a>
+  <a href="#s6">CRO 转化优化</a>
+  <a href="#s7">关键词与竞价</a>
+  <a href="#s8">与产品的同构</a>
+  <a href="#s9">面试弹药卡</a>
+</div></nav>
+
+<!-- 1 -->
+<section id="s1"><div class="wrap">
+  <h2>定位说明</h2>
+  <p class="lead">先说清楚这个知识库是什么、不是什么——这决定了它该怎么被使用。</p>
+
+  <div class="callout risk">
+    <b>它是什么：</b>一套<b>方法论知识库</b>。内容来自三部分——① Stukent 官方 Instructor Guide 公开的模拟机制；② 数字营销领域通行的指标体系与优化方法；③ 将这些方法与自有产品（Y-Exp、Game-OS）打通的连接分析。
+  </div>
+
+  <div class="callout warn">
+    <b>它不是什么：</b>不是成绩单，不是"我做得很好"的证明，也不包含任何个人排名、得分或转化提升数字。
+    <b>这是刻意的</b>——把方法论体系化，与某门课考了多少分，是两件独立的事。
+  </div>
+
+  <h3>为什么这样设计</h3>
+  <p>一个课程项目的价值分两层：</p>
+  <table>
+    <thead><tr><th style="width:20%">层次</th><th style="width:40%">内容</th><th style="width:40%">是否受"投入程度"影响</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td><b>知识层</b></td><td>学过 A/B 测试、CRO、关键词研究、预算分配、KPI 加权评分体系</td><td><b>❌ 不受影响</b>——课程教了就是教了，这是事实</td></tr>
+      <tr><td><b>业绩层</b></td><td>班级排名、转化率提升幅度、单轮得分</td><td>✅ 受影响——投入不足则数据不好看，不应写入</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:14px"><b>本知识库只取知识层。</b>这既保证了每一项内容都真实可追溯，也避免了在面试中被追问细节时无法自洽的风险。</p>
+</div></section>
+
+<!-- 2 -->
+<section id="s2"><div class="wrap">
+  <h2>十轮进阶地图</h2>
+  <p class="lead">Mimic Pro 的课程结构本身是有教学意图的——三轮一种广告类型，最后综合优化。</p>
+
+  <div class="roundgrid">
+    <div class="rnd p1"><div class="r">ROUND 1</div><div class="t">搜索广告<br>入门</div></div>
+    <div class="rnd p1"><div class="r">ROUND 2</div><div class="t">搜索广告<br>实践</div></div>
+    <div class="rnd p1"><div class="r">ROUND 3</div><div class="t">搜索广告<br>优化</div></div>
+    <div class="rnd p2"><div class="r">ROUND 4</div><div class="t">展示广告<br>入门</div></div>
+    <div class="rnd p2"><div class="r">ROUND 5</div><div class="t">展示广告<br>再营销</div></div>
+    <div class="rnd p2"><div class="r">ROUND 6</div><div class="t">展示广告<br>优化</div></div>
+    <div class="rnd p3"><div class="r">ROUND 7</div><div class="t">购物广告<br>入门</div></div>
+    <div class="rnd p3"><div class="r">ROUND 8</div><div class="t">购物广告<br>再营销</div></div>
+    <div class="rnd p3"><div class="r">ROUND 9</div><div class="t">购物广告<br>优化</div></div>
+    <div class="rnd p4"><div class="r">ROUND 10</div><div class="t">整体战役<br>优化</div></div>
+  </div>
+
+  <div class="grid3">
+    <div class="card" style="border-top:3px solid var(--ok)">
+      <h4 style="margin-top:0;color:var(--ok)">R1–R3 · 搜索广告</h4>
+      <p style="font-size:13.3px">关键词研究 → 广告文案撰写 → 着陆页匹配 → 出价优化。核心是<b>捕捉高意图流量</b>。</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--info)">
+      <h4 style="margin-top:0;color:var(--info)">R4–R6 · 展示广告</h4>
+      <p style="font-size:13.3px">品牌曝光 → 受众定向 → <b>再营销（Remarketing）</b>。核心是<b>覆盖漏斗上中游</b>。</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--warn)">
+      <h4 style="margin-top:0;color:var(--warn)">R7–R9 · 购物广告</h4>
+      <p style="font-size:13.3px">商品 Feed → 购物广告 → 再营销 → 优化。核心是<b>商品级精准匹配</b>。</p>
+    </div>
+  </div>
+
+  <h3>模拟场景与约束</h3>
+  <table>
+    <thead><tr><th style="width:22%">要素</th><th>设定</th></tr></thead>
+    <tbody>
+      <tr><td><b>模拟公司</b></td><td>Buhi Supply Co.（电商箱包零售：背包、钱包、挎包、旅行袋）</td></tr>
+      <tr><td><b>扮演角色</b></td><td>新任数字营销专员（digital marketing specialist intern）</td></tr>
+      <tr><td><b>预算</b></td><td>每轮 <b>$5,000</b>，10 轮共 <b>$50,000</b></td></tr>
+      <tr><td><b>初始产品线</b></td><td>American Dream（背包 / 邮差包 / 旅行袋），后期追加新产品线</td></tr>
+      <tr><td><b>反馈机制</b></td><td>每轮结束出 <b>Insights</b> 反馈（红 / 黄 / 绿三色标注各维度表现），基于上一轮决策</td></tr>
+      <tr><td><b>权重设计</b></td><td>轮次越靠后权重越高——<b>早期失误不会致命，后期优化收益更大</b></td></tr>
+    </tbody>
+  </table>
+  <p class="src" style="font-size:12px;color:#8C82A0;margin-top:6px">来源：Stukent Mimic Pro Instructor Guide（公开文档，2020 修订版）</p>
+
+  <div class="callout v">
+    <b>这个"后置权重"设计很值得注意：</b>它模拟了真实业务的<b>学习曲线</b>——早期轮次是探索期（learn how the system works），后期才是收割期（optimize）。
+    这与产品开发的 MVP 逻辑同源：<b>前几轮允许犯错以换取信息，后几轮用信息换收益</b>。
+  </div>
+</div></section>
+
+<!-- 3 -->
+<section id="s3"><div class="wrap">
+  <h2>指标体系：从曝光到收入的漏斗</h2>
+  <p class="lead">每个指标都定义了漏斗的一层，也定义了优化的着力点。</p>
+
+  <table>
+    <thead><tr><th style="width:16%">指标</th><th style="width:24%">公式</th><th style="width:30%">衡量什么</th><th style="width:30%">优化杠杆</th></tr></thead>
+    <tbody>
+      <tr><td><b>Impressions</b><br>曝光量</td><td>广告被展示次数</td><td>覆盖广度 / 品牌可见性</td><td>提高出价、扩关键词、加预算</td></tr>
+      <tr><td><b>Clicks</b><br>点击量</td><td>广告被点击次数</td><td>流量获取能力</td><td>优化文案、提升相关性</td></tr>
+      <tr class="hi"><td><b>CTR</b><br>点击率</td><td>Clicks ÷ Impressions</td><td><b>广告与受众的匹配质量</b></td><td>文案、标题、受众定向</td></tr>
+      <tr><td><b>Conversions</b><br>转化数</td><td>完成购买的次数</td><td>漏斗末端产出</td><td>着陆页、商品页、结账流程</td></tr>
+      <tr class="hi"><td><b>CVR</b><br>转化率</td><td>Conversions ÷ Clicks</td><td><b>流量变现效率</b></td><td>CRO（着陆页 / 表单 / CTA）</td></tr>
+      <tr><td><b>CPA</b><br>获客成本</td><td>Spend ÷ Conversions</td><td>单位转化的代价</td><td>降 CPC 或提 CVR</td></tr>
+      <tr><td><b>Revenue</b><br>收入</td><td>Conversions × Price</td><td>绝对营收规模</td><td>转化量 × 客单价</td></tr>
+      <tr><td><b>Profit</b><br>利润</td><td>Revenue − COGS</td><td>真实商业价值</td><td>控成本、优化结构</td></tr>
+      <tr class="hi"><td><b>ROAS</b><br>广告支出回报</td><td>Revenue ÷ Spend</td><td><b>投放效率的核心判据</b></td><td>把预算挪向高 ROAS 战役</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <b>漏斗的层级关系决定了优化顺序：</b>
+    <span style="font-family:ui-monospace,Menlo,monospace;font-size:13px">Impressions → Clicks → Conversions → Revenue</span>
+    每一层都是下一层的天花板。<b>先诊断卡在哪一层，再决定动什么</b>——曝光不足是出价/预算问题，点击不足是文案问题，转化不足是着陆页问题。
+    不分层诊断就动手，是新手最常见的错误。
+  </div>
+</div></section>
+
+<!-- 4 -->
+<section id="s4"><div class="wrap">
+  <h2>评分模型：归一化 → 加权 → 缩放</h2>
+  <p class="lead">这块是整门课最"数学"的部分，也是与自有产品内核连接最紧密的地方。</p>
+
+  <h3>三步计算</h3>
+  <div class="step"><div class="n">1</div><div class="c"><b>归一化</b>
+    <p>每个 KPI 除以该类别的<b>最大值</b>（班级内最优者），消除量纲差异，使各指标可比较。</p></div></div>
+  <div class="step"><div class="n">2</div><div class="c"><b>加权求和</b>
+    <p>Impressions 10% · Clicks 10% · Conversions 20% · Profit 20% · Revenue 20% · <b>Class Rank 20%（反向）</b>。</p></div></div>
+  <div class="step"><div class="n">3</div><div class="c"><b>缩放到 5 分制</b>
+    <p>加权结果线性映射到课程评分区间。</p></div></div>
+
+  <div class="callout warn">
+    <b>两个容易被忽略的设计细节：</b>
+    <ul style="margin:8px 0 0 20px;font-size:13.5px">
+      <li><b>Profit 与 Revenue 各占 20%</b>——意味着"只冲规模不控成本"拿不到高分，这与"营收增长"导向的 KPI 有本质区别</li>
+      <li><b>Class Rank 是反向计入的竞争性指标</b>——你的得分部分取决于同学表现，这是零和成分</li>
+    </ul>
+  </div>
+
+  <h3>为什么这块值得单独记</h3>
+  <p>因为它是一个<b>完整的多准则决策（MCDM）实例</b>：把量纲不同的多个目标，通过归一化 + 加权，合成为单一可比较的分数。</p>
+  <p>这套方法在工业界极其常见——信贷评分卡、推荐系统排序、供应商评估、产品功能优先级打分，本质都是同一结构。</p>
+</div></section>
+
+<!-- 5 -->
+<section id="s5"><div class="wrap">
+  <h2>A/B 测试完整流程</h2>
+  <p class="lead">从假设到结论，每一步都不能跳。</p>
+
+  <div class="step"><div class="n">1</div><div class="c"><b>建立假设</b>
+    <p>用「改变 X 将导致 Y，因为 Z」的句式写清楚。<b>没有明确假设的测试不是实验，是碰运气</b>。</p></div></div>
+  <div class="step"><div class="n">2</div><div class="c"><b>确定主指标与护栏指标</b>
+    <p>主指标（如转化率）决定成败；护栏指标（如跳出率、退款率）防止"拆东墙补西墙"。</p></div></div>
+  <div class="step"><div class="n">3</div><div class="c"><b>计算最小样本量</b>
+    <p>基于基线转化率、最小可检测效应（MDE）、显著性水平 α 与统计功效（1−β）。<b>这一步决定实验要跑多久</b>。</p></div></div>
+  <div class="step"><div class="n">4</div><div class="c"><b>分流与随机化</b>
+    <p>确定性哈希分流保证同一用户始终落在同一组；流量均匀分配；避免与其他实验重叠污染。</p></div></div>
+  <div class="step"><div class="n">5</div><div class="c"><b>运行并监控（不偷看结论）</b>
+    <p>中途反复查看结果并提前停止，会显著抬高假阳性率——这就是<b>窥探偏差（peeking problem）</b>。</p></div></div>
+  <div class="step"><div class="n">6</div><div class="c"><b>统计检验</b>
+    <p>频率派（z-test / t-test，看 p 值与置信区间）与贝叶斯派（贝叶斯因子 BF₁₀）双轨。<b>两者结论一致时决策最稳健</b>。</p></div></div>
+  <div class="step"><div class="n">7</div><div class="c"><b>看效应量，不只看显著性</b>
+    <p>p&lt;0.05 只说明"有差异"，<b>不说明"差异有多大、值不值得做"</b>。必须同时看绝对提升与相对提升。</p></div></div>
+  <div class="step"><div class="n">8</div><div class="c"><b>决策与归档</b>
+    <p>三选一：上线胜出版本 / 迭代再测 / 记录教训并归档。<b>失败的实验同样有价值——它排除了一个错误方向</b>。</p></div></div>
+
+  <div class="callout ok">
+    <b>优先级排序方法（ICE）：</b>当测试想法多于可执行容量时，按 <b>Impact（影响）× Confidence（信心）÷ Effort（成本）</b> 打分排序。
+    这比"谁嗓门大谁先做"可靠得多，也是产品团队常用的优先级框架。
+  </div>
+</div></section>
+
+<!-- 6 -->
+<section id="s6"><div class="wrap">
+  <h2>CRO：转化率优化</h2>
+  <p class="lead">把已有流量变现得更充分——通常比继续买流量更便宜。</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4 style="margin-top:0">高杠杆测试点</h4>
+      <ul style="font-size:13.5px">
+        <li><b>标题</b>——聚焦用户获得的结果，而非产品功能</li>
+        <li><b>CTA 按钮</b>——文案清晰度与紧迫感</li>
+        <li><b>社会证明</b>——评价、数量、本地证言的位置</li>
+        <li><b>表单简化</b>——减少字段、支持自动填充</li>
+        <li><b>风险消除</b>——免费退货、质保、保障承诺</li>
+        <li><b>价格呈现</b>——分层、锚定、赠品（须诚实表述）</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">着陆页原则</h4>
+      <ul style="font-size:13.5px">
+        <li><b>消息匹配</b>——落地页内容必须与带来流量的广告承诺一致</li>
+        <li><b>单一目标</b>——移除分散注意力的导航与外链</li>
+        <li><b>减少选择</b>——多个并列选项会造成决策瘫痪</li>
+        <li><b>视觉支撑</b>——产品演示、真实场景图</li>
+        <li><b>加载速度</b>——慢一秒，转化掉一截</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <b>漏斗分析是 CRO 的起点：</b>先画出完整转化路径（曝光 → 点击 → 落地 → 加购 → 结账 → 支付），
+    <b>计算每一步之间的转化率</b>，找到流失最严重的那一环。优化力气应该花在<b>落差最大的环节</b>，而不是最显眼的环节。
+  </div>
+</div></section>
+
+<!-- 7 -->
+<section id="s7"><div class="wrap">
+  <h2>关键词研究与竞价</h2>
+  <p class="lead">搜索广告的地基——选错词，后面全白做。</p>
+
+  <h3>关键词的三个考量维度</h3>
+  <div class="grid3">
+    <div class="card"><h4 style="margin-top:0">搜索量</h4>
+      <p style="font-size:13.3px">月均搜索次数。太小的词没流量，太大的词竞争激烈、意图模糊。</p></div>
+    <div class="card"><h4 style="margin-top:0">竞争程度</h4>
+      <p style="font-size:13.3px">有多少广告主在抢。竞争激烈 → CPC 高 → 需要更高出价。</p></div>
+    <div class="card"><h4 style="margin-top:0">平均点击成本</h4>
+      <p style="font-size:13.3px">直接决定预算能买多少点击，以及 CPA 能否压到阈值以下。</p></div>
+  </div>
+
+  <h3>两个核心优化动作</h3>
+  <table>
+    <thead><tr><th style="width:22%">动作</th><th style="width:38%">做法</th><th style="width:40%">为什么有效</th></tr></thead>
+    <tbody>
+      <tr><td><b>暂停低效词</b></td><td>按转化数据筛选，暂停高 CPA（如 &gt;$30）或亏损的关键词</td><td>释放预算，避免持续失血</td></tr>
+      <tr><td><b>加负面关键词</b></td><td>把不相关的搜索词加入否定列表</td><td>广告只展示给高意图人群，直接改善 CTR 与 CVR</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <b>Quality Score（质量得分）是隐藏杠杆：</b>它由<b>广告相关性 + 预期点击率 + 落地页体验</b>三者决定。
+    质量分高 → 同样的排名付更低的 CPC。<b>这是"用质量换价格"的机制</b>——优化文案和落地页相关性，比单纯提高价更划算。
+  </div>
+
+  <h3>预算分配：70 / 20 / 10 法则</h3>
+  <table>
+    <thead><tr><th style="width:24%">渠道</th><th style="width:16%">初期分配</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td>搜索广告</td><td><b>70%</b></td><td>高意图、ROI 可立即衡量，早期稳定基本盘</td></tr>
+      <tr><td>展示广告</td><td>20%</td><td>品牌建设与再营销潜力</td></tr>
+      <tr><td>社交 / 视频</td><td>10%</td><td>测试新创意、定向特定人群</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13.5px;color:#5A6875"><b>注意烧钱速度（Burn Rate）：</b>早期最大的风险是在获得足够数据之前就把预算耗尽——
+    一旦没钱，即便后来找到了赢家策略也无法放大。应按剩余天数计算每日支出上限。</p>
+</div></section>
+
+<!-- 8 -->
+<section id="s8"><div class="wrap">
+  <h2>与自有产品的同构</h2>
+  <p class="lead">这块是本知识库最独特的部分——它解释了为什么这门课的内容不是孤立的学分，而是你产品内核的一部分。</p>
+
+  <div class="callout v">
+    <b>核心洞察：Mimic Pro 的评分模型、Game-OS 的向量映射、Y-Exp 的实验框架，是同一个数学骨架的三种实例。</b>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:20%">系统</th><th style="width:26%">输入</th><th style="width:26%">变换</th><th style="width:28%">输出</th></tr></thead>
+    <tbody>
+      <tr><td><b>Mimic Pro 评分</b></td><td>原始 KPI（曝光/点击/转化/利润/收入/排名）</td><td>归一化 → 加权求和 → 缩放到 5 分制</td><td>单轮得分</td></tr>
+      <tr><td><b>Game-OS 向量</b></td><td>六维人格向量（TOL/SPD/INF/ENT/LEAD/VIS）</td><td>6×8 加权矩阵 → 范围约束</td><td>八维感官参数</td></tr>
+      <tr><td><b>Y-Exp 实验</b></td><td>分流后的行为数据</td><td>z-test + 贝叶斯因子双检验 → 效应量</td><td>上线 / 迭代 / 归档</td></tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:14.5px"><b>三者共享的结构是：</b></p>
+  <p style="font-family:ui-monospace,Menlo,monospace;font-size:13.5px;background:#F7F5FA;padding:12px 16px;border-radius:8px">
+    多源/多量纲输入 → 归一化消除量纲 → 加权线性组合（权重体现价值判断）→ 确定性输出
+  </p>
+
+  <div class="callout ok">
+    <b>为什么这个连接值得讲：</b>多数候选人学过 A/B 测试、也做过加权打分，但很少有人意识到<b>这两件事在数学上是同一个结构</b>。
+    能指出这一点，说明你不是在"收集方法"，而是在<b>提炼可迁移的抽象</b>——这正是高级 PM 与执行层 PM 的分界线。
+  </div>
+
+  <h3>另一个同构点：后置权重 ≈ MVP 迭代</h3>
+  <p>Mimic Pro 的"轮次越靠后权重越高"，与产品开发中的 MVP 逻辑完全一致：</p>
+  <div class="grid3">
+    <div class="card"><h4 style="margin-top:0;color:var(--ok)">早期轮次</h4>
+      <p style="font-size:13.3px">探索期。目标是<b>搞清系统怎么运转</b>，允许犯错以换取信息。</p></div>
+    <div class="card"><h4 style="margin-top:0;color:var(--warn)">中期轮次</h4>
+      <p style="font-size:13.3px">收敛期。基于 Insights 反馈调整，找到有效策略。</p></div>
+    <div class="card"><h4 style="margin-top:0;color:var(--info)">后期轮次</h4>
+      <p style="font-size:13.3px">收割期。权重最高，<b>用前期积累的信息换收益</b>。</p></div>
+  </div>
+</div></section>
+
+<!-- 9 -->
+<section id="s9"><div class="wrap">
+  <h2>面试弹药卡</h2>
+  <p class="lead">三张卡，覆盖这门课最可能被问到的三个方向。</p>
+
+  <div class="card">
+    <h4 style="margin-top:0;color:var(--navy)">卡 1 · 这门课你学到了什么？</h4>
+    <p style="font-size:14px;color:#3A4A5A">「三层。最表层是工具操作——关键词研究、广告结构搭建、出价；中间层是指标体系——
+      曝光点击转化收入这条漏斗，以及 CTR、CVR、CPA、ROAS 各自的杠杆点；最深的一层是<b>评分模型本身</b>——
+      多目标怎么归一化、怎么加权、权重如何体现价值判断。第三层对我影响最大，因为后来做 Y-Exp 和 Game-OS 时，我发现自己其实在重复同一个结构。」</p>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0;color:var(--navy)">卡 2 · 怎么做一次 A/B 测试？（完整流程）</h4>
+    <p style="font-size:14px;color:#3A4A5A">「八步：明确假设（改变 X 导致 Y 因为 Z）→ 定主指标和护栏指标 →
+      算最小样本量 → 哈希分流 → 跑够时长不偷看 → 双检验（z-test 看 p 值和置信区间、贝叶斯因子 BF₁₀ 看证据强度）→
+      看效应量而不只看显著性 → 上线/迭代/归档。这八步我在 Y-Exp 里全部实现成了代码，
+      尤其是最小样本量计算和双检验，这是我自己写框架时才真正吃透的。」</p>
+    <p style="font-size:13px;color:#7A8898;margin-top:8px">← 这句话同时把"课程"和"产品"串起来了，是本卡的关键。</p>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0;color:var(--navy)">卡 3 · 你那门课成绩怎么样？（如果对方追问）</h4>
+    <p style="font-size:14px;color:#3A4A5A">「坦白说投入有限，当时没有完全沉进去。真正让我把 A/B 这套方法吃透的，
+      是后来自己写 Y-Exp 的过程——要自己实现哈希分流、z-test 和贝叶斯因子，就得搞明白为什么需要最小样本量、
+      为什么 p 值不够还要看效应量。模拟课给了我概念，做框架才让我真正会用。
+      所以我把这门课的方法论体系化成了知识库，而不是靠成绩单去证明它。」</p>
+    <div class="callout ok" style="margin:12px 0 0">
+      <b>为什么这个回答比"我成绩很好"更有力：</b>它展示了<b>准确的自我认知</b>和<b>真实的学习路径</b>——
+      而知识库的存在正好佐证了后半句：你确实把方法论系统化了。二者互相加强，不矛盾。
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p><b>数字营销知识库 · Stukent Mimic Pro 体系化</b></p>
+  <p>方法论来源：Stukent Mimic Pro Instructor Guide（公开文档）+ 数字营销通行方法论 + 自有产品连接分析</p>
+  <p style="opacity:.7;margin-top:6px">本知识库记录方法论体系，不含个人成绩数据 · 整理于 2026 年 9 月</p>
+</div></footer>
+
+</body>
+</html>

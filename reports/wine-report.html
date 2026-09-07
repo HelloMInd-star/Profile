@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Y.Mine 人格调酒系统 · 产品深度分析与竞品分析</title>
+<style>
+:root{
+  --plum:#2B1B3D; --plum2:#3E2A56; --plum-l:#E4DAF0;
+  --amber:#D4A24C; --amber-l:#F7EDD8;
+  --text:#221C2B; --grey:#6E6480; --line:#E6E0EE;
+  --bg:#FCFBFD; --card:#FFFFFF;
+  --ok:#2E7D5B; --warn:#C0781E; --risk:#B23A3A; --info:#5B4B9E;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Source Han Sans SC","Noto Sans CJK SC","PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+
+.hero{background:linear-gradient(135deg,var(--plum) 0%,#150D20 100%);color:#fff;padding:64px 0 56px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-130px;top:-130px;width:440px;height:440px;border-radius:50%;background:rgba(212,162,76,.09)}
+.hero::before{content:"";position:absolute;left:8%;bottom:-90px;width:220px;height:220px;border-radius:50%;background:rgba(212,162,76,.05)}
+.hero .tag{display:inline-block;background:rgba(212,162,76,.18);color:var(--amber);padding:5px 14px;border-radius:20px;font-size:12.5px;letter-spacing:1.5px;margin-bottom:20px;border:1px solid rgba(212,162,76,.32)}
+.hero h1{font-size:36px;font-weight:700;letter-spacing:-.5px;margin-bottom:14px;line-height:1.3;position:relative}
+.hero .sub{font-size:16px;color:#C6B6DC;max-width:770px;line-height:1.8;position:relative}
+.hero .meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:32px;padding-top:26px;border-top:1px solid rgba(255,255,255,.14);position:relative}
+.hero .meta div{font-size:12.5px;color:#9C8CB4}
+.hero .meta strong{display:block;font-size:21px;color:#fff;font-weight:600;margin-bottom:2px}
+
+nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:4px;overflow-x:auto;padding:0 28px}
+nav a{padding:15px 13px;font-size:13.5px;color:var(--grey);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:.18s}
+nav a:hover{color:var(--plum);border-bottom-color:var(--amber)}
+
+section{padding:52px 0;border-bottom:1px solid var(--line)}
+section:last-child{border:none}
+h2{font-size:25px;font-weight:700;color:var(--plum);margin-bottom:8px;display:flex;align-items:center;gap:12px}
+h2 .num{background:var(--plum);color:#fff;width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+h2+.lead{color:var(--grey);font-size:14.5px;margin-bottom:28px;padding-left:44px}
+h3{font-size:17.5px;font-weight:650;color:var(--plum2);margin:32px 0 14px;padding-left:11px;border-left:3px solid var(--amber)}
+h4{font-size:15px;font-weight:650;color:var(--text);margin:20px 0 8px}
+p{margin-bottom:13px}
+ul,ol{margin:0 0 14px 20px}
+li{margin-bottom:7px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:24px;margin-bottom:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:840px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;text-align:center}
+.kpi .v{font-size:26px;font-weight:700;color:var(--plum);line-height:1.2}
+.kpi .v small{font-size:13px;font-weight:500;color:var(--grey)}
+.kpi .l{font-size:12.5px;color:var(--grey);margin-top:5px}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:16px 0;background:var(--card)}
+th{background:var(--plum);color:#fff;padding:11px 12px;text-align:left;font-weight:600;font-size:13px}
+td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:hover{background:#F8F6FB}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.hi{background:var(--amber-l)!important}
+.hi td{font-weight:600}
+
+.tag{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11.5px;font-weight:600;margin-right:5px}
+.t-ok{background:#E3F3EA;color:var(--ok)}
+.t-warn{background:#FDF1E0;color:var(--warn)}
+.t-risk{background:#FBE9E9;color:var(--risk)}
+.t-info{background:#EDE9F8;color:var(--info)}
+.t-plum{background:var(--plum-l);color:var(--plum)}
+.t-amber{background:var(--amber-l);color:#8A6420}
+
+.callout{border-left:4px solid var(--info);background:#F3F0FA;padding:15px 18px;border-radius:0 8px 8px 0;margin:16px 0;font-size:14px}
+.callout.warn{border-color:var(--warn);background:#FDF6EC}
+.callout.risk{border-color:var(--risk);background:#FBEDED}
+.callout.ok{border-color:var(--ok);background:#EDF7F2}
+.callout b{color:var(--plum)}
+
+pre{background:#1B1226;color:#E4DAF0;padding:15px 17px;border-radius:8px;overflow-x:auto;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:12.5px;line-height:1.65;margin:14px 0}
+pre .k{color:#B39DDB}.c{color:#8B7A9C}.s{color:#9FC98B}.f{color:#E8C07D}
+code{background:#F2EEF8;padding:1.5px 6px;border-radius:4px;font-size:12.8px;font-family:ui-monospace,Menlo,monospace;color:var(--plum2)}
+
+.mods{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.mods span{background:var(--plum-l);color:var(--plum);padding:4px 10px;border-radius:5px;font-size:11.8px;font-family:ui-monospace,Menlo,monospace}
+.mods span.f{background:var(--amber-l);color:#7A5A1E;font-weight:600}
+
+.src{font-size:11.5px;color:#8C82A0;margin-top:6px}
+.src a{color:var(--info);text-decoration:none}
+.src a:hover{text-decoration:underline}
+footer{background:var(--plum);color:#B4A3C8;padding:30px 0;font-size:12.5px;text-align:center}
+.concl{background:linear-gradient(135deg,var(--plum),#150D20);color:#fff;padding:30px 32px;border-radius:12px;margin:22px 0}
+.concl h4{color:var(--amber);font-size:17px;margin-bottom:10px}
+.concl p{color:#CFC2E0;margin-bottom:8px}
+.concl strong{color:#fff}
+.split{display:grid;grid-template-columns:340px 1fr;gap:30px;align-items:center}
+@media(max-width:840px){.split{grid-template-columns:1fr}}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--grey);margin-top:10px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+/* 矩阵 */
+.matrix{overflow-x:auto;margin:16px 0}
+.matrix table{font-size:12.5px;min-width:520px}
+.matrix td:first-child{font-weight:650;color:var(--plum);background:#FAF8FD}
+.matrix td.pos{background:#E8F5EE;color:#1E6B47}
+.matrix td.neg{background:#FBEDED;color:#9E3030}
+.matrix td.zero{color:#B5AAC4}
+
+/* 链路图 */
+.chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin:20px 0}
+.chain .node{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:13px 10px;text-align:center;position:relative}
+.chain .node .h{font-size:11px;color:#9C8CB4;margin-bottom:5px;letter-spacing:.5px}
+.chain .node .t{font-size:13.5px;font-weight:650;color:var(--plum);line-height:1.3}
+.chain .node .d{font-size:11.5px;color:var(--grey);margin-top:4px}
+.chain .node.core{border-color:var(--amber);background:var(--amber-l)}
+.chain .arrow{display:flex;align-items:center;padding:0 8px;color:var(--amber);font-size:17px;flex-shrink:0}
+@media(max-width:840px){.chain{flex-direction:column}.chain .arrow{transform:rotate(90deg);padding:5px 0;justify-content:center}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="tag">PRODUCT DEEP-DIVE · COMPETITIVE ANALYSIS</span>
+    <h1>Y.Mine 人格调酒系统<br>产品深度剖析与竞品格局分析</h1>
+    <p class="sub">一份基于源码逐行核验与市场公开数据的产品分析报告。核心命题：<b style="color:var(--amber)">把主观的人格，翻译成可计算、可复现、可落地执行的多感官体验参数。</b></p>
+    <div class="meta">
+      <div><strong>26</strong>线上路由</div>
+      <div><strong>27</strong>确定性引擎</div>
+      <div><strong>6→8</strong>维风味映射</div>
+      <div><strong>32+</strong>款配方库</div>
+      <div><strong>6</strong>感官通道编排</div>
+      <div><strong>2026.09</strong>分析日期</div>
+    </div>
+  </div>
+</div>
+
+<nav><div class="wrap">
+    <a href="../cone-0.68.html" style="color:#6B4FA8;font-weight:700">📐 数学内核</a>
+  <a href="#s1">执行摘要</a>
+  <a href="#s2">核心抽象</a>
+  <a href="#s3">人格→感官映射</a>
+  <a href="#s4">推荐引擎</a>
+  <a href="#s5">多感官编排</a>
+  <a href="#s6">产品矩阵</a>
+  <a href="#s7">技术架构</a>
+  <a href="#s8">局限清单</a>
+  <a href="#s9">竞品格局</a>
+  <a href="#s10">差异化定位</a>
+  <a href="#s11">SWOT</a>
+  <a href="#s12">商业化路径</a>
+  <a href="#s13">合规红线</a>
+  <a href="#s14">面试谈资</a>
+</div></nav>
+
+<!-- Game-OS 上下文 / 版本信息 -->
+<section style="padding:26px 0 6px;border-bottom:1px solid var(--line);background:#FBFAFD">
+ <div class="wrap">
+  <div style="background:linear-gradient(135deg,#F6F4FB,#EDF3F8);border:1px solid var(--line);
+       border-radius:12px;padding:20px 24px">
+   <div style="font-size:11.5px;letter-spacing:1.5px;color:#6B4FA8;font-weight:700;margin-bottom:8px">
+     POSITIONING · 本报告在项目矩阵中的位置</div>
+   <h3 style="margin:0 0 10px;padding:0;border:none;font-size:17px;color:#1A3A5C">本报告分析的是 Game-OS 在「感官 / 分子调酒域」的落地实例</h3>
+   <p style="font-size:13.8px;color:#4A5866;margin:0 0 14px;line-height:1.8">Game-OS 的核心主张是：<b>每一个决策问题，无论领域如何，都投射到同一个几何骨架上——一个锥体，和一个位于 0.68 的通用风险阈值</b>。在分子调酒这一域，0.68 表现为<b>风味浓度的平衡点</b>。本系统最值钱的部分不是"人格调酒"这个概念，而是它把向量到感官的映射做成了<b>可解释、可复现、可测试的确定性函数</b>——这与 Game-OS「可审计、可解释、带熔断的决策管道」是同一套工程哲学。</p>
+   <table style="margin:0;font-size:12.8px">
+     <tbody>
+       <tr><td style="width:120px;color:#6B7A88">报告版本</td><td>v1.1 · 2026-09-07</td></tr>
+       <tr><td style="color:#6B7A88">数据截止</td><td>2026-09-07（GitHub 仓库最后提交：2026-09-06）</td></tr>
+       <tr><td style="color:#6B7A88">内核归属</td><td>Game-OS V2.5 决策 AI 平台 · 感官 / 分子调酒域落地</td></tr>
+       <tr><td style="color:#6B7A88">姊妹报告</td><td>《人格金融孪生平台》（金融域）· 《0.68 数学推导页》（理论内核）</td></tr>
+     </tbody>
+   </table>
+   <p style="margin:12px 0 0;font-size:12.8px">
+     <a href="../cone-0.68.html" style="color:#2C6E9B;font-weight:600;text-decoration:none">
+       📐 查看 Game-OS 理论内核：决策锥体与 0.68 阈值 →</a>
+     ｜
+     <a href="../index.html" style="color:#2C6E9B;font-weight:600;text-decoration:none">← 返回作品集首页</a>
+   </p>
+  </div>
+ </div>
+</section>
+
+<!-- 1 -->
+<section id="s1"><div class="wrap">
+  <h2><span class="num">1</span>执行摘要</h2>
+  <p class="lead">先给结论，再给证据。</p>
+
+  <div class="concl">
+    <h4>一句话定位</h4>
+    <p>Y.Mine 不应被理解成「又一个鸡尾酒配方 App」，而应是 <strong>以人格向量为统一中间层的多感官体验编排系统</strong>——同一组输入，确定性地产出酒、色、香、味、音、光六个通道的参数。</p>
+    <p style="margin-top:12px">它的真正资产不是"人格调酒"这个概念，而是<strong>三层可验证的硬设计</strong>：① OCEAN→六维→八维风味的<b>加权矩阵映射</b>（数学可解释、纯函数、有测试）；② 每款酒自带<b>八维风味画像</b>，构成匹配的数据基础；③ 六通道共享同一数据契约，而非各自独立的随机效果。</p>
+  </div>
+
+  <div class="grid4" style="margin:22px 0">
+    <div class="kpi"><div class="v">90<small>/100</small></div><div class="l">体验设计完整度</div></div>
+    <div class="kpi"><div class="v">86<small>/100</small></div><div class="l">工程实现质量</div></div>
+    <div class="kpi"><div class="v">78<small>/100</small></div><div class="l">商业路径清晰度</div></div>
+    <div class="kpi"><div class="v" style="color:var(--risk)">40<small>/100</small></div><div class="l">线下交付与验证</div></div>
+  </div>
+  <p class="src">评分为基于源码与公开材料的自评。线下交付（40）被刻意标红——这是从"有趣的原型"走向"可收费产品"之间唯一的鸿沟。</p>
+
+  <h3>三个最有价值的判断</h3>
+  <div class="grid3">
+    <div class="card">
+      <span class="tag t-ok">有证据</span>
+      <h4 style="margin-top:10px">不是配方库，是体验编排层</h4>
+      <p style="font-size:13.8px">Cocktail Flow、Difford's 解决"找配方"，Foodpairing 解决"风味计算"。Y.Mine 解决的是<b>让六个感官通道共享同一套可解释参数</b>——这是不同层次的问题。</p>
+    </div>
+    <div class="card">
+      <span class="tag t-info">差异化</span>
+      <h4 style="margin-top:10px">单点已红海，闭环仍空白</h4>
+      <p style="font-size:13.8px">人格输入（MBTI 歌单）、单通道输出（配方推荐）都已成熟；但<b>"输入—向量—多输出—制作—反馈"的完整闭环</b>，公开资料中尚未见到成熟产品。</p>
+    </div>
+    <div class="card">
+      <span class="tag t-risk">风险</span>
+      <h4 style="margin-top:10px">最大风险是从未进过真实吧台</h4>
+      <p style="font-size:13.8px">主流程存在<b>已知集成测试失败</b>（MoodDial intensity 异常），且从未在真实酒吧验证过制作闭环。酒吧买的是<b>运营指标</b>，不是人格报告。</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- 2 -->
+<section id="s2"><div class="wrap">
+  <h2><span class="num">2</span>核心抽象：六维向量作为统一数据契约</h2>
+  <p class="lead">这是整个系统真正的地基，也是"人格调酒"这个漂亮名字遮蔽掉的最值钱部分。</p>
+
+  <p>Y.Mine 的所有感官模块共享同一个抽象：<b>把人的状态表示为一组可计算的向量，再让不同通道消费这组向量</b>。</p>
+
+  <h3>六维人格向量</h3>
+  <div class="mods">
+    <span class="f">TOL 容错</span><span class="f">SPD 速度</span><span class="f">INF 信息</span>
+    <span class="f">ENT 热情</span><span class="f">LEAD 主导</span><span class="f">VIS 直觉</span>
+  </div>
+  <p class="src">范围 [-1, 1]，50 分为中性零点。纯函数派生，无副作用。</p>
+
+  <h3>OCEAN → 六维：映射设计有明确的产品思考</h3>
+  <table>
+    <thead><tr><th>OCEAN 维度</th><th>→ 六维</th><th class="num">权重</th><th>设计意图</th></tr></thead>
+    <tbody>
+      <tr><td>Openness 开放性</td><td><code>VIS</code> 直觉</td><td class="num">1.0</td><td>开放性 → 直觉与灵感</td></tr>
+      <tr><td>Conscientiousness 尽责性</td><td><code>INF</code> 信息</td><td class="num">1.0</td><td>尽责性 → 信息依赖与谋略</td></tr>
+      <tr><td>Extraversion 外向性</td><td><code>ENT</code> 热情</td><td class="num">1.0</td><td>外向性 → 热情</td></tr>
+      <tr><td>Agreeableness 宜人性</td><td><code>TOL</code> 容错</td><td class="num">+0.5</td><td rowspan="2"><b>TOL 由 A 与 −N 各贡献一半</b>，避免单一维度独占</td></tr>
+      <tr><td>Neuroticism 神经质</td><td><code>TOL</code> 容错</td><td class="num">−0.5</td></tr>
+      <tr><td colspan="2"><code>LEAD</code> 主导 = (E + A) / 2</td><td class="num">—</td><td>由外向 + 宜人合成</td></tr>
+      <tr><td colspan="2"><code>SPD</code> 速度 = 0</td><td class="num">—</td><td><b>测评不贡献，仅由德州扑克入口贡献</b></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <b>这个设计最精妙的一处：</b>源码注释写着「测评回答<b>你是怎样的人</b>，牌类回答<b>你怎么决策</b>」——SPD（决策速度）被刻意留空，只由对局行为贡献。这说明向量不是拍脑袋定的维度清单，而是<b>按数据来源做了语义分工</b>。
+  </div>
+
+  <h3>向量是跨项目复用的</h3>
+  <p>同一套六维向量，在金融孪生平台里驱动<b>风险预算与投资人匹配</b>，在调酒系统里驱动<b>风味、颜色、气味、音乐</b>。这不是两个独立项目，而是<b>一个抽象在两种场景下的复用</b>——这是整个作品矩阵（12 个应用）真正的统一内核。</p>
+</div></section>
+
+<!-- 3 -->
+<section id="s3"><div class="wrap">
+  <h2><span class="num">3</span>人格 → 感官：6×8 风味加权矩阵</h2>
+  <p class="lead">这是全项目技术含量最高、也最能体现"产品经理 + 工程"复合能力的一块。</p>
+
+  <p><code>flavorFromVector.ts</code> 定义了一个 <b>6×8 的加权矩阵</b>，把六维人格向量映射为八维风味偏好：</p>
+
+  <div class="matrix">
+  <table>
+    <thead><tr><th>风味维度</th><th>TOL</th><th>SPD</th><th>INF</th><th>ENT</th><th>LEAD</th><th>VIS</th><th>语义解释</th></tr></thead>
+    <tbody>
+      <tr><td>sweet 甜</td><td class="pos">0.1</td><td class="zero">0</td><td class="zero">0</td><td class="pos">0.4</td><td class="zero">0</td><td class="pos">0.2</td><td>热情 + 直觉 → 偏好甜</td></tr>
+      <tr><td>sour 酸</td><td class="zero">0</td><td class="pos">0.3</td><td class="pos">0.1</td><td class="pos">0.1</td><td class="zero">0</td><td class="zero">0</td><td>决策快 → 偏好清爽</td></tr>
+      <tr><td>bitter 苦</td><td class="zero">0</td><td class="pos">0.1</td><td class="pos">0.4</td><td class="neg">−0.2</td><td class="pos">0.2</td><td class="zero">0</td><td>信息驱动 → 苦；<b>热情抑制苦</b></td></tr>
+      <tr><td>strong 烈</td><td class="pos">0.3</td><td class="zero">0</td><td class="zero">0</td><td class="pos">0.1</td><td class="pos">0.4</td><td class="zero">0</td><td>容错 + 主导 → 高酒精度</td></tr>
+      <tr><td>smoky 烟熏</td><td class="pos">0.3</td><td class="zero">0</td><td class="pos">0.2</td><td class="neg">−0.1</td><td class="pos">0.2</td><td class="pos">0.1</td><td>容错 + 信息 → 复杂风味</td></tr>
+      <tr><td>fruity 果</td><td class="zero">0</td><td class="pos">0.1</td><td class="zero">0</td><td class="pos">0.4</td><td class="zero">0</td><td class="pos">0.2</td><td>热情 + 直觉 → 果香</td></tr>
+      <tr><td>herbal 草本</td><td class="pos">0.1</td><td class="zero">0</td><td class="pos">0.4</td><td class="neg">−0.1</td><td class="zero">0</td><td class="pos">0.3</td><td>信息 + 直觉 → 草本</td></tr>
+      <tr><td>creamy 醇</td><td class="pos">0.1</td><td class="zero">0</td><td class="zero">0</td><td class="pos">0.2</td><td class="zero">0</td><td class="pos">0.2</td><td>热情 + 直觉 → 顺滑</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="src">矩阵约束：<b>每行权重绝对值之和 ≤ 1</b>，保证输出落在 [−1, 1]；负权重表示该维度<b>压制</b>该风味。全零向量输出中性 0.5。</p>
+
+  <div class="callout ok">
+    <b>为什么这个矩阵值钱：</b>它不是"ENTJ → 莫吉托"这种拍脑袋的查表，而是一个<b>可微、可测、可解释</b>的线性映射。你能说出「这杯酒偏苦，是因为你 INF 得分高、而 ENT 压低了它」——<b>每一步都能解释</b>。这正是"可控、可审计的体验编排"与"装饰性人格标签"的分界线。
+  </div>
+
+  <h3>完整派生链路</h3>
+  <div class="chain">
+    <div class="node"><div class="h">INPUT</div><div class="t">OCEAN 测评<br>／ 对局行为</div><div class="d">0-100 分</div></div>
+    <div class="arrow">→</div>
+    <div class="node core"><div class="h">CONTRACT</div><div class="t">六维向量</div><div class="d">TOL/SPD/INF<br>ENT/LEAD/VIS</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="h">DERIVE</div><div class="t">八维风味</div><div class="d">6×8 矩阵</div></div>
+    <div class="arrow">→</div>
+    <div class="node core"><div class="h">OUTPUT ×6</div><div class="t">酒 / 色 / 香<br>味 / 音 / 光</div><div class="d">六通道同契约</div></div>
+  </div>
+
+  <h3>另外三个派生引擎</h3>
+  <div class="grid3">
+    <div class="card"><h4 style="margin-top:0">colorFromVector</h4>
+      <p style="font-size:13.5px">六维 → HSL 色彩（hue / saturation / lightness）。替代了旧版"10 种原型 10 个固定色"的硬编码方案，改为<b>连续派生</b>。</p></div>
+    <div class="card"><h4 style="margin-top:0">scentFromVector</h4>
+      <p style="font-size:13.5px">对每个维度按正负取出对应气味 note，输出<b>主调 + 副调</b>两个音符。向量空间中维护完整 note 列表供 UI 渲染气味谱。</p></div>
+    <div class="card"><h4 style="margin-top:0">musicEngine（23.8KB）</h4>
+      <p style="font-size:13.5px">Web Audio API 实时生成，配 <code>musicProfileEngine</code>（18.7KB）+ <code>audioAnalyzer</code> 频谱分析。是六通道里技术最重的一个。</p></div>
+  </div>
+</div></section>
+
+<!-- 4 -->
+<section id="s4"><div class="wrap">
+  <h2><span class="num">4</span>推荐引擎：八维风味画像 + 余弦相似度</h2>
+  <p class="lead">矩阵算出"你偏好什么风味"之后，还需要回答"哪款酒匹配"——这一步同样是可解释的。</p>
+
+  <h3>每款酒自带八维风味画像</h3>
+  <p>关键在于：<b>配方库里每款酒都预标注了八维 flavorProfile</b>（0-10 分），与人格侧输出的八维偏好<b>维度对齐</b>。这是匹配能成立的数据基础。</p>
+
+  <pre><span class="c">// gin.ts · 干马天尼（节选）</span>
+{
+  <span class="f">id</span>: <span class="s">'gin-dry-martini'</span>, <span class="f">name</span>: <span class="s">'干马天尼'</span>, <span class="f">nameEn</span>: <span class="s">'Dry Martini'</span>,
+  <span class="f">tagline</span>: <span class="s">'极简配方中蕴藏着无限微妙的平衡。'</span>,
+  <span class="f">story</span>: <span class="s">'它是鸡尾酒界的"白衬衫"——金酒、味美思、橄榄或柠檬皮…'</span>,
+  <span class="f">baseSpirit</span>: <span class="s">'gin'</span>, <span class="f">abv</span>: 28, <span class="f">glass</span>: <span class="s">'martini'</span>,
+  <span class="f">flavorProfile</span>: { sweet:0, sour:1, bitter:3, strong:7,
+                      smoky:0, fruity:0, herbal:6, creamy:0 },   <span class="c">// ← 八维画像</span>
+  <span class="f">ingredients</span>: [...], <span class="f">steps</span>: [...], <span class="f">moods</span>: [<span class="s">'elegant'</span>, <span class="s">'calm'</span>]
+}</pre>
+
+  <div class="grid2">
+    <div class="card">
+      <h4 style="margin-top:0">数据结构的完整度</h4>
+      <ul style="font-size:13.5px">
+        <li>双语名称 + <b>tagline</b> + <b>富文本故事</b>（story）</li>
+        <li>基酒分类、<b>ABV 酒精度</b>、杯型、装饰</li>
+        <li><b>八维风味画像</b>（与人格侧维度对齐）</li>
+        <li>配料（含用量与备注）、<b>分步制作流程</b></li>
+        <li><b>moods 情绪标签</b>（elegant / calm 等）</li>
+      </ul>
+      <p style="font-size:13px;color:var(--grey);margin-top:10px">这不是"配方列表"，而是<b>结构化知识库</b>——故事字段直接支撑了后续的叙事生成。</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">三种推荐路径</h4>
+      <ul style="font-size:13.5px">
+        <li><code>recommendCocktails</code> — 风味距离匹配，输出 0-100 匹配分</li>
+        <li><code>recommendByArchetype</code> — 按人格原型推荐</li>
+        <li><code>recommendByVector</code> — 直接由向量驱动</li>
+      </ul>
+      <p style="font-size:13px;color:var(--grey);margin-top:10px"><code>computeFlavorDistance</code> 计算相似度，<code>generateMatchReasons</code> / <code>generateArchetypeReasons</code> 生成<b>可读的推荐理由</b>——不只给结果，还给解释。</p>
+    </div>
+  </div>
+
+  <div class="callout ok">
+    <b>推荐理由生成器是关键设计。</b>多数推荐系统只输出"为你推荐：莫吉托"。Y.Mine 会输出<b>为什么</b>——「你的 ENT 偏高 → 偏好果香与甜感 → 这款酒的 fruity 维度得分为 X」。这把"黑箱推荐"变成了<b>可解释的对话</b>，也直接创造了分享与社交传播的理由。
+  </div>
+
+  <h3>配方库规模（按基酒分类）</h3>
+  <table>
+    <thead><tr><th>基酒分类</th><th class="num">已核实款数</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>Gin 金酒</td><td class="num">16</td><td>源码注释标注"后续补充 17-35 款"，规划 35 款</td></tr>
+      <tr><td>Whiskey 威士忌</td><td class="num">6</td><td>14.4KB</td></tr>
+      <tr><td>Rum 朗姆</td><td class="num">4</td><td>9.7KB</td></tr>
+      <tr><td>Vodka 伏特加</td><td class="num">3</td><td>7.1KB</td></tr>
+      <tr><td>Tequila 龙舌兰</td><td class="num">3</td><td>7.6KB</td></tr>
+      <tr class="hi"><td>合计（5 类已核实）</td><td class="num">32</td><td>另有 Brandy / Liqueur 两类未完全统计，实际约 35-40 款</td></tr>
+    </tbody>
+  </table>
+  <p class="src"><b>注意口径：</b>常见说法"30 款 IBA 配方"是近似值。实际已核实 32 款、总量约 35-40 款，且<b>持续扩充中</b>（金酒单类就规划 35 款）。对外表述建议用"30+ 款"或"40 款以内"，避免被追问时答不准。</p>
+</div></section>
+
+<!-- 5 -->
+<section id="s5"><div class="wrap">
+  <h2><span class="num">5</span>多感官编排：六通道共享同一组参数</h2>
+  <p class="lead">这是与所有配方类 App 拉开代差的地方。</p>
+
+  <div class="grid3">
+    <div class="card"><h4 style="margin-top:0">🍸 酒</h4><p style="font-size:13.5px">八维风味匹配 → 具体配方 + ABV + 杯型 + 装饰 + 分步制作</p></div>
+    <div class="card"><h4 style="margin-top:0">🎨 色</h4><p style="font-size:13.5px"><code>colorFromVector</code> → HSL 主色/辅色，驱动 FlavorSpectrum 色阶渐变</p></div>
+    <div class="card"><h4 style="margin-top:0">👃 香</h4><p style="font-size:13.5px"><code>scentFromVector</code> → 主调 + 副调气味 note，含完整气味谱</p></div>
+    <div class="card"><h4 style="margin-top:0">👅 味</h4><p style="font-size:13.5px">八维风味权重 → 味觉画像，可直接驱动色阶与推荐</p></div>
+    <div class="card"><h4 style="margin-top:0">🎵 音</h4><p style="font-size:13.5px"><code>musicEngine</code>（23.8KB）Web Audio 实时生成 + 频谱分析</p></div>
+    <div class="card"><h4 style="margin-top:0">💡 光</h4><p style="font-size:13.5px"><code>lightEngine</code> + <code>scentEngine</code> 联动，氛围参数化</p></div>
+  </div>
+
+  <div class="callout">
+    <b>核心差异不是"通道多"，而是"同一个输入"。</b>传统方案里，酒单、灯光、歌单由三个人分别决定，彼此无关。Y.Mine 里它们由<b>同一组向量的同一次计算</b>派生——同一输入 + 同一规则版本 = 可复现的输出组合。这带来三个工程价值：
+    <ul style="margin:8px 0 0 20px;font-size:13.5px">
+      <li><b>版本管理</b>：映射规则可迭代、可回滚、可 A/B</li>
+      <li><b>设备接口</b>：色/音/光参数可标准化输出给灯具、音响、互动屏</li>
+      <li><b>线下复现</b>：同一人格在不同门店应得到一致体验——这是连锁部署的前提</li>
+    </ul>
+  </div>
+
+  <h3>叙事层：从参数到故事</h3>
+  <p><code>cocktailStoryEngine.ts</code>（16.8KB）负责把参数结果包装为可分享的叙事。配合配方库里每款酒预置的 <code>tagline</code> 与 <code>story</code> 富文本，输出的不只是"喝什么"，而是<b>一个可以被讲述、被拍照、被转发的体验</b>。</p>
+  <p style="font-size:13.8px"><b>这是情绪经济里的关键转化环节</b>：人格标签降低选择成本与社交表达成本，故事卡提供传播载体——但要清醒，它<b>降低的是决策成本，不是替代饮品本身的品质</b>。</p>
+</div></section>
+
+<!-- 6 -->
+<section id="s6"><div class="wrap">
+  <h2><span class="num">6</span>产品矩阵：26 个路由不只是调酒</h2>
+  <p class="lead">这个项目的实际规模远超"调酒"二字。</p>
+
+  <div class="mods">
+    <span class="f">/personality</span><span class="f">/cocktail</span><span class="f">/menu</span><span class="f">/brew/journey</span>
+    <span class="f">/brew/light</span><span class="f">/brew/music</span><span class="f">/brew/scent</span><span class="f">/brew/molecular</span>
+    <span>/prelude</span><span>/hub</span><span>/explore</span><span>/cards</span>
+    <span>/brew/story-preview</span><span>/tavern</span><span>/bar-counter</span><span>/chess</span>
+    <span>/mbti-party</span><span>/mind</span><span>/invest</span><span>/brew/sandbox</span>
+    <span>/brew/balance</span><span>/poker</span><span>/login</span>
+  </div>
+  <p class="src">金色 = 调酒与人格核心链路。<code>/bar-counter</code>（吧台端）与 <code>/menu</code>（酒单）说明产品<b>已经考虑了店员与顾客的双向视角</b>，不是纯 C 端玩具。</p>
+
+  <h3>几条值得注意的产品线</h3>
+  <div class="grid2">
+    <div class="card">
+      <h4 style="margin-top:0">brew 系列：调制全流程</h4>
+      <p style="font-size:13.8px"><code>journey</code>（用户旅程）→ <code>light</code>（灯光）→ <code>music</code>（音乐）→ <code>scent</code>（气味）→ <code>molecular</code>（分子层）→ <code>story-preview</code>（故事预览）。<b>这是一条完整的体验流水线，不是零散页面。</b></p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">跨场景复用</h4>
+      <p style="font-size:13.8px"><code>/poker</code> 德州扑克、<code>/chess</code> 人格棋、<code>/mbti-party</code> 派对、<code>/tavern</code> 酒馆、<code>/invest</code> 投资——<b>同一套向量在不同场景采集与消费</b>，互为数据源。</p>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <b>但这也是风险：</b>26 个路由意味着产品的<b>叙事焦点被稀释</b>。对酒吧客户来说，他不需要知道你有德州扑克和塔罗——他只关心"能不能让客人多点一杯酒"。<b>商业化时必须做减法，把 brew + menu + bar-counter 这条主链路单独拎出来。</b>
+  </div>
+</div></section>
+
+<!-- 7 -->
+<section id="s7"><div class="wrap">
+  <h2><span class="num">7</span>技术架构与工程质量</h2>
+  <p class="lead">纯前端项目，但工程规范度不低。</p>
+
+  <div class="grid4" style="margin-bottom:20px">
+    <div class="kpi"><div class="v">310</div><div class="l">仓库文件</div></div>
+    <div class="kpi"><div class="v">27</div><div class="l">确定性引擎</div></div>
+    <div class="kpi"><div class="v">27</div><div class="l">配套测试文件</div></div>
+    <div class="kpi"><div class="v">32</div><div class="l">Commits</div></div>
+  </div>
+
+  <h3>技术栈</h3>
+  <div class="mods">
+    <span class="f">React 18</span><span class="f">TypeScript 5</span><span class="f">Vite 5</span><span class="f">Tailwind 3</span>
+    <span class="f">ECharts</span><span class="f">Canvas 2D</span><span class="f">Web Audio API</span><span class="f">Zustand</span>
+  </div>
+  <p class="src">无后端。<code>src/services</code> 5 个文件主要为本地逻辑与 Mock；登录为 Mock 鉴权（页面原文："任意用户名密码即可登入"）。</p>
+
+  <h3>工程质量：测试覆盖是真做了</h3>
+  <table>
+    <thead><tr><th>引擎</th><th class="num">实现</th><th class="num">测试</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>musicProfileEngine</td><td class="num">18.7KB</td><td class="num">15.9KB</td><td>测试体量接近实现本身</td></tr>
+      <tr><td>personaFusionEngine</td><td class="num">14.7KB</td><td class="num">23.0KB</td><td><b>测试大于实现</b></td></tr>
+      <tr><td>timeEngine</td><td class="num">11.0KB</td><td class="num">19.4KB</td><td><b>测试大于实现</b></td></tr>
+      <tr><td>pokerEngine</td><td class="num">24.0KB</td><td class="num">—</td><td>含 pokerAI / pokerSimulator</td></tr>
+      <tr><td>tavernEngine</td><td class="num">6.3KB</td><td class="num">20.2KB</td><td><b>测试远大于实现</b></td></tr>
+    </tbody>
+  </table>
+  <div class="callout ok">
+    <b>这是面试时很值得讲的一点。</b>多份引擎的测试文件<b>体量超过实现本身</b>——这说明你不是在"写完能跑就行"，而是在把核心逻辑当<b>可回归的确定性资产</b>来维护。对涉及数学映射的代码，这是正确做法。
+  </div>
+
+  <h3>三个架构亮点</h3>
+  <div class="grid3">
+    <div class="card"><h4 style="margin-top:0">① 纯函数优先</h4>
+      <p style="font-size:13.5px">所有映射引擎标注"纯函数，无副作用，可独立测试"。这让向量→感官的每一步都可被单元测试锁定。</p></div>
+    <div class="card"><h4 style="margin-top:0">② 类型先行</h4>
+      <p style="font-size:13.5px"><code>src/types</code> 13 个文件，<code>PersonaVector</code> / <code>FlavorKey</code> / <code>Cocktail</code> 等契约先定义、后实现。</p></div>
+    <div class="card"><h4 style="margin-top:0">③ 兼容性设计</h4>
+      <p style="font-size:13.5px"><code>colorFromVector</code> 明确作为兼容层，保留旧 <code>auraColor</code> 路径——<b>重构不破坏既有功能</b>。</p></div>
+  </div>
+</div></section>
+
+<!-- 8 -->
+<section id="s8"><div class="wrap">
+  <h2><span class="num">8</span>诚实的局限清单</h2>
+  <p class="lead">有多少说多少——这份报告的价值在于可信，不在于好看。</p>
+
+  <table>
+    <thead><tr><th style="width:20%">局限</th><th>实情</th><th style="width:26%">应对口径</th></tr></thead>
+    <tbody>
+      <tr><td><b>主流程有已知 Bug</b></td><td><code>BarCounterPage</code> 集成测试场景 2/3/4/5/7 失败，根因 MoodDial 点击后 <code>intensity</code> 状态异常——<b>核心体验链路当前带病</b>。</td><td>已知问题，修复在排期；<b>优先修这个</b></td></tr>
+      <tr><td><b>无后端、无持久化</b></td><td>Mock 鉴权，数据存本地。用户换设备即丢失，<b>无法支撑"跨酒吧的调酒人格护照"</b>。</td><td>纯前端降低部署成本；持久化需合作方系统配合</td></tr>
+      <tr><td><b>无真实用户数据</b></td><td>无 DAU、留存、转化。所有"有效性"仍是设计层面主张。</td><td>应届生阶段可接受；需种子样本自证</td></tr>
+      <tr><td><b>人格→风味缺乏效度验证</b></td><td>6×8 矩阵是<b>基于设计判断的权重设定</b>，不是基于用户实验的统计结果。ENT 高是否真的偏好甜？没有数据支撑。</td><td>明确称"设计假设"，不是"科学结论"</td></tr>
+      <tr><td><b>从未进过真实吧台</b></td><td>无库存约束、无调酒师编辑流程、无制作时长验证、无售罄处理。<b>这是最大的鸿沟。</b></td><td>承认原型阶段；下一步是成都清吧试点</td></tr>
+      <tr><td><b>酒库数量口径混乱</b></td><td>"30 款"是近似值，实际 32+ 且持续扩充；金酒单类规划 35 款。</td><td>统一说"30+ 款，持续扩充"</td></tr>
+      <tr><td><b>纯前端 ≠ 免除合规</b></td><td>只要收集测评结果，就是个人信息处理者；人格向量属<b>人格推断风险数据</b>。</td><td>已规划游客模式、数据最小化、可删除</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout risk">
+    <b>最应该优先解决的是第一条。</b>一个宣称"人格→六感官"的产品，核心交互（MoodDial 情绪调节）存在已知状态异常——如果面试官或客户真的点进去体验，会直接遇到。这比任何商业问题都紧急。
+  </div>
+</div></section>
+
+<!-- 9 -->
+<section id="s9"><div class="wrap">
+  <h2><span class="num">9</span>竞品格局：六类玩家，没有一个在做同一件事</h2>
+  <p class="lead">现有竞争者分别占据配方内容、风味科学、酒吧运营、定制消费品和沉浸体验——Y.Mine 不靠堆叠组件竞争。</p>
+
+  <table>
+    <thead><tr><th>类别与代表</th><th>目标用户</th><th>核心能力</th><th>商业模式与规模</th><th>与 Y.Mine 的关系</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>Cocktail Flow</b><br><span class="src">配方 App · 海外</span></td>
+        <td>家庭用户、爱好者</td>
+        <td>分步配方、"我的酒柜"库存约束推荐、按基酒/强度/颜色筛选</td>
+        <td>免费 + Premium <b>$4.99/月</b><br>100 万+ 下载，4.6 分</td>
+        <td>强在内容与易用性；<b>无多感官编排</b></td>
+      </tr>
+      <tr>
+        <td><b>Difford's Guide</b><br><span class="src">配方社区 · 海外</span></td>
+        <td>专业及进阶饮酒者</td>
+        <td>配方库、酒柜、评分、社区协作配方</td>
+        <td>Premium <b>$4.50/月</b><br>会员分级公开，用户量未披露</td>
+        <td>权威内容构成壁垒；非人格驱动</td>
+      </tr>
+      <tr>
+        <td><b>Foodpairing</b><br><span class="src">风味科学 · 比利时</span></td>
+        <td>专业厨师、调酒师</td>
+        <td><b>5,000+ 食材、100 万+ 配对预测</b>，基于共享挥发性风味分子</td>
+        <td>B2B 专业工具；价格与用户数未公开</td>
+        <td><b>最重要的技术参照</b>：证明"风味向量化"可产品化</td>
+      </tr>
+      <tr class="hi">
+        <td><b>九点半</b><br><span class="src">酒吧 SaaS · 中国</span></td>
+        <td>小酒馆至连锁酒吧</td>
+        <td>3D 沙盘预定、排号、点单、结账、营销 + <b>AI 调酒机器人"小九"</b>（情绪识别、机械臂）</td>
+        <td>夜经济 SaaS；提供全版本试用，客户数未披露</td>
+        <td><b>重叠最高的中国竞品</b>；代表"软件+硬件+现场"路径</td>
+      </tr>
+      <tr class="hi">
+        <td><b>HHB / 通义灵码 AI 调酒师</b><br><span class="src">情绪化调酒 · 中国</span></td>
+        <td>酒吧顾客</td>
+        <td>输入当日<b>心情 / 星座 / MBTI / 灵感</b>，数秒生成推荐；真人调酒师制作</td>
+        <td>试点/营销导向；付费规模未公开</td>
+        <td><b>输入比 OCEAN 更轻</b>；推荐仍以店内既有菜单为边界</td>
+      </tr>
+      <tr>
+        <td><b>网易云 MBTI 歌单</b><br><span class="src">人格营销 · 中国</span></td>
+        <td>年轻音乐用户</td>
+        <td>MBTI 测试 → 人格标签 → 专属歌单</td>
+        <td>C 端内容/广告；未披露独立收入</td>
+        <td>证明<b>人格可作为娱乐化分发</b>，不等于心理测量有效</td>
+      </tr>
+      <tr>
+        <td><b>teamLab</b><br><span class="src">沉浸体验 · 亚洲</span></td>
+        <td>展览受众</td>
+        <td>互动数字艺术、灯光、声音、空间传感</td>
+        <td>持续运营大型展览（京都 Biovortex 2025-10 开放）</td>
+        <td>证明<b>跨感官可规模化</b>；但非餐饮场景</td>
+      </tr>
+      <tr>
+        <td><b>Function of Beauty</b><br><span class="src">个性定制 · 海外</span></td>
+        <td>个护消费者</td>
+        <td>问卷 → 定制配方/颜色/香型/标签</td>
+        <td>DTC；曾获融资并进入 Target、CVS</td>
+        <td>验证<b>"输入→定制→溢价"</b>的消费者接受度</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>市场盘子（三个口径，不可相加）</h3>
+  <table>
+    <thead><tr><th>赛道</th><th class="num">中国市场数据</th><th>时间</th><th>对 Y.Mine 的意义</th></tr></thead>
+    <tbody>
+      <tr><td>酒馆 / 酒吧</td><td class="num"><b>1,175 亿元</b>，门店超 6 万家</td><td>2025 预计</td><td>最清晰的 B 端付费入口</td></tr>
+      <tr><td>现制饮品</td><td class="num"><b>3,400 亿元</b></td><td>2025 预计</td><td>相邻大盘，仅作参照</td></tr>
+      <tr><td>情绪经济</td><td class="num"><b>2.72 万亿元</b>（2029 预计破 4.5 万亿）</td><td>2025</td><td>为色/香/音/光溢价提供语境</td></tr>
+      <tr><td>Z 世代情绪消费</td><td class="num">56.3% 为情绪价值"快乐消费"</td><td>2025</td><td>人格叙事降低选择与社交成本</td></tr>
+    </tbody>
+  </table>
+  <p class="src">数据来源：红餐产业研究院（新华网 2025-04）、新华网 2026-04、艾媒咨询（光明网 2026-04 转引）。<b>三者分属不同市场与口径，不可相加，也不能据此推导 Y.Mine 收入。</b></p>
+
+  <div class="callout warn">
+    <b>成都可作为首批验证城市。</b>2025 年 3 月全国酒馆门店中西南占 15.4%、四川占 6.0%（华东 28.6%、广东 9.1%）。成都有足够区域门店基础，但华东华南才是规模化市场——<b>先在成都跑通，再复制出去</b>。
+  </div>
+</div></section>
+
+<!-- 10 -->
+<section id="s10"><div class="wrap">
+  <h2><span class="num">10</span>差异化定位：空白不在技术，在闭环</h2>
+  <p class="lead">横轴：从内容到交付的完整度；纵轴：从单通道到多感官的统一度。</p>
+
+  <div class="split">
+    <div>
+      <svg viewBox="0 0 400 400" style="width:100%;max-width:400px">
+        <g stroke="#E6E0EE" stroke-width="1">
+          <line x1="50" y1="50" x2="50" y2="340"/><line x1="50" y1="50" x2="370" y2="50"/>
+          <line x1="50" y1="122" x2="370" y2="122" stroke-dasharray="3,3"/>
+          <line x1="50" y1="195" x2="370" y2="195" stroke-dasharray="3,3"/>
+          <line x1="50" y1="267" x2="370" y2="267" stroke-dasharray="3,3"/>
+          <line x1="130" y1="50" x2="130" y2="340" stroke-dasharray="3,3"/>
+          <line x1="210" y1="50" x2="210" y2="340" stroke-dasharray="3,3"/>
+          <line x1="290" y1="50" x2="290" y2="340" stroke-dasharray="3,3"/>
+        </g>
+        <g stroke="#9C8CB4" stroke-width="1.5" fill="none"><path d="M50 340 L50 50"/><path d="M50 340 L370 340"/></g>
+        <text x="210" y="368" font-size="11.5" fill="#6E6480" text-anchor="middle">内容/配方 → 多感官 → 线下交付闭环</text>
+        <text x="18" y="195" font-size="11.5" fill="#6E6480" text-anchor="middle" transform="rotate(-90 18 195)">单通道 → 统一向量编排</text>
+        <g font-size="11">
+          <circle cx="90" cy="300" r="7" fill="#9C8CB4"/><text x="90" y="320" text-anchor="middle" fill="#5A5070">Cocktail Flow</text>
+          <circle cx="120" cy="255" r="7" fill="#9C8CB4"/><text x="120" y="275" text-anchor="middle" fill="#5A5070">Foodpairing</text>
+          <circle cx="150" cy="300" r="7" fill="#9C8CB4"/><text x="150" y="320" text-anchor="middle" fill="#5A5070">网易云MBTI</text>
+          <circle cx="270" cy="200" r="7" fill="#9C8CB4"/><text x="270" y="220" text-anchor="middle" fill="#5A5070">HHB AI调酒</text>
+          <circle cx="300" cy="170" r="7" fill="#9C8CB4"/><text x="300" y="190" text-anchor="middle" fill="#5A5070">九点半</text>
+          <circle cx="205" cy="120" r="7" fill="#9C8CB4"/><text x="205" y="140" text-anchor="middle" fill="#5A5070">teamLab</text>
+          <circle cx="200" cy="78" r="13" fill="#D4A24C" fill-opacity="0.28" stroke="#D4A24C" stroke-width="2"/>
+          <circle cx="200" cy="78" r="5.5" fill="#D4A24C"/>
+          <text x="200" y="60" text-anchor="middle" fill="#8A6420" font-weight="700" font-size="12.5">Y.Mine</text>
+        </g>
+        <rect x="160" y="55" width="170" height="95" fill="#2E7D5B" fill-opacity="0.06" stroke="#2E7D5B" stroke-dasharray="4,3" rx="6"/>
+        <text x="245" y="152" font-size="10.5" fill="#2E7D5B" text-anchor="middle">统一向量 × 线下交付 = 空白</text>
+      </svg>
+      <div class="legend">
+        <span><i style="background:#9C8CB4"></i>成熟竞品</span>
+        <span><i style="background:#D4A24C"></i>Y.Mine</span>
+        <span><i style="background:#2E7D5B;opacity:.35"></i>空白区</span>
+      </div>
+    </div>
+    <div>
+      <div class="callout ok">
+        <b>读图结论：</b>Y.Mine 在<b>纵轴（统一向量编排）</b>上领先所有竞品——这是差异化立足点。但在<b>横轴右侧（线下交付闭环）</b>明显靠后，而那里才是酒吧愿意付钱的地方。
+      </div>
+      <h4>判断：空白是"可复现的感官系统"，不是"人格调酒"</h4>
+      <p style="font-size:14px">截至 2026 年 9 月，公开资料中<b>尚未发现</b>成熟产品同时满足这六项：</p>
+      <ol style="font-size:13.5px">
+        <li>使用 OCEAN 或可配置六维向量作为统一中间层</li>
+        <li>将同一向量<b>确定性</b>派生至酒/色/香/味/音/光</li>
+        <li>连接真实酒单、库存、制作规则与安全约束</li>
+        <li>保留映射版本、输出日志与设备接口</li>
+        <li>面向线下酒吧、品牌活动或硬件生态开放部署</li>
+        <li>提供"为何得到这杯酒"的可读解释</li>
+      </ol>
+      <div class="callout warn">
+        <b>必须加上的限定：</b>证据支持的是"<b>成熟组件尚未被公开整合</b>"，<b>不支持</b>"技术方向全球绝对空白"。实验室、品牌定制项目或未公开系统可能已经实现。
+      </div>
+      <p style="font-size:13.8px"><b>因此最稳妥的表述是：</b>「单点人格输入、单通道输出、营销型人格叙事已经红海化；真正可防守的是<b>输入—向量—多输出—制作—反馈的完整闭环</b>。」</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- 11 -->
+<section id="s11"><div class="wrap">
+  <h2><span class="num">11</span>PESTEL 宏观扫描 → SWOT</h2>
+  <p class="lead">先用 PESTEL 系统扫描外部环境，再导出 SWOT 的 O/T——避免机会与威胁来自直觉。内部项（S/W）来自前 10 章的源码核验。</p>
+
+  <h3>PESTEL 外部环境扫描</h3>
+  <table>
+    <thead><tr><th style="width:13%">维度</th><th style="width:30%">关键因素</th><th style="width:32%">对本产品的影响</th><th style="width:12%">导出</th></tr></thead>
+    <tbody>
+      <tr><td><b>P 政治 / 监管</b></td><td>《未成年人网络保护条例》2024-01-01 施行；《广告法》禁止诱导饮酒、<b>不得暗示饮酒消除紧张焦虑</b></td><td>年龄门禁、分享卡文案、传播话术均受限</td><td><span class="tag t-warn">T</span></td></tr>
+      <tr><td><b>E 经济</b></td><td>酒馆市场 <b>1,175 亿元 / 6 万家门店</b>；现制饮品 3,400 亿元</td><td>B 端付费基础存在；西南 15.4%、四川 6.0% 提供本地试点密度</td><td><span class="tag t-ok">O</span></td></tr>
+      <tr><td><b>S 社会</b></td><td>情绪经济 <b>2.72 万亿元</b>；Z 世代 <b>56.3%</b> 为情绪价值"快乐消费"</td><td>人格叙事降低选择成本与社交表达成本，需求真实</td><td><span class="tag t-ok">O</span></td></tr>
+      <tr><td><b>T 技术</b></td><td>Web Audio / Canvas 成熟；AI 生成内容普及；酒吧 SaaS 已教育市场</td><td>实现门槛低（利好），概念易被复制（利空）</td><td><span class="tag t-ok">O</span> <span class="tag t-warn">T</span></td></tr>
+      <tr><td><b>E 环境 / 可持续</b></td><td>本地原料、低碳运营受关注</td><td>可作为主题包方向，非当前核心</td><td><span class="tag t-ok">O</span></td></tr>
+      <tr><td><b>L 法律</b></td><td>算法推荐需提供<b>非个性化选项与关闭入口</b>；AIGC 需标识；《食品安全法》主体责任在经营者</td><td>纯前端≠免责；配方安全责任需明确分层</td><td><span class="tag t-warn">T</span></td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>一个关键区分：</b>PESTEL 扫描暴露出本项目<b>机会与威胁同源</b>——"情绪经济"既是需求来源，也意味着竞品可用同样的叙事快速复制。因此差异化必须建立在<b>规则与数据</b>（可审计的映射矩阵）之上，而非概念之上。下方 SWOT 的 O/T 条目均来自上表。
+  </div>
+
+
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--ok)">
+      <h4 style="margin-top:0;color:var(--ok)">S · 优势（内部）</h4>
+      <ul style="font-size:13.8px">
+        <li><b>6×8 风味矩阵可解释</b>——每一步能说出"为什么是这杯"</li>
+        <li>六通道<b>共享同一数据契约</b>，可复现、可版本化</li>
+        <li>测试体量多份<b>超过实现本身</b>，工程质量扎实</li>
+        <li>配方库是<b>结构化知识库</b>（含故事、ABV、分步、情绪标签）</li>
+        <li>纯前端架构<b>部署成本极低</b>，易嵌入合作方系统</li>
+        <li>向量跨项目复用（金融/调酒/对局同源）</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--risk)">
+      <h4 style="margin-top:0;color:var(--risk)">W · 劣势（内部）</h4>
+      <ul style="font-size:13.8px">
+        <li><b>核心交互有已知 Bug</b>（MoodDial intensity 异常）</li>
+        <li>无后端、无持久化，跨设备体验断裂</li>
+        <li>矩阵权重是<b>设计假设，非实验结论</b></li>
+        <li><b>从未进过真实吧台</b>：无库存、无调酒师编辑、无制作验证</li>
+        <li>26 个路由导致叙事焦点稀释</li>
+        <li>无真实用户数据</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--info)">
+      <h4 style="margin-top:0;color:var(--info)">O · 机会（外部）</h4>
+      <ul style="font-size:13.8px">
+        <li>酒馆市场 <b>1,175 亿元 / 6 万家门店</b>，B 端付费基础存在</li>
+        <li>情绪经济 <b>2.72 万亿</b>，Z 世代 56.3% 为情绪价值买单</li>
+        <li>酒吧 SaaS（九点半）已教育市场，<b>无需再解释"为什么数字化"</b></li>
+        <li>品牌快闪／新品发布愿为<b>一次性高额制作费</b>买单</li>
+        <li>成都门店密度足够，<b>本地化试点可行</b></li>
+        <li>硬件（机械臂调酒）接口标准化趋势</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--warn)">
+      <h4 style="margin-top:0;color:var(--warn)">T · 威胁（外部）</h4>
+      <ul style="font-size:13.8px">
+        <li><b>酒吧 SaaS 厂商可叠加情绪互动</b>（九点半已有机器人）</li>
+        <li>AI 配方工具可能被<b>内嵌进 POS / 外卖 / 酒品牌 CRM</b></li>
+        <li>大品牌可<b>一次性买断人格化叙事</b>，不留长期空间</li>
+        <li>人格测试页面<b>极易被复制</b>，概念本身无壁垒</li>
+        <li>酒类广告、未成年人保护等<b>合规门槛</b></li>
+        <li>Foodpairing 类<b>风味科学</b>若下探，技术优势被稀释</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <b>关键区分：可复制 vs 难复制。</b>竞争对手可以一夜之间抄出一个"MBTI 测调酒"的 H5 页面；但<b>难以在短期内复制经过验证、可审计、能接入多种门店系统的映射规则</b>。所以壁垒要建在<b>规则与数据</b>上，不是概念上。
+  </div>
+</div></section>
+
+<!-- 12 -->
+<section id="s12"><div class="wrap">
+  <h2><span class="num">12</span>商业化路径：品牌活动优先于 SaaS</h2>
+  <p class="lead">排序依据是产品成熟度、客户付费意愿与可验证性，不是市场规模的简单比较。</p>
+
+  <table>
+    <thead><tr><th>优先级</th><th>路径</th><th>现实性</th><th>关键动作</th><th>收入形式</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td><span class="tag t-ok">P0</span></td><td><b>品牌快闪 / 营销活动</b></td><td>高</td>
+        <td>品牌人格主题包、限量配方+视觉、气味与音乐设定、活动数据看板</td>
+        <td>项目费 + 驻场费 + 内容再利用</td></tr>
+      <tr class="hi"><td><span class="tag t-ok">P0</span></td><td><b>酒吧体验 SaaS（插件化）</b></td><td>中高</td>
+        <td>不替代 POS，作为垂直插件接入；桌边测评→吧台确认→下单闭环</td>
+        <td>单店月费 / 按桌台或场次</td></tr>
+      <tr><td><span class="tag t-info">P1</span></td><td>主题 / IP 授权</td><td>中</td>
+        <td>把人格引擎、配方库、主题视觉、气味卡、灯光预设模块化</td>
+        <td>主题包授权费</td></tr>
+      <tr><td><span class="tag t-warn">P2</span></td><td>硬件接口（智能调酒机）</td><td>中</td>
+        <td>先定义 JSON 配方 schema、配料约束、浓度、步骤、灯光声音时间线</td>
+        <td>接口授权 / 集成费</td></tr>
+      <tr><td><span class="tag t-warn">P2</span></td><td>C 端订阅</td><td>低-中</td>
+        <td>家庭无酒精调饮、派对主机、跨店"调酒人格护照"</td>
+        <td>订阅（参照 $4.99/月量级）</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <b>为什么品牌活动排在酒吧 SaaS 之前：</b>品牌活动能承受一次性高额制作费、周期短、无需立即解决复杂库存与日常运营问题，却能在有限场次内<b>直接验证分享率、加购、客单提升</b>。它是最适合验证"体验溢价是否成立"的入口。
+  </div>
+
+  <div class="callout risk">
+    <b>酒吧 SaaS 的铁律：客户持续付费的基础是运营指标，不是"人格报告好看"。</b>首批试点必须追踪并可解释：
+    <ul style="margin:8px 0 0 20px;font-size:13.5px">
+      <li>互动效果：桌边互动率、测评完成率、分享率</li>
+      <li>点单转化：从体验到下单的转化率、加购率</li>
+      <li>商业结果：特调客单价、每桌消费、<b>停留时长</b></li>
+      <li>制作交付：调酒师编辑率、<b>制作时长</b>、售罄率</li>
+      <li>复购传播：回访率、分享后二次访问</li>
+    </ul>
+    <b>若提升主要来自 novelty（新鲜感）而制作成本过高，应优先简化向量维度或收缩配方池。</b>
+  </div>
+
+  <h3>建议的最小可行试点</h3>
+  <div class="card">
+    <p style="font-size:14px"><b>目标不是覆盖所有感官，而是在一家真实酒吧跑通闭环。</b></p>
+    <p style="font-size:13.8px">MVP 范围：<b>30 款门店配方 + 六维向量 + 颜色/音乐/灯光 + 调酒师确认环节</b>，在成都清吧完成 <b>4–8 周试点</b>。对照组：普通菜单 vs 人格体验菜单（按日期或随机分配）。</p>
+    <p style="font-size:13.8px;margin-top:10px"><b>只有当人格组与非人格组的差异具有可解释性，且调酒师编辑率可控，产品才具备复制条件。</b></p>
+  </div>
+
+  <h3>三大战略框架的推导</h3>
+  <p style="font-size:14px">上述 P0-P2 排序并非直觉，而是三套框架的交叉结果。</p>
+
+  <h4 style="font-size:15px;color:#1A3A5C;margin:18px 0 8px">① BCG 矩阵 —— 六通道该留哪几个</h4>
+  <div class="callout warn" style="margin:10px 0">
+    <b>口径声明：</b>BCG 严格依赖市场份额与增长率，本项目无市场数据。此处为<b>定性类比</b>——以"用户体验贡献"替代相对份额、以"实现与落地成本"替代增长率，用于 MVP 取舍，<b>不构成市场份额判断</b>。
+  </div>
+  <table>
+    <thead><tr><th style="width:14%">象限</th><th style="width:20%">通道</th><th style="width:36%">判断依据</th><th style="width:30%">MVP 决策</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td><b>🐄 金牛</b></td><td>🍸 <b>酒</b></td><td>核心交付物，直接对应点单与客单价；30+ 款结构化配方库已就绪</td><td><b>必留</b>——MVP 主干</td></tr>
+      <tr class="hi"><td><b>⭐ 明星</b></td><td>🎨 色 + 📖 故事</td><td>实现成本低（纯前端派生），但对分享率与传播贡献最大，是情绪经济的转化载体</td><td><b>必留</b>——传播引擎</td></tr>
+      <tr><td><b>❓ 问题</b></td><td>🎵 <b>音</b></td><td>技术最重（musicEngine 23.8KB + profileEngine 18.7KB），但酒吧本就有背景音乐，<b>增量价值存疑</b></td><td><b>降级为可选</b>，视试点反馈决定</td></tr>
+      <tr><td><b>🐕 瘦狗</b></td><td>💡 <b>光</b> / 👃 香</td><td>依赖门店硬件改造，落地成本极高，且非我方可控</td><td><b>暂不纳入 MVP</b>，仅保留接口</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>BCG 直接改写了 MVP 范围：</b>第 12 章建议的试点范围是"30 款配方 + 六维向量 + 颜色/音乐/灯光"。经 BCG 重排后应修正为 <b>酒 + 色 + 故事</b> 三通道，音与光降为可选——<b>这能显著降低试点成本与调酒师学习负担</b>，也是"从 26 个路由做减法"的第一次实质落地。
+  </div>
+
+  <h4 style="font-size:15px;color:#1A3A5C;margin:20px 0 8px">② Ansoff 增长矩阵 —— 往哪个方向长</h4>
+  <table>
+    <thead><tr><th style="width:16%">战略</th><th style="width:26%">方向</th><th style="width:30%">具体动作</th><th style="width:12%">风险</th><th style="width:16%">优先级</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td><b>市场渗透</b></td><td>现有产品 → 现有市场（成都）</td><td>在已合作酒吧增加配方、提升分享率与加购</td><td>低</td><td><span class="tag t-ok">当前主攻</span></td></tr>
+      <tr class="hi"><td><b>产品开发</b></td><td>新产品 → 现有市场</td><td>品牌快闪包、无酒精版本、主题 IP 包</td><td>中</td><td><span class="tag t-ok">P0</span></td></tr>
+      <tr><td><b>市场开发</b></td><td>现有产品 → 新市场</td><td>复制到华东（28.6%）、华南（广东 9.1%）</td><td>中高</td><td><span class="tag t-info">验证后启动</span></td></tr>
+      <tr><td><b>多元化</b></td><td>新产品 → 新市场</td><td>硬件（智能调酒机）接口、C 端订阅 App</td><td>高</td><td><span class="tag t-warn">P2 / 暂缓</span></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13.5px;color:#5A6875"><b>结论：</b>Ansoff 显示"品牌快闪"属产品开发象限、风险可控且现金流快，故排 P0；"市场开发"必须在成都验证完成后才启动——这正是 OLI 要回答的问题。</p>
+
+  <h4 style="font-size:15px;color:#1A3A5C;margin:20px 0 8px">③ OLI 范式 —— 成都验证后，要不要复制到华东华南</h4>
+  <p style="font-size:13.8px">OLI（Ownership-Location-Internalization）原用于解释对外直接投资选址。这里借用它判断"<b>跨区域扩张应采取何种组织方式</b>"——自营、授权还是合作。</p>
+  <table>
+    <thead><tr><th style="width:18%">维度</th><th style="width:38%">本项目状况</th><th style="width:44%">推论</th></tr></thead>
+    <tbody>
+      <tr><td><b>O 所有权优势</b></td><td>六维向量 → 多感官映射规则是独特资产，可跨门店复现</td><td>优势<b>存在且可脱离单店存在</b> → 具备跨区域复制的技术基础</td></tr>
+      <tr><td><b>L 区位优势</b></td><td>成都（四川 6.0%）门店密度足够验证；但<b>规模化市场在华东 28.6% 与广东 9.1%</b></td><td>成都的 L 足以<b>验证</b>产品，不足以<b>支撑规模</b> → 必须先验证后扩张</td></tr>
+      <tr><td><b>I 内部化优势</b></td><td>自营可保证体验一致性与数据回流；授权给本地服务商则扩张快但品控弱</td><td>核心映射规则<b>必须内部化</b>（否则复现性崩塌）；地面交付<b>应外部化</b></td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>OLI 的合成结论：</b>O 有、成都 L 仅够验证、I 在规则层——三者交叉得出唯一路径：<b>在成都自营完成 4–8 周试点（内部化，守住映射规则与数据），验证成功后以"规则内部化 + 地面交付外部化"的方式复制到华东华南</b>。这与第 12 章"成都先行、再复制出去"的建议独立得出、相互印证。
+  </div>
+</div></section>
+
+<!-- 13 -->
+<section id="s13"><div class="wrap">
+  <h2><span class="num">13</span>合规红线：纯前端不等于免责</h2>
+  <p class="lead">酒精、数据、算法、生成内容——四条线都要守。</p>
+
+  <div class="callout risk">
+    <b>① 酒精业务：年龄门禁 + 审慎传播。</b>《未成年人网络保护条例》2024-01-01 起施行，监管明确<b>面向未成年人的互联网媒介不得发布酒类广告</b>。《广告法》禁止诱导、怂恿饮酒，<b>不得暗示饮酒能消除紧张焦虑或增加体力</b>。产品应：进入酒饮功能前年龄确认、分享卡不美化醉酒/驾驶/过量、显著提示"仅供成年人 · 请理性饮酒"。
+  </div>
+  <div class="callout warn">
+    <b>② 算法推荐：必须提供非个性化选项。</b>《互联网信息服务算法推荐管理规定》要求显著告知服务情况、说明基本原理与运行机制；用户应能<b>获得非个性化选项、便捷关闭算法推荐、删除用于推荐的特征标签</b>。即使采用纯函数计算，只要形成个性化推荐就应参照执行。
+  </div>
+  <div class="callout warn">
+    <b>③ 人格数据：属人格推断风险数据。</b>《个人信息保护法》要求敏感信息单独同意；OCEAN 分数虽未必属法定敏感信息，但具人格推断风险。建议：允许游客体验、人格向量与真实身份分离、明确数据控制者与删除路径、<b>不用于歧视性定价或医疗暗示</b>。
+  </div>
+  <div class="callout warn">
+    <b>④ AI 生成标识：上线前完成，不要事后补救。</b>《人工智能生成合成内容标识办法》<b>2025-09-01 起施行</b>，要求文本/音频/图片/视频/虚拟场景设置显式与隐式标识。当前基于 Web Audio、Canvas 与固定规则的输出，也应标注"算法生成体验方案"，<b>避免用户将娱乐性映射误解为专业心理或风味结论</b>。
+  </div>
+
+  <h3>配方安全的责任分层</h3>
+  <table>
+    <thead><tr><th>环节</th><th>责任主体</th><th>Y.Mine 的边界</th></tr></thead>
+    <tbody>
+      <tr><td>配方生成</td><td>Y.Mine</td><td>标注"建议仅由具备资质门店制作"；提示酒精/咖啡因/过敏原风险</td></tr>
+      <tr><td>原料与制作</td><td>门店 / 调酒师</td><td>提供参数，<b>不替代餐饮经营者安全责任</b></td></tr>
+      <tr><td>浓度与替换</td><td>门店 SOP</td><td>提供版本管理，最终控制点在门店</td></tr>
+      <tr><td>用户自制</td><td>用户</td><td>明确自定义配方与自制原料的安全责任归属</td></tr>
+    </tbody>
+  </table>
+  <p class="src">依据《食品安全法》：食品生产经营者对其生产经营食品的安全负责。应用可以生成参数，但不能替代餐饮经营者的安全责任。</p>
+
+  <div class="callout ok">
+    <b>一句话原则：产品边界必须清晰——不提供医疗、心理诊断或醉酒效果承诺。</b>配方安全、酒类传播、未成年人保护和人格数据最小化，应在<b>产品设计阶段</b>完成，而不是留到规模扩张后补课。
+  </div>
+</div></section>
+
+<!-- 14 -->
+<section id="s14"><div class="wrap">
+  <h2><span class="num">14</span>面试谈资：这个项目该怎么讲</h2>
+  <p class="lead">注意：这个项目投金融科技岗时是配角，投产品/体验设计岗时才是主角。</p>
+
+  <div class="card">
+    <h4 style="margin-top:0">Q1：一句话说这是什么？</h4>
+    <p style="font-size:14px;color:var(--plum2)"><b>"一个把主观人格翻译成可计算感官参数的多感官体验编排系统。同一组六维向量，确定性地产出酒、色、香、味、音、光——不是六个独立效果，是同一次计算的六个投影。"</b></p>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0">Q2：跟普通调酒 App 的区别？</h4>
+    <p style="font-size:14px;color:var(--plum2)"><b>"Cocktail Flow 解决'找配方'，Foodpairing 解决'风味计算'，我解决的是让多个感官通道共享同一套可解释参数。关键差异是可复现——同一输入、同一规则版本，在不同门店应得到一致体验，这是连锁部署的前提。"</b></p>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0">Q3：人格真的能决定口味吗？你怎么验证？</h4>
+    <p style="font-size:14px;color:var(--plum2)"><b>"不能，我也不这么宣称。6×8 矩阵是基于设计判断的权重设定，不是统计结论。我的做法是把它定位为'体验坐标'而非'心理真理'——它降低的是选择成本和社交表达成本，不是替代饮品品质。验证上，下一步是在真实酒吧做 A/B 试点，看转化、客单、制作时长是否改善。"</b></p>
+    <p style="font-size:13px;color:var(--grey);margin-top:8px">← 这个回答比"能"更有说服力，因为它展示了<b>对产品边界的清醒认知</b>。</p>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0">Q4：这个项目在金融科技简历里为什么只写一行？</h4>
+    <p style="font-size:14px;color:var(--plum2)"><b>"因为投递方向决定信息优先级。投金融科技岗时，它与岗位无直接关联，写多了会稀释定位——所以我收进作品集链接一行带过。但它的内核（人格向量作为统一数据契约）和金融平台是同一套思维，如果聊到抽象能力和跨场景复用，我可以详细展开。"</b></p>
+  </div>
+
+  <div class="concl" style="margin-top:26px">
+    <h4>最后一句</h4>
+    <p>这个项目最值得讲的不是"人格调酒"这个概念，而是三件事：<strong>你能把主观体验抽象成可计算、可测试的确定性函数</strong>（6×8 矩阵 + 测试覆盖）；<strong>你懂什么叫"统一数据契约"</strong>（六通道同源，而非六个独立效果）；<strong>你知道边界在哪</strong>（不宣称科学效度，清楚合规红线）。</p>
+    <p style="margin-top:10px">第三点尤其少见——多数应届生会急着证明自己"什么都能做"，而你会说清楚"什么不该做"。<strong>这才是产品经理的成熟标志。</strong></p>
+  </div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <p>Y.Mine 人格调酒系统 · 产品深度分析与竞品分析报告</p>
+    <p style="margin-top:6px;opacity:.75">分析基于 GitHub 公开仓库源码（逐行核验）与市场公开数据 · 生成于 2026 年 9 月</p>
+    <p style="margin-top:6px;opacity:.6">报告中的评分与判断为分析方观点，非第三方审计结论；引用数据以标注来源为准。</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>行为建模方法论 · 理论依据与验证框架</title>
+<style>
+:root{
+  --bg:#0a0f2c; --panel:#111a3d; --card:#151d45; --line:rgba(167,139,250,.18);
+  --text:#e8edff; --dim:#8b96c4; --gold:#FBBF24; --cyan:#22D3EE;
+  --green:#4ADE80; --red:#F87171;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  line-height:1.75;padding:34px 20px 80px}
+.wrap{max-width:1000px;margin:0 auto}
+h1{font-size:26px;margin:0 0 8px;letter-spacing:.5px}
+.sub{color:var(--dim);font-size:13px;margin-bottom:8px}
+.tagline{color:var(--gold);font-size:14px;margin-bottom:30px;
+  border-left:3px solid var(--gold);padding-left:14px}
+
+h2{font-size:19px;margin:46px 0 16px;padding-bottom:10px;
+  border-bottom:1px solid var(--line);color:var(--gold)}
+h2 .num{color:var(--dim);font-size:14px;margin-right:10px;font-weight:400}
+h3{font-size:15px;margin:26px 0 10px;color:var(--cyan)}
+p{margin:0 0 14px;font-size:14px}
+ul,ol{margin:0 0 16px;padding-left:22px;font-size:14px}
+li{margin-bottom:7px}
+
+.panel{background:var(--panel);border:1px solid var(--line);
+  border-radius:12px;padding:20px 24px;margin:18px 0}
+.callout{background:var(--card);border-left:3px solid var(--cyan);
+  border-radius:0 8px 8px 0;padding:14px 18px;margin:16px 0;font-size:13.5px}
+.warn{border-left-color:var(--red)}
+.gold{border-left-color:var(--gold)}
+
+table{width:100%;border-collapse:collapse;font-size:13px;margin:14px 0}
+th{text-align:left;color:var(--dim);font-weight:500;font-size:11px;
+  letter-spacing:1px;padding:9px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid rgba(167,139,250,.08);vertical-align:top}
+td.k{color:var(--text);white-space:nowrap;font-weight:500}
+
+.src{color:var(--dim);font-size:11.5px;font-style:normal}
+.badge{display:inline-block;font-size:10.5px;padding:2px 9px;border-radius:20px;
+  letter-spacing:.5px;margin-right:7px;font-style:normal}
+.b-core{background:rgba(251,191,36,.15);color:var(--gold)}
+.b-risk{background:rgba(248,113,113,.15);color:var(--red)}
+.b-meth{background:rgba(34,211,238,.15);color:var(--cyan)}
+
+.chain{display:flex;flex-direction:column;gap:0;margin:20px 0}
+.chain-item{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start}
+.chain-n{width:44px;height:44px;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;font-size:15px;font-weight:600;
+  background:var(--card);border:1px solid var(--line);color:var(--gold)}
+.chain-body{background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:14px 18px;margin-bottom:12px}
+.chain-body h4{margin:0 0 6px;font-size:14px;color:var(--text)}
+.chain-body p{margin:0;font-size:13px;color:var(--dim)}
+
+/* 可填写结果区 */
+input.num{background:#0d1436;border:1px solid var(--line);color:var(--text);
+  border-radius:6px;padding:6px 9px;font-size:13px;width:96px;text-align:center;
+  font-family:inherit}
+input.num:focus{outline:none;border-color:var(--cyan)}
+.verdict{font-weight:600;font-size:12px;padding:3px 10px;border-radius:20px;
+  display:inline-block;white-space:nowrap}
+.v-pass{background:rgba(74,222,128,.15);color:var(--green)}
+.v-part{background:rgba(251,191,36,.15);color:var(--gold)}
+.v-fail{background:rgba(248,113,113,.15);color:var(--red)}
+.v-none{background:rgba(139,150,196,.12);color:var(--dim)}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+button{background:var(--card);border:1px solid var(--line);color:var(--text);
+  padding:9px 18px;border-radius:7px;cursor:pointer;font-size:13px;font-family:inherit}
+button:hover{border-color:var(--cyan)}
+button.primary{background:linear-gradient(135deg,#2563eb,#7c3aed);border:none}
+.pending{color:var(--dim);font-size:12.5px;font-style:italic}
+.summary-box{background:#0d1436;border:1px solid var(--line);border-radius:8px;
+  padding:16px 18px;font-size:13px;white-space:pre-wrap;min-height:80px;margin-top:14px}
+.tip{font-size:11.5px;color:var(--dim);margin-top:9px}
+@media print{body{background:#fff;color:#000}button{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>行为建模方法论 · 理论依据与验证框架</h1>
+<div class="sub">罗煜 · Y.Mine / Game-OS 产品体系的科学基础与自我检验设计</div>
+<div class="tagline">
+核心主张：本产品体系不是「人格测量工具」，而是「行为预测与决策干预工具」。
+它以可观测行为为准绳，以预测效度为合法性来源，并内置机制分离「测得准」与「改得好」。
+</div>
+
+<!-- ============ 0 ============ -->
+<h2><span class="num">00</span>一个必须首先澄清的立场</h2>
+
+<p>心理构念（人格、偏好、风险态度）<strong>没有独立于测量之外的"真值"</strong>。
+这与物理测量根本不同：身高 175.2cm 是一个等待被发现的客观量，尺子不准可以换更准的；
+而"外向性"是我们对一簇行为倾向<strong>起的一个名字</strong>，不是装在人脑里的实体。</p>
+
+<p>这叫 <strong>效标问题（criterion problem）</strong>——没有外部金标准可供对齐。
+因此任何心理产品都不应声称自己在"测量"，而应声称自己在<strong>"预测"</strong>。
+预测是可以被行为数据严格检验的；测量则永远无法被证实。</p>
+
+<div class="callout gold">
+<strong>由此确定的产品定位：</strong><br>
+不是「准确测出你的人格」，而是「识别你的行为模式，并预测你的决策倾向」。<br>
+前者无法证成（没有真值），后者可以验证（有行为数据）。<br>
+<span class="src">这也是本页后续所有验证设计的逻辑起点。</span>
+</div>
+
+<h3>为什么"预测"而非"测量"不是降低标准</h3>
+<p>声称测量，需要证明"我的向量 = 你的真实人格"——做不到，且无法证伪。
+声称预测，只需要证明"我的向量能预测你的行为"——这有明确对错的判据。</p>
+<p><strong>放弃一个无法兑现的强主张，换取一个可以兑现的弱主张，是产品诚实度的提升，不是降级。</strong>
+而且对 PM 岗位而言，前者关心的是"你是否解决了哲学难题"，后者关心的是"你的主张站不站得住"。</p>
+
+<!-- ============ 1 ============ -->
+<h2><span class="num">01</span>理论地基：三个学科的交叉</h2>
+
+<table>
+<tr><th style="width:20%">学科</th><th style="width:32%">核心贡献</th><th>对本项目的意义</th></tr>
+<tr>
+  <td class="k">心理测量学<br><span class="src">Psychometrics</span></td>
+  <td>效度证据链：内容效度 / 结构效度 / 效标关联效度<br>
+      <span class="src">Cronbach &amp; Meehl, 1955</span></td>
+  <td>提供了"没有真值时如何评判一个测量工具"的完整方法。本项目的合法性来自<strong>效标关联效度</strong>（能预测什么），而非结构效度（像不像真的）。</td>
+</tr>
+<tr>
+  <td class="k">行为决策<br><span class="src">Behavioral Decision Making</span></td>
+  <td>人非理性人，决策受情绪与认知偏差系统性扭曲<br>
+      <span class="src">Kahneman &amp; Tversky; Shefrin &amp; Statman; Barber &amp; Odean</span></td>
+  <td>是"行为可预测"这一前提的来源。若偏差是随机的则无从预测；正因其<strong>系统且因人而异</strong>，才存在可建模的空间。</td>
+</tr>
+<tr>
+  <td class="k">推断统计<br><span class="src">Inferential Statistics</span></td>
+  <td>置换检验 / Bootstrap / 效应量 / 多重比较校正<br>
+      <span class="src">Fisher 1935; Efron 1979; Cohen 1988; Bonferroni 1936</span></td>
+  <td>提供"如何设计一个让自己骗不了自己的检验"。这是本页第 03、04 节的方法来源。</td>
+</tr>
+</table>
+
+<!-- ============ 2 ============ -->
+<h2><span class="num">02</span>行为决策基础：可预测的偏差结构</h2>
+
+<p>本项目隐含一个前提：<strong>人的行为偏差不是随机噪声，而是有结构、可分类、可预测的</strong>。
+以下四个经典发现为这一前提提供了实证支撑。</p>
+
+<h3><span class="badge b-core">核心</span>处置效应 <span class="src">Disposition Effect</span></h3>
+<p>投资者倾向于<strong>过早卖出盈利资产、长期持有亏损资产</strong>——即"截断利润、让亏损奔跑"。
+<span class="src">Shefrin &amp; Statman, 1985</span></p>
+<div class="callout">
+<strong>产品含义：</strong>这是一个可直接量化的行为指标（盈利持有时长 vs 亏损持有时长）。
+若不同人格向量分组在该指标上表现显著差异，即为效标关联效度的直接证据。
+</div>
+
+<h3><span class="badge b-core">核心</span>过度自信 <span class="src">Overconfidence</span></h3>
+<p>交易越频繁的投资者，净收益越差，且显著跑输市场平均水平。
+<span class="src">Barber &amp; Odean, 2000</span></p>
+<div class="callout">
+<strong>产品含义：</strong>换手率成为一个强效标。若系统识别出的"高冲动型"用户实际换手率显著更高，
+则画像具备预测价值——<strong>且这一预测与用户主观感受无关，不会被巴纳姆效应污染</strong>。
+</div>
+
+<h3><span class="badge b-core">核心</span>损失厌恶 <span class="src">Loss Aversion</span></h3>
+<p>损失带来的心理痛苦，约为等额收益所带来快感的两倍，导致风险偏好在盈亏区间不对称。
+<span class="src">Kahneman &amp; Tversky, 1979</span></p>
+<div class="callout">
+<strong>产品含义：</strong>这是"风险压力测试"模块的理论依据——
+同一用户在浮盈与浮亏状态下会呈现系统性不同的风险承受能力，应当分别建模而非取平均。
+</div>
+
+<h3><span class="badge b-core">核心</span>情绪与生理唤醒对决策的影响</h3>
+<p>情绪状态与生理唤醒水平会系统性改变风险偏好，且这一影响可通过客观生理指标（如皮肤电反应 SCR）捕捉，
+不完全依赖主观自评。</p>
+<div class="callout">
+<strong>产品含义：</strong>支持"内在状态 → 决策行为"这一链路的可预测性。
+也说明行为数据比问卷自评更接近真实机制——这是冷启动后应逐步提高行为数据权重的理由之一。
+</div>
+
+<!-- ============ 3 ============ -->
+<h2><span class="num">03</span>验证设计：三个递进的问题</h2>
+
+<p>把"我的画像有用吗"拆成三个可分别回答的问题。<strong>缺任何一步，结论都不成立。</strong></p>
+
+<div class="chain">
+  <div class="chain-item">
+    <div class="chain-n">Q1</div>
+    <div class="chain-body">
+      <h4>结构存不存在？</h4>
+      <p>数据中是真的存在"类型"，还是本来就连续一片？<br>
+      方法：轮廓系数 + <strong>打乱基线</strong>对照。<br>
+      <span class="src">任何数据都能聚类，随机点也能分出簇。所以必须问：我的结构比"没有结构的数据"强多少？</span></p>
+    </div>
+  </div>
+  <div class="chain-item">
+    <div class="chain-n">Q2</div>
+    <div class="chain-body">
+      <h4>结构稳不稳定？</h4>
+      <p>换一批样本，还能分出同样的类型吗？<br>
+      方法：Bootstrap 重采样 + ARI（Adjusted Rand Index）。<br>
+      <span class="src">若换个样本就分出完全不同的簇，则不可对外声称"发现了 N 种类型"。</span></p>
+    </div>
+  </div>
+  <div class="chain-item">
+    <div class="chain-n">Q3</div>
+    <div class="chain-body">
+      <h4>结构有没有用？⭐</h4>
+      <p>分出来的类型，能预测外部行为差异吗？<br>
+      方法：ANOVA + 效应量 η² + Bonferroni 校正。<br>
+      <span class="src">这是从"能分型"到"分型有用"的跃迁，也是本项目真正需要的一环。</span></p>
+    </div>
+  </div>
+</div>
+
+<h3>为什么 Q1 需要两个基线</h3>
+<table>
+<tr><th style="width:22%">基线</th><th style="width:34%">做法</th><th>能排除什么</th></tr>
+<tr><td class="k">均匀随机</td><td>同维度均匀分布随机数据</td>
+    <td>排除"纯粹偶然"造成的假结构。但<strong>太宽松</strong>——真实数据的分布形状本身就会产生结构感。</td></tr>
+<tr><td class="k">列打乱 ⭐</td><td>每列独立打乱行序：保留每列分布形状，但<strong>破坏特征间相关性</strong></td>
+    <td>排除"分布形状造成的假象"。若打乱后轮廓系数不变，说明所谓结构只是"大家都集中在中间"。<br>
+    <span class="src">即 Fisher 的置换检验思想：构造一个"除假设机制外其他都一样"的平行世界。</span></td></tr>
+</table>
+<p><strong>净增益 = 真实轮廓系数 − 打乱基线轮廓系数</strong>，这才是干净的证据。
+&gt;0.10 说明结构来自特征间关联；&lt;0.05 说明基本无结构，应放弃"可分型"这一说法。</p>
+
+<h3>为什么用 η² 而不是 p 值</h3>
+<p>p 值只回答"差异是否可能由随机造成"，<strong>不回答"差异有多大"</strong>。
+在 n=50,000 的样本下，两组均值相差 0.5 个百分点也能得到 p&lt;0.001——统计显著，但没有实际意义。</p>
+<p><strong>η² = 组间方差 / 总方差</strong>，直白说就是"这个行为指标的差异里，有多少比例能被'属于哪个簇'解释"。
+<span class="src">Cohen 1988 标准：&gt;0.14 大效应，0.06–0.14 中，&lt;0.06 小。</span></p>
+
+<h3>为什么必须做 Bonferroni 校正</h3>
+<p>同时检验 3 个行为指标，每个有 5% 假阳性风险，则"至少一个假阳性"的概率为 1−0.95³ ≈ <strong>14.3%</strong>。
+检验越多越容易"碰巧显著"。Bonferroni 取最保守策略：p<sub>校正</sub> = p<sub>原始</sub> × 检验个数。</p>
+<div class="callout warn">
+<strong>为什么选最保守的：</strong>这些结论会作为对外表述的依据。
+<strong>漏报一个真实效应的代价，远小于把一个假阳性说成发现并被戳穿。</strong>
+</div>
+
+<!-- ============ 4 ============ -->
+<h2><span class="num">04</span>四个陷阱：人格类产品特有的自欺风险</h2>
+
+<h3><span class="badge b-risk">陷阱 1</span>巴纳姆效应 <span class="src">Barnum / Forer Effect</span></h3>
+<p>人会把模糊、普遍适用的人格描述，误认为是为自己量身定制的。
+经典实验（Forer, 1948）：给一整班学生发<strong>完全相同</strong>的一段"个性分析"，
+平均吻合度评分达 <strong>4.26 / 5</strong>。</p>
+<div class="callout warn">
+<strong>威胁：</strong>用户说"很准"不能作为产品有效的证据。<br>
+<strong>对策：</strong>单盲对照——给对照组一段随机生成的画像，若吻合度同样接近 4 分，则"准"是巴纳姆效应而非真实预测。
+</div>
+
+<h3><span class="badge b-risk">陷阱 2</span>标签效应 / 自我实现的预言</h3>
+<p>系统告诉用户"你是激进型" → 用户相信并按此行动 → 行为数据"证实"标签 → 系统更确信 → <strong>正反馈放大</strong>。
+<span class="src">相关：Rosenthal &amp; Jacobson 的皮格马利翁效应；标签理论。</span></p>
+
+<div class="callout warn">
+<strong>这是本分析中最关键的一条修正：</strong><br>
+"多轮数据会自动拉回平均、纠正初始偏差"这一直觉，<strong>只对随机误差成立</strong>。<br><br>
+<table style="margin:10px 0 0">
+<tr><th></th><th>回归效应</th><th>标签效应</th></tr>
+<tr><td class="k">偏差性质</td><td>随机（时高时低）</td><td><strong>系统性</strong>（单向）</td></tr>
+<tr><td class="k">多轮之后</td><td>抵消，趋近真值</td><td><strong>累积，越来越偏</strong></td></tr>
+<tr><td class="k">数据更多</td><td>更准</td><td><strong>更自信地错</strong></td></tr>
+</table>
+</div>
+
+<h3><span class="badge b-risk">陷阱 3</span>测量还是干预？——一个必须选边的问题</h3>
+<p>标签效应对"测量工具"是污染，对"干预工具"却是<strong>核心机制</strong>。两者不能混着说。</p>
+<table>
+<tr><th style="width:18%"></th><th style="width:41%">测量工具</th><th>干预工具</th></tr>
+<tr><td class="k">成功标准</td><td>画像与真实人格吻合</td><td>用户决策质量提升</td></tr>
+<tr><td class="k">标签效应</td><td>是污染，必须排除</td><td>是机制，正是要的</td></tr>
+<tr><td class="k">验证方法</td><td>对照外部人格量表</td><td>随机对照实验（A/B）</td></tr>
+<tr><td class="k">表述</td><td>"我测得准"</td><td>"我让他变好了"</td></tr>
+</table>
+<div class="callout gold">
+<strong>本项目选边：干预工具。</strong><br>
+若系统告诉一个散户"你的行为偏追涨杀跌"，他因此减少无效交易——
+作为<em>测量</em>这是失败（改变了被测对象）；作为<em>产品</em>这是巨大成功。
+行为金融学的核心发现之一正是：散户<strong>即使知道</strong>自己有偏差，也很难自行纠正。
+若产品真能改善行为，其价值远超"测得准"。
+</div>
+
+<h3><span class="badge b-risk">陷阱 4</span>回归均值 <span class="src">Regression to the Mean</span></h3>
+<p>极端表现在后续观测中自然趋中，这是统计现象而非干预效果。
+若只对"上次表现最差的 10% 用户"推送干预，即使干预无效，他们的下次表现也会自然变好。</p>
+<div class="callout warn">
+<strong>对策：</strong>任何干预效果的评估都必须设<strong>对照组</strong>，
+不能做"干预前 vs 干预后"的简单前后对比。
+</div>
+
+<!-- ============ 5 ============ -->
+<h2><span class="num">05</span>校准机制：贝叶斯权重，而非算术平均</h2>
+
+<p>"多轮记录后校准值拉回平均"这一表述在技术上需要修正：
+它不是简单平均，而是<strong>加权融合，且权重应随数据积累而转移</strong>。</p>
+
+<p><strong>后验 ∝ 先验 × 似然</strong>。关键在于权重如何设定：</p>
+
+<table>
+<tr><th style="width:22%">阶段</th><th style="width:22%">问卷 / 自评权重</th><th style="width:22%">行为数据权重</th><th>理由</th></tr>
+<tr><td class="k">冷启动（0 轮）</td><td>100%</td><td>0%</td><td>只能信用户说的</td></tr>
+<tr><td class="k">早期（1–3 轮）</td><td>60%</td><td>40%</td><td>行为样本太少，单次决策噪声极大</td></tr>
+<tr><td class="k">中期（4–10 轮）</td><td>30%</td><td>70%</td><td>行为模式开始稳定</td></tr>
+<tr><td class="k">长期（10+ 轮）</td><td>10%</td><td>90%</td><td>行为基本说明一切</td></tr>
+</table>
+
+<p><strong>为什么冷启动阶段问卷反而更可靠？</strong>
+早期单次决策的噪声极大——用户某次重仓，可能只是那天心情好，不代表他是激进型。
+此时问卷提供的先验比单条行为记录更可信。</p>
+
+<div class="callout">
+<strong>何时该怀疑行为数据：</strong>
+若观察到用户行为在系统给出画像后<strong>突然朝画像方向变化</strong>（而非渐进变化），
+即为标签效应的信号。此时应<strong>降低该轮数据的权重</strong>，而不是照单全收。
+</div>
+
+<h3>可落地的检测设计：延迟对照组</h3>
+<div class="panel">
+<p style="margin:0 0 10px"><strong>设计：</strong></p>
+<ul style="margin-bottom:8px">
+<li><strong>A 组</strong>：完成问卷后<strong>立即</strong>展示画像</li>
+<li><strong>B 组</strong>：完成问卷后<strong>延迟 2 周</strong>展示，这 2 周只记录行为</li>
+</ul>
+<p style="margin:0"><strong>判读：</strong>比较两组在"给画像前"的行为基线。
+若基线一致，则此后出现的差异即为标签效应所致——<strong>从而把"测得准"与"改得好"分离开来</strong>。<br>
+<span class="src">成本极低（仅延迟展示），但能同时解决陷阱 1、2、4。</span></p>
+</div>
+
+<!-- ============ 6 ============ -->
+<h2><span class="num">06</span>从验证到产品：五层链条</h2>
+
+<p>把各个功能串成叙事，是产品从"模块堆砌"走向"有主张"的关键一步。
+但串联的<strong>目标函数</strong>必须摆正：<strong>不是"让用户相信"，而是"让用户做出他本来做不到的、更好的决策"</strong>。
+"相信"是这条路上的收费站，不是目的地。</p>
+
+<div class="chain">
+  <div class="chain-item"><div class="chain-n">1</div><div class="chain-body">
+    <h4>现象层 · 可观测行为</h4>
+    <p>展示可验证的数字，而非模糊描述。<br>
+    例："你亏损时平均持有 47 天，盈利时 12 天"</p></div></div>
+  <div class="chain-item"><div class="chain-n">2</div><div class="chain-body">
+    <h4>映射层 · 人格叙事</h4>
+    <p>用行为决策理论解释现象，而非凭空映射。<br>
+    例："这符合损失厌恶模式，在你的六维向量上表现为…"</p></div></div>
+  <div class="chain-item"><div class="chain-n">3</div><div class="chain-body">
+    <h4>洞察层 · 让用户看清自己</h4>
+    <p>例："你以为自己在等回本，实际是在回避承认错误"<br>
+    <span class="src">★ 用户在此处点头——但这个点头不是目的，是为下一层铺路</span></p></div></div>
+  <div class="chain-item"><div class="chain-n">4</div><div class="chain-body">
+    <h4>干预层 · 具体可执行的一步 ⭐</h4>
+    <p>例："下次触及 −8% 时，系统会先问你：如果此刻空仓，你会以这个价格买入吗？"<br>
+    <span class="src">大多数人格产品死在第 3 层——洞察惊艳，然后没有然后了</span></p></div></div>
+  <div class="chain-item"><div class="chain-n">5</div><div class="chain-body">
+    <h4>反馈层 · 记录改变并回喂</h4>
+    <p>例："三个月后持有天数 47 → 28，该变化被记录并回喂校准"</p></div></div>
+</div>
+
+<h3>自检：逐层问"所以呢？"</h3>
+<table>
+<tr><th style="width:16%">层</th><th>自检问题</th></tr>
+<tr><td class="k">现象</td><td>我展示的是<strong>可验证的数字</strong>，还是模糊描述？</td></tr>
+<tr><td class="k">映射</td><td>这个映射有理论依据，还是我拍的？</td></tr>
+<tr><td class="k">洞察</td><td>用户看完会不会问"那我该怎么办"？</td></tr>
+<tr><td class="k">干预</td><td>有没有<strong>具体到可执行的一步</strong>？</td></tr>
+<tr><td class="k">反馈</td><td>用户改变了，我能观测到吗？</td></tr>
+</table>
+
+<div class="callout warn">
+<strong>一个分岔：两种"心理设计"</strong><br><br>
+<table style="margin:8px 0 0">
+<tr><th style="width:22%"></th><th style="width:39%">用心理学理论设计映射</th><th>用心理技巧操纵用户</th></tr>
+<tr><td class="k">依据</td><td>行为决策学的实证发现</td><td>说服术、话术套路</td></tr>
+<tr><td class="k">目的</td><td>让用户看清自己</td><td>让用户接受结论</td></tr>
+<tr><td class="k">可证伪</td><td>✅ 预测得准不准可检验</td><td>❌ 总能自圆其说</td></tr>
+<tr><td class="k">长期</td><td>用户决策质量提升</td><td>用户依赖度提升但能力不提升</td></tr>
+</table>
+<br><strong>区分标准：</strong>你敢不敢告诉用户"这个画像可能会改变你"？
+敢说且设计了对照组分离"测得准"与"改得好" → 干预工具；不敢说、只想让用户觉得"你好懂我" → 娱乐产品。
+</div>
+
+<!-- ============ 7 ============ -->
+<h2><span class="num">07</span>数据来源分层：陈述性 vs 显示性偏好</h2>
+
+<p>公开数据集与产品内收集数据，差异不只是"谁的"，而是<strong>认识论地位不同</strong>。
+经济学称其为 <strong>陈述性偏好（stated preference）</strong> 与
+<strong>显示性偏好（revealed preference）</strong> 之分。</p>
+
+<table>
+<tr><th style="width:20%"></th><th style="width:40%">公开数据集</th><th>产品内收集数据</th></tr>
+<tr><td class="k">性质</td><td>自我报告（问卷打分）</td><td>行为记录（真实操作）</td></tr>
+<tr><td class="k">语境</td><td>实验室/问卷，无后果</td><td>真实场景，有实际损益</td></tr>
+<tr><td class="k">被试心态</td><td>知道"我在被测试"</td><td>在做自己的事</td></tr>
+<tr><td class="k">时间维度</td><td>通常横截面（一次性）</td><td><strong>纵向</strong>（可追踪同一人）</td></tr>
+</table>
+
+<div class="callout gold">
+<strong>核心差异：心态差。</strong><br>
+问卷问"你能承受 20% 亏损吗"——绝大多数人说能；真跌到 15% 时，割肉的是同一批人。<br>
+这不是撒谎，而是<strong>人在假设情境中根本无法预测自己的真实反应</strong>。
+即 <strong>冷暖共情缺口（hot-cold empathy gap）</strong>：冷静时想象不出恐慌时的自己。
+</div>
+
+<h3>这解释了贝叶斯权重转移的底层逻辑</h3>
+<p>第 05 节的权重表（冷启动问卷 100% → 长期行为 90%），本质上就是在处理这一差异：
+问卷记录的是"我以为我会怎样"，行为记录的是"我实际做了什么"。
+随着行为数据积累，前者理应让位。</p>
+
+<h3>但产品数据不是自动更好——它有四种自身偏差</h3>
+<table>
+<tr><th style="width:22%">偏差</th><th>说明</th></tr>
+<tr><td class="k">自选偏差</td><td>愿意做人格测试的散户不是散户的随机样本，他们更愿自我反思。结论可能只适用于这类人。</td></tr>
+<tr><td class="k">幸存者偏差</td><td>跑了的用户不带走数据。留下来的可能是觉得准的那批——越用越"准"，其实是样本在自我筛选。</td></tr>
+<tr><td class="k">霍桑效应</td><td>知道自己被记录，行为本身即被改变（即第 04 节的标签效应）。</td></tr>
+<tr><td class="k">冷启动噪声</td><td>前 100 个用户的数据，噪声远大于信号。此时不应急于下结论。</td></tr>
+</table>
+
+<div class="callout">
+<strong>一句话区分：</strong><br>
+公开数据告诉你"人在实验室里怎么回答"，产品数据告诉你"人在真实处境里怎么行动"。<br>
+<strong>前者便宜但会撒谎，后者诚实但昂贵。</strong>
+</div>
+
+<!-- ============ 8 ============ -->
+<h2><span class="num">08</span>验证的经济学：为什么必须在原型阶段做</h2>
+
+<p>在环境受限时，用最便宜的数据源先把"方向性错误"排除掉，
+把昂贵的用户接触留给"方向已确认、只需验证细节"的问题。</p>
+
+<h3>成本是阶跃式上涨，不是线性</h3>
+<table>
+<tr><th style="width:24%">阶段</th><th style="width:30%">改一个假设的代价</th><th>额外损失</th></tr>
+<tr><td class="k">想法阶段</td><td>5 分钟</td><td>无</td></tr>
+<tr><td class="k">原型阶段</td><td>半天</td><td>无</td></tr>
+<tr><td class="k">有用户之后</td><td>数据迁移、解释成本</td><td><strong>可能流失一批用户</strong></td></tr>
+<tr><td class="k">上线运营</td><td>发公告、做兼容、客诉</td><td><strong>信任不可逆损耗</strong></td></tr>
+</table>
+
+<div class="callout warn">
+<strong>信任是不可再生资源。</strong>
+一个用户愿意认真做完你的测试，这份注意力只能用一次。
+若产品假设是错的，你消耗了它却没换来有效信息。
+</div>
+
+<h3>公开数据在链条中的真实位置：过滤器</h3>
+<div class="panel">
+<p style="margin:0;font-size:13.5px;line-height:2">
+100 个产品假设<br>
+　↓ <strong style="color:var(--gold)">公开数据筛掉明显不成立的</strong>（成本≈0）<br>
+20 个<br>
+　↓ 原型验证筛掉做不出来的<br>
+5 个<br>
+　↓ <strong style="color:var(--cyan)">真人测试（最贵，留到这里）</strong><br>
+1–2 个
+</p>
+</div>
+
+<p><strong>值得注意：</strong>这比标准精益创业的 build-measure-learn 更前置了一步——
+<strong>在 build 之前就先 measure</strong>，用的是别人已经采集好的数据。</p>
+
+<h3>一个需要澄清的措辞</h3>
+<p>公开数据<strong>不接近"真实用户数据"</strong>，它接近的是"真实的人性规律"。</p>
+<ul>
+<li>真实用户数据 → 告诉你<strong>你的</strong>用户会怎么做（具体到你的产品与交互）</li>
+<li>公开数据 → 告诉你<strong>人</strong>会怎么做（一般性规律）</li>
+</ul>
+<p>前者只能自己采集，后者免费可得。<strong>而架构决策主要需要的是后者</strong>——
+因为要回答的是"该用连续向量还是离散类型"这类问题，靠一般性规律即可。</p>
+
+<div class="callout gold">
+<strong>因此形成的最优路径：</strong><br>
+用免费数据定架构 → 用原型验证可行性 → 用真人验证产品价值。<br>
+每一步只回答该成本层级该回答的问题，<strong>不越级</strong>。
+</div>
+
+<h3>当前阶段的能力边界（诚实陈述）</h3>
+<p>公开数据能证明的极限是：<strong>这套映射在原理上说得通，且在他人采集的数据上存在可预测的结构</strong>。<br>
+它无法证明用户会买单，也无法证明干预有效。<br>
+<strong>而偏差层面的问题（标签效应等），只有在"有人真正使用"的那一刻才会产生——因此必须留到真实用户阶段验证。</strong></p>
+
+<!-- ============ 9 ============ -->
+<h2><span class="num">09</span>实证结果 · Big Five (n=20,000)</h2>
+
+<div class="callout">
+<strong>数据来源：</strong>automoto/big-five-data（30 万人公开数据集），取前 20,000 行。
+特征为五个大五维度（0–1 归一化）。脚本：<code>validate_personality.py</code>。
+</div>
+
+<h3>9.1 原始数据</h3>
+
+<pre style="background:#0d1436;border:1px solid var(--line);border-radius:8px;padding:14px 16px;font-size:12px;overflow-x:auto;color:var(--dim);line-height:1.6">
+  k       真实数据       均匀基线       打乱基线      净增益
+  2     0.2120     0.1907     0.1317  +0.0803
+  3     0.1864     0.1677     0.1286  +0.0578
+  4     0.1687     0.1573     0.1326  +0.0360
+  5     0.1655     0.1555     0.1363  +0.0292
+  6     0.1576     0.1560     0.1397  +0.0180
+  7     0.1493     0.1567     0.1357  +0.0136
+  8     0.1456     0.1674     0.1347  +0.0109
+
+最优 k = 2（轮廓系数 0.2120）
+ARI = 0.9957 ± 0.0024
+
+簇  样本数      宜人性      外向性      开放性      尽责性      神经质
+ 0    9407    -0.40    -0.56    -0.33    -0.54    +0.68
+ 1   10593    +0.36    +0.49    +0.29    +0.48    -0.60
+
+η²：宜人性 0.1420 · 外向性 0.2743 · 开放性 0.0941 · 尽责性 0.2576 · 神经质 0.4048
+平均 η² = 0.2345
+</pre>
+
+<h3>9.2 最重要的发现：五个维度全部反向 = 一根轴，不是两类人</h3>
+
+<div class="callout gold">
+<strong>簇剖面显示：两个簇在全部五个维度上方向相反</strong>（神经质为反向）。<br><br>
+若人格为离散类型，k=2 应分离出"某几个维度不同、其余维度相似"的簇。
+而实际得到的是"一边全低、一边全高"——<strong>这说明所谓的两簇并非两种人，而是同一根连续轴的两个端点</strong>。<br><br>
+该轴在心理学中称为 <strong>一般人格因子（General Factor of Personality, GFP）</strong>，
+亦称"稳定性–可塑性"轴。本数据独立复现了这一已知结构。
+</div>
+
+<h3>9.3 逐项解读</h3>
+
+<table>
+<tr><th style="width:22%">指标</th><th style="width:14%">数值</th><th>解读</th></tr>
+<tr><td class="k">净增益 (k=2)</td><td>+0.0803</td>
+    <td>落在「0.05–0.10」区间 → <strong>结构较弱，需谨慎表述</strong>，非"结构明确存在"。</td></tr>
+<tr><td class="k">净增益随 k 变化</td><td>0.080 → 0.011</td>
+    <td><strong>单调下降</strong>。这是关键证据：不存在多簇结构，k 越大越勉强，
+        与"离散类型"假设相悖，与"连续谱"假设一致。</td></tr>
+<tr><td class="k">ARI</td><td>0.9957</td>
+    <td>数值稳定，但 k=2 时稳定性天然偏高，<strong>独立参考价值有限</strong>。</td></tr>
+<tr><td class="k">η² 平均</td><td>0.2345</td>
+    <td>⚠️ <strong>不可作为效标关联效度</strong>，见 9.4。</td></tr>
+</table>
+
+<h3>9.4 ⚠️ 一个必须点破的方法论陷阱</h3>
+
+<div class="callout warn">
+η² 计算的是"簇能解释<strong>用于聚类的那五个维度</strong>多少方差"。<br>
+<strong>用 X 聚类、再用 X 计算解释力——这是同义反复，数值必然偏高。</strong><br><br>
+因此 <strong>0.2345 不代表"画像能解释 23% 的行为"</strong>。
+真正的效标关联效度必须使用<strong>外部变量</strong>（如换手率、持仓时长、盈亏处置），
+需改用 <code>validate_investor.py</code> 配合含行为指标的数据集。<br><br>
+<strong>结论：本轮未检验 Q3（分型是否有用），该问题目前为空白，不应声称已验证。</strong>
+</div>
+
+<h3>9.5 由此得到的结论</h3>
+
+<table>
+<tr><th style="width:46%">❌ 不可主张</th><th>✅ 可主张</th></tr>
+<tr><td>数据表明人格可分型，16 型有实证依据</td>
+    <td>数据表明人格空间中<strong>不存在离散类型结构</strong>，仅存在单一连续轴</td></tr>
+<tr><td>发现了 N 种人格类型</td>
+    <td>独立复现了一般人格因子（GFP）这一已知结构</td></tr>
+<tr><td>画像可解释 23% 的行为</td>
+    <td>连续轴解释了各维度 9%–40% 的方差（<strong>内部指标，非外部效标</strong>）</td></tr>
+</table>
+
+<div class="callout gold">
+<strong>对产品的实际意义：</strong><br>
+本产品底层本就采用<strong>六维连续向量</strong>，因此这不是"需要修改"的结论，
+而是<strong>已有设计获得了 n=20,000 的证据支持</strong>。<br><br>
+同时说明：对外呈现的离散类型（16 型）应明确定位为<strong>交互层</strong>——
+其价值在于<strong>可用性</strong>（人脑不擅长处理六个连续维度，但能记住一个类型标签），
+而非<strong>准确性</strong>。二者不应混为一谈。
+</div>
+
+
+<!-- ============ 6 ============ -->
+<h2><span class="num">10</span>MBTI 与大五：一个必须能说清的选择</h2>
+
+<p>本项目底层是<strong>六维连续向量</strong>（特质论），对外呈现为<strong>16 型</strong>（类型论）。
+这个组合需要能说清为什么。</p>
+
+<table>
+<tr><th style="width:18%"></th><th style="width:41%">类型论（MBTI）</th><th>特质论（Big Five）</th></tr>
+<tr><td class="k">假设</td><td>人是离散的类别</td><td>人是连续的维度</td></tr>
+<tr><td class="k">学界地位</td><td>流行于企业与大众，<strong>学术界批评较多</strong></td><td><strong>学界主流共识</strong></td></tr>
+<tr><td class="k">重测信度</td><td>较低：同一个人隔数周重测，约半数至少一个维度会变</td><td>较高，长期稳定</td></tr>
+<tr><td class="k">结构效度</td><td>因子分析不支持离散划分</td><td>因子结构可复现</td></tr>
+<tr><td class="k">效标关联</td><td>预测工作绩效等能力较弱</td><td>有大量实证支持</td></tr>
+</table>
+
+<div class="callout gold">
+<strong>推荐表述（若被问"你自己信 MBTI 吗"）：</strong><br>
+"我把它当<strong>交互层</strong>而不是<strong>测量层</strong>。
+底层我用的是连续向量，16 型只是为了让用户能记住和讨论——
+就像气象预报说'明天多云'而不是'云量 63%'。
+但如果要做严格的个体差异推断，我会用连续分数。"<br>
+<span class="src">这一句能把"用了个流行概念"转变为"知道自己在用什么"。</span>
+</div>
+
+<p><strong>这同时也解释了本项目为何选择"预测"作为合法性来源：</strong>
+16 型作为交互层不必承担测量责任，真正的有效性由底层连续向量的预测效度来保证。</p>
+
+<!-- ============ 7 ============ -->
+<h2><span class="num">11</span>对外表述约束</h2>
+
+<table>
+<tr><th style="width:44%">❌ 不应使用</th><th>✅ 推荐表述</th></tr>
+<tr><td>准确测出你的人格</td><td>识别你的行为模式</td></tr>
+<tr><td>16 型科学测评</td><td>基于行为数据的决策风格画像</td></tr>
+<tr><td>发现真实的你</td><td>把你的决策倾向变得可见、可讨论</td></tr>
+<tr><td>通过真实用户数据验证了产品有效性</td><td>在公开数据集上完成方法论验证</td></tr>
+<tr><td>n=30 的验证已充分</td><td>n=30 为初步探索，样本量是主要限制</td></tr>
+</table>
+
+<div class="callout warn">
+<strong>核心原则：</strong>声称"描述可观测行为"比声称"揭示真实自我"难被问穿得多。
+前者做出了一个更谦虚的主张，而这个主张是<strong>真的能兑现</strong>的。
+</div>
+
+<!-- ============ 8 ============ -->
+<h2><span class="num">12</span>结果记录区 <span class="src">（待填充）</span></h2>
+
+<p>验证跑完后，将数据填入下表。填写后自动判定并生成结论文案。
+数据保存在浏览器本地，可导出为独立 HTML 展示。</p>
+
+<div class="panel">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+    <div><label style="font-size:12px;color:var(--dim)">数据集名称</label>
+      <input id="m_ds" class="num" style="width:100%;text-align:left" value="Big Five 公开数据集（automoto/big-five-data，前 20,000 行）"></div>
+    <div><label style="font-size:12px;color:var(--dim)">样本量 n</label>
+      <input id="m_n" class="num" style="width:100%;text-align:left" value="20000"></div>
+  </div>
+
+  <table>
+    <thead><tr>
+      <th style="width:26%">指标</th><th style="width:14%">假设阈值</th>
+      <th style="width:14%">实测值</th><th style="width:14%">判定</th><th>说明</th>
+    </tr></thead>
+    <tbody id="tb"></tbody>
+  </table>
+
+  <div class="summary-box" id="sum">填入实测值后自动生成结论…</div>
+
+  <div class="btns">
+    <button class="primary" onclick="save()">保存</button>
+    <button onclick="expHTML()">导出 HTML</button>
+    <button onclick="window.print()">打印 / 存 PDF</button>
+    <button onclick="reset()">清空</button>
+  </div>
+  <div class="tip">数据自动保存在本浏览器。导出的 HTML 为独立文件，可上传至 GitHub Pages 与作品集并列展示。</div>
+</div>
+
+
+<!-- ============ 9 ============ -->
+<hr style="border:none;border-top:1px solid var(--line);margin:44px 0 18px">
+<p class="src">
+本页为方法论文档，用于支撑 Y.Mine / Game-OS 产品体系的设计合理性。<br>
+本页仅含方法论与实证，不含对外表述话术（另行归档）。第 12 章结果记录区已填入本轮实测数据，后续可随新数据更新。
+</p>
+
+</div>
+
+<script>
+var DATA_VERSION='2026-09-07-bigfive-20k';
+var DEF=[
+ {n:'最优簇数 k',hyp:'4 ±1',h:4,rule:'near',tol:1,act:2,
+  note:'Q1：实测 k=2（非 4）。净增益随 k 单调下降，说明无多簇结构 → 判定「部分支持」'},
+ {n:'轮廓系数净增益',hyp:'≥ 0.10',h:0.10,rule:'gt',act:0.0803,
+  note:'Q1：实测 0.0803，落在 0.05–0.10 区间 → 结构较弱，需谨慎表述'},
+ {n:'Bootstrap 稳定性 ARI',hyp:'≥ 0.75',h:0.75,rule:'gt',act:0.9957,
+  note:'Q2：实测 0.9957，稳定。但 k=2 时稳定性天然偏高，独立参考价值有限'},
+ {n:'行为差异效应量 η²',hyp:'≥ 0.14',h:0.14,rule:'gt',act:null,
+  note:'⚠ 需外部行为效标（换手率/持仓时长等）。本轮仅得内部指标 0.2345——用 X 聚类再用 X 算解释力，属同义反复，不可填此栏'},
+ {n:'校正后 p 值',hyp:'≤ 0.05',h:0.05,rule:'lt',act:null,
+  note:'Q3：需含行为指标的数据集，本轮未检验 → 留空，不应声称已验证'},
+ {n:'六维向量 vs 大五 相关性 |r|',hyp:'≥ 0.30',h:0.30,rule:'gt',act:null,
+  note:'待算：可检验向量是否有心理学锚点，非自创黑箱'},
+ {n:'0.68 阈值跨域复现率',hyp:'≥ 0.60',h:0.60,rule:'gt',act:null,
+  note:'待算：五个域中观察到阈值一致的比例（本项目独有）'},
+ {n:'画像自评吻合度',hyp:'≥ 4.0 / 5',h:4.0,rule:'gt',act:null,
+  note:'需种子测试；对照组应显著更低，否则为巴纳姆效应'}
+];
+var R=[];
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function vd(r){
+  if(r.act==null||r.act===''||isNaN(parseFloat(r.act)))return'none';
+  var a=parseFloat(r.act),h=parseFloat(r.h);
+  if(r.rule==='gt')return a>=h?'pass':(a>=h*0.7?'part':'fail');
+  if(r.rule==='lt')return a<=h?'pass':(a<=h*2?'part':'fail');
+  if(r.rule==='near')return Math.abs(a-h)<=r.tol?'pass':(Math.abs(a-h)<=r.tol*2?'part':'fail');
+  return'none';}
+function vt(r){return{none:'待填',pass:'支持',part:'部分支持',fail:'未支持'}[vd(r)];}
+function render(){
+  var h='';
+  R.forEach(function(r,i){
+    h+='<tr><td class="k">'+esc(r.n)+'</td><td style="color:var(--dim)">'+esc(r.hyp)+'</td>'
+      +'<td><input class="num" value="'+(r.act==null?'':esc(r.act))+'" placeholder="待填" '
+      +'oninput="upd('+i+',this.value)"></td>'
+      +'<td><span class="verdict v-'+vd(r)+'">'+vt(r)+'</span></td>'
+      +'<td style="color:var(--dim);font-size:12px">'+esc(r.note)+'</td></tr>';});
+  document.getElementById('tb').innerHTML=h;
+  sum();}
+function upd(i,v){
+  R[i].act = (v===''?null:(isNaN(parseFloat(v))?v:parseFloat(v)));
+  render();
+  try{localStorage.setItem('theory_version',DATA_VERSION);localStorage.setItem('theory_results',JSON.stringify(R));
+      localStorage.setItem('theory_meta',JSON.stringify({
+        ds:document.getElementById('m_ds').value,n:document.getElementById('m_n').value}));}catch(e){}}
+function sum(){
+  var f=R.filter(function(r){return r.act!=null&&!isNaN(parseFloat(r.act));});
+  var el=document.getElementById('sum');
+  if(!f.length){el.textContent='填入实测值后自动生成结论…';return;}
+  var p=f.filter(function(r){return vd(r)==='pass';});
+  var q=f.filter(function(r){return vd(r)==='part';});
+  var n=document.getElementById('m_n').value||'?';
+  var ds=document.getElementById('m_ds').value||'公开数据集';
+  var t;
+  if(p.length>=Math.ceil(f.length*0.7)){
+    t='【结果：支持】\n\n在'+ds+'（n='+n+'）上，'+f.length+' 项指标中 '+p.length+' 项达到阈值。\n\n'
+     +'可表述为：\n在公开数据集（'+ds+', n='+n+'）上完成方法论验证，'
+     +p.slice(0,2).map(function(r){return r.n+'达'+r.act;}).join('、')+'。\n\n'
+     +'注意保留「公开数据集」五字——这验证的是方法论层，不是产品有效性。';
+  }else if(p.length+q.length>=Math.ceil(f.length*0.5)){
+    t='【结果：部分支持】\n\n'+f.length+' 项中：'+p.length+' 达标、'+q.length+' 边缘。\n\n'
+     +'可表述为（保守）：\n在'+ds+'（n='+n+'）上开展方法论探索，部分指标呈预期方向，'
+     +'受'+(parseInt(n)<50?'样本量':'特征粒度')+'限制未全部达显著。\n\n'
+     +'建议补充：趋势方向正确但强度不足，下一步针对性改进。';
+  }else{
+    t='【结果：未支持】\n\n'+f.length+' 项中仅 '+p.length+' 项达标。\n\n'
+     +'建议：暂不作为成果对外陈述。\n\n'
+     +'可说明：我用公开数据做过验证，结果是阴性——分型与行为未显现假设中的关联。'
+     +'这说明问题出在特征选择而非分型思路本身，我已据此重新设计特征。'
+     +'这一阴性结果帮我避开了更大的坑：若直接找种子用户，会浪费参与者的时间和信任。';
+  }
+  if(parseInt(n)<50)t+='\n\n⚠ n='+n+' 偏小，所有结论请表述为「初步探索」，不要说「已验证」。';
+  el.textContent=t;}
+function save(){try{localStorage.setItem('theory_version',DATA_VERSION);localStorage.setItem('theory_results',JSON.stringify(R));
+  alert('已保存到本浏览器。\n如需在线展示，请点「导出 HTML」并上传。');}catch(e){alert('保存失败：'+e);}}
+function reset(){if(!confirm('清空所有已填数据？'))return;
+  R=JSON.parse(JSON.stringify(DEF));
+  document.getElementById('m_ds').value='';document.getElementById('m_n').value='';render();
+  try{localStorage.removeItem('theory_results');localStorage.removeItem('theory_meta');localStorage.removeItem('theory_version');}catch(e){}}
+function expHTML(){
+  var s='<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n<meta charset="UTF-8">\n<title>行为建模方法论 · 含验证结果</title>\n<style>'
+    +document.querySelector('style').textContent+'</style>\n</head>\n<body>\n'
+    +document.querySelector('.wrap').outerHTML+'\n</body>\n</html>';
+  s=s.replace(/<div class="btns">[\s\S]*?<\/div>/g,'');
+  s=s.replace(/<input[^>]*>/g,function(m){
+    var v=/value="([^"]*)"/.exec(m);return v&&v[1]?v[1]:'';});
+  var b=new Blob([s],{type:'text/html;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download='behavior_modeling_theory.html';a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);},1000);}
+function load(){
+  var fresh=true;
+  try{
+    if(localStorage.getItem('theory_version')!==DATA_VERSION){fresh=false;}
+    var r=JSON.parse(localStorage.getItem('theory_results')||'null');
+    R=(fresh&&r)?r:JSON.parse(JSON.stringify(DEF));
+    var m=JSON.parse(localStorage.getItem('theory_meta')||'null');
+    if(fresh&&m){document.getElementById('m_ds').value=m.ds||document.getElementById('m_ds').value;
+                 document.getElementById('m_n').value=m.n||document.getElementById('m_n').value;}
+  }catch(e){R=JSON.parse(JSON.stringify(DEF));}
+  render();}
+['m_ds','m_n'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',function(){
+    try{localStorage.setItem('theory_meta',JSON.stringify({
+      ds:document.getElementById('m_ds').value,n:document.getElementById('m_n').value}));}catch(e){}
+    sum();});});
+load();
+</script>
+</body>
+</html>

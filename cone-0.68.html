@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>决策锥体与 0.68 阈值 · Game-OS 理论内核</title>
+<style>
+:root{
+  --ink:#0a080c; --ink2:#14101a; --gold:#FBBF24; --violet:#A78BFA; --cyan:#22D3EE;
+  --text:#241E2B; --grey:#6E6480; --line:#E4DEEC; --bg:#FCFBFD; --card:#fff;
+  --ok:#2E7D5B; --warn:#B87A1E; --risk:#B23A3A; --info:#5B4B9E;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Source Han Sans SC","Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.78;font-size:15px}
+.wrap{max-width:1060px;margin:0 auto;padding:0 28px}
+.hero{background:linear-gradient(135deg,#0a080c,#1a1420 60%,#241a2e);color:#E8D4B8;padding:60px 0 52px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-120px;top:-120px;width:400px;height:400px;border-radius:50%;background:rgba(167,139,250,.10)}
+.hero .wrap{position:relative}
+.tag{display:inline-block;background:rgba(251,191,36,.16);color:var(--gold);padding:5px 14px;border-radius:20px;
+  font-size:12px;letter-spacing:1.6px;margin-bottom:18px;border:1px solid rgba(251,191,36,.3)}
+.hero h1{font-size:34px;font-weight:700;letter-spacing:-.5px;margin-bottom:10px;line-height:1.28;color:#fff}
+.hero .en{font-size:14px;color:#A78BFA;font-family:ui-monospace,Menlo,monospace;margin-bottom:16px}
+.hero .sub{font-size:15.5px;color:#C0AE98;max-width:790px}
+.meta{display:flex;flex-wrap:wrap;gap:28px;margin-top:28px;padding-top:24px;border-top:1px solid rgba(251,191,36,.18)}
+.meta div{font-size:12px;color:#8A7A66}
+.meta strong{display:block;font-size:16px;color:#E8D4B8;font-weight:600;margin-bottom:2px}
+section{padding:48px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border:none}
+h2{font-size:24px;font-weight:700;color:#1a1420;margin-bottom:6px;letter-spacing:-.3px}
+h2+.lead{color:var(--grey);font-size:14.5px;margin-bottom:26px}
+h3{font-size:17.5px;font-weight:650;color:var(--ink2);margin:28px 0 12px;padding-left:11px;border-left:3px solid var(--gold)}
+p{margin-bottom:12px}
+ul,ol{margin:0 0 14px 20px}li{margin-bottom:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:22px;margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:14px 0;background:var(--card)}
+th{background:#1a1420;color:#E8D4B8;padding:10px 12px;text-align:left;font-weight:600;font-size:12.8px}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:hover{background:#FAF8FC}
+.callout{border-left:4px solid var(--info);background:#F3F0FA;padding:14px 18px;border-radius:0 8px 8px 0;margin:14px 0;font-size:14px}
+.callout.risk{border-color:var(--risk);background:#FBEDED}
+.callout.warn{border-color:var(--warn);background:#FDF6EC}
+.callout.ok{border-color:var(--ok);background:#EDF7F2}
+.callout b{color:#1a1420}
+code{background:#F2EEF8;padding:1.5px 6px;border-radius:4px;font-size:12.8px;font-family:ui-monospace,Menlo,monospace;color:#4A3A6A}
+.tag{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11.5px;font-weight:600;margin-right:5px}
+.t-warn{background:#FDF1E0;color:var(--warn)}
+.t-ok{background:#E3F3EA;color:var(--ok)}
+.t-risk{background:#FBE9E9;color:var(--risk)}
+.t-info{background:#EDE9F8;color:var(--info)}
+.split{display:grid;grid-template-columns:1fr 380px;gap:30px;align-items:center}
+@media(max-width:880px){.split{grid-template-columns:1fr}}
+footer{background:#0a080c;color:#8A7A66;padding:28px 0;font-size:12.5px;text-align:center}
+footer b{color:#E8D4B8}
+.concl{background:linear-gradient(135deg,#14101a,#0a080c);color:#C0AE98;padding:28px 30px;border-radius:12px;margin:20px 0}
+.concl h4{color:var(--gold);font-size:16.5px;margin-bottom:10px}
+.concl strong{color:#fff}
+.ax{background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px 18px;margin:12px 0;
+  font-family:ui-monospace,Menlo,monospace;font-size:13.5px;line-height:1.9}
+.ax .lbl{color:var(--grey);font-family:inherit;font-size:11.5px;letter-spacing:1px}
+</style>
+</head>
+<body>
+
+<div class="hero"><div class="wrap">
+  <span class="tag">GAME-OS · THEORETICAL CORE</span>
+  <h1>决策锥体与 0.68 阈值</h1>
+  <div class="en">Decision Cone · A Unified Geometric Skeleton for Cross-Domain Decision Systems</div>
+  <p class="sub">一个跨域猜想的几何表述：任何包含「探索/利用权衡」「风险/收益折衷」「秩序/混沌边界」的系统，都可能收敛到同一个几何骨架——顶点 0（绝对确定/死寂），底面 1（完全混沌/热寂），有效决策区上界稳定在 0.68。</p>
+  <div class="meta">
+    <div><strong>0.618</strong>φ 黄金分割比</div>
+    <div><strong>0.68</strong>通用阈值（含熔断冗余）</div>
+    <div><strong>5</strong>同构域</div>
+    <div><strong>3</strong>实验验证域</div>
+    <div><strong>Preprint</strong>arXiv math.HO · 2026</div>
+  </div>
+</div></div>
+
+<section><div class="wrap">
+  <h2 style="color:var(--risk)">⚠ 首先：这是什么，不是什么</h2>
+  <p class="lead">这一页最重要的一段话，请先看这里。</p>
+
+  <div class="callout risk">
+    <b>这是一个「猜想」（conjecture），不是已证明的定理。</b><br>
+    论文原文用词是「本文提出并形式化了一个<b>猜想</b>」；arXiv 分类为 <code>math.HO</code>（数学概览），状态为<b>预印本（preprint）</b>，arXiv 编号待定。它<b>未经同行评审</b>，也<b>不是学界公认结论</b>。
+  </div>
+
+  <p><b>因此正确的表述方式是：</b></p>
+  <table>
+    <thead><tr><th style="width:44%">✅ 可以这样说</th><th>❌ 不能这样说</th></tr></thead>
+    <tbody>
+      <tr><td>「我提出并形式化了一个<b>猜想</b>：五个域在几何上收敛到同一骨架」</td><td>「我证明了 0.68 是通用决策常数」</td></tr>
+      <tr><td>「在三个实验域中<b>观察到</b>阈值的可复现性」</td><td>「学界已验证 / 论文已发表」</td></tr>
+      <tr><td>「这是一篇工作论文，正在寻求验证与证伪」</td><td>「这是成熟的数学理论」</td></tr>
+      <tr><td>「0.68 = φ(0.618) + 熔断冗余」</td><td>「0.68 由 xx 公式严格导出」</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <b>为什么必须这样标注：</b>面试官里但凡有数学或量化背景的人，听到"我证明了一个跨域通用常数"会立刻追问推导过程——那时会非常难看。而说"我提出了一个猜想，并在三个域做了实验验证，正在寻求证伪"，<b>反而显得专业、严谨、有学术素养</b>。
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>一、锥体的几何结构</h2>
+  <p class="lead">五个关键位置，构成一个可度量、可审计的决策空间。</p>
+
+  <div class="split">
+    <div>
+      <svg viewBox="0 0 420 340" style="width:100%;max-width:420px">
+        <defs>
+          <linearGradient id="cone" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a1420"/><stop offset="100%" stop-color="#3a2a45"/>
+          </linearGradient>
+        </defs>
+        <polygon points="210,20 60,300 360,300" fill="url(#cone)" stroke="#A78BFA" stroke-width="2"/>
+        <text x="210" y="16" font-size="12" fill="#A78BFA" text-anchor="middle">▼ 顶点 0.0</text>
+        <text x="196" y="316" font-size="12" fill="#F87171" text-anchor="middle">▲ 基底 1.0</text>
+        <g stroke-dasharray="4,3">
+          <line x1="110" y1="163" x2="310" y2="163" stroke="#22D3EE" stroke-width="1.4"/>
+          <line x1="116" y1="176" x2="304" y2="176" stroke="#8ab0b8" stroke-width="1.2"/>
+          <line x1="139" y1="228" x2="281" y2="228" stroke="#FBBF24" stroke-width="2.6"/>
+          <line x1="126" y1="205" x2="294" y2="205" stroke="#F87171" stroke-width="1.2" stroke-dasharray="3,3"/>
+        </g>
+        <g font-size="11">
+          <text x="322" y="167" fill="#22D3EE">0.50 稳态中心轴</text>
+          <text x="322" y="209" fill="#F87171">0.48 资本保全线</text>
+          <text x="322" y="232" fill="#FBBF24" font-weight="700">0.68 熔断阈值</text>
+        </g>
+        <g font-size="10.5" fill="#C0AE98">
+          <text x="30" y="140">僵化区</text><text x="30" y="156">·脆弱</text><text x="30" y="172">·过拟合</text>
+          <text x="330" y="262" fill="#F87171">混沌区</text><text x="330" y="278" fill="#F87171">·级联风险</text>
+        </g>
+        <text x="210" y="248" font-size="11" fill="#FBBF24" text-anchor="middle">▲ 有效决策区（上界 0.68）</text>
+        <circle cx="210" cy="228" r="5" fill="#FBBF24"/>
+      </svg>
+    </div>
+    <div>
+      <table>
+        <thead><tr><th>位置</th><th>含义</th></tr></thead>
+        <tbody>
+          <tr><td><b>顶点 0.0</b></td><td>绝对确定 — 僵死</td></tr>
+          <tr><td><b>0.48 线</b></td><td>资本保全底线</td></tr>
+          <tr><td><b>0.50 轴</b></td><td>稳态中心线</td></tr>
+          <tr><td><b>0.68 阈值</b></td><td>保险丝 / 熔断线（源自 φ + 安全边际）</td></tr>
+          <tr><td><b>基底 1.0</b></td><td>纯粹混沌 — 最大熵</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <b>读图要点：</b>低于 0.68，系统僵硬、脆弱、过拟合；高于 0.68，系统崩塌、级联风险、黑天鹅；<b>位于阈值附近，系统"呼吸"</b>——自适应、可审计、可进化。
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>二、0.68 从哪来</h2>
+  <p class="lead">拆解这个数字——哪些是论文给出的，哪些是待验证的。</p>
+
+  <div class="ax">
+    <div class="lbl">已知量（论文明确给出）</div>
+    φ ≈ 0.618　　黄金分割比<br>
+    1 − φ ≈ 0.382　　对称补<br>
+    <span style="color:#B23A3A">0.68　　通用阈值（论文原话：含熔断冗余）</span>
+  </div>
+
+  <div class="ax">
+    <div class="lbl">关系拆解</div>
+    0.68 − 0.618 = <b style="color:#B23A3A">0.062</b>　← 这就是「熔断冗余 / 安全边际」
+  </div>
+
+  <div class="callout warn">
+    <b>必须诚实说明的一点：</b>论文给出了 φ、对称补、以及"0.68（含熔断冗余）"这三个量，但<b>我未在公开源码与论文摘要中检索到 0.062 这一冗余项的严格推导过程</b>（例如它为何是 0.062 而非 0.05 或 0.07）。
+  </div>
+
+  <p>因此，严谨的表述应该是：</p>
+  <div class="callout ok">
+    阈值 0.68 可理解为 <b>φ(0.618) 叠加一层熔断冗余（≈0.062）</b> 后的取值；φ 部分有明确的数学来源，<b>冗余项的取值依据属于待进一步形式化的部分</b>——这也正是这篇工作论文仍在演进的原因。
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>三、五域同构映射</h2>
+  <p class="lead">这个猜想的核心主张：五个看似无关的域，在同一几何视角下收敛。</p>
+
+  <table>
+    <thead><tr><th>域</th><th>决策问题</th><th>0.68 在该域的含义</th><th>落地产品</th></tr></thead>
+    <tbody>
+      <tr><td>📐 <b>圆锥几何</b></td><td>秩序 / 混沌边界</td><td>有效决策区上界</td><td>Cone Game 沙盒</td></tr>
+      <tr><td>♠️ <b>博弈均衡</b></td><td>探索 / 利用权衡</td><td>策略收敛均衡点</td><td>Poker Face Arena</td></tr>
+      <tr><td>💰 <b>金融定价</b></td><td>风险 / 收益折衷</td><td>风险警戒线（折现率由锥顶向锥底扩散）</td><td>人格金融孪生平台</td></tr>
+      <tr><td>🧠 <b>认知张力</b></td><td>人格向量分配</td><td>七维向量张力上限</td><td>7D 向量分析</td></tr>
+      <tr><td>🍸 <b>分子调酒</b></td><td>风味浓度配比</td><td>浓度平衡点</td><td>人格调酒系统</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Fibonacci–染色体同构</h3>
+  <p>论文的形式化主张是：<b>斐波那契递归结构与染色体遗传重组过程之间存在深层数学同构</b>，每一 Fibonacci 编码对应一个染色体重组位点。这一同构被认为是"同一个 0.68 常数同时出现在五个域"的数学骨架解释。</p>
+
+  <div class="callout">
+    <b>同样需要标注：</b>这是论文提出的<b>同构猜想</b>。<code>labs/evidence/chromosome_diagnostic.html</code> 提供了可视化实验，但可视化 ≠ 证明。
+  </div>
+
+  <h3>三个实验验证域</h3>
+  <div class="grid3">
+    <div class="card"><h4 style="margin:0 0 6px;color:#1a1420">金融风险</h4>
+      <p style="font-size:13.5px;margin:0">CAPM / WACC / DCF 投射到锥体，观察折现率扩散与风险警戒</p></div>
+    <div class="card"><h4 style="margin:0 0 6px;color:#1a1420">德州扑克 GTO</h4>
+      <p style="font-size:13.5px;margin:0">MBTI 16 型 AI 陪练，Kelly + 人格 + LLM 三层架构，验证阈值可解释性</p></div>
+    <div class="card"><h4 style="margin:0 0 6px;color:#1a1420">七维向量认知建模</h4>
+      <p style="font-size:13.5px;margin:0">跨域语义向量在 0.68 超球面上的聚类</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>四、配套机制</h2>
+  <p class="lead">锥体之外，Game-OS 还有三套机制，让阈值不只是数字。</p>
+
+  <div class="grid3">
+    <div class="card">
+      <h4 style="margin:0 0 8px;color:#1a1420">🛡 七层熔断</h4>
+      <p style="font-size:13.5px;margin:0">风险不是单一数字，而是分层保险丝系统。任一层触发时系统<b>优雅降级</b>而非级联崩溃。</p>
+    </div>
+    <div class="card">
+      <h4 style="margin:0 0 8px;color:#1a1420">🔺 三角审计</h4>
+      <p style="font-size:13.5px;margin:0">每个决策在执行前经过<b>三个独立模型交叉验证</b>——没有任何单一模型拥有不受制约的权威。</p>
+    </div>
+    <div class="card">
+      <h4 style="margin:0 0 8px;color:#1a1420">🌐 跨域同构</h4>
+      <p style="font-size:13.5px;margin:0">Fibonacci–染色体同构是数学骨架，解释同一常数为何跨域复现。</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>五、待验证清单</h2>
+  <p class="lead">一篇诚实的工作论文，应该清楚自己哪里还没做完。</p>
+
+  <table>
+    <thead><tr><th style="width:30%">待办项</th><th>说明</th><th style="width:16%">状态</th></tr></thead>
+    <tbody>
+      <tr><td><b>0.062 冗余项推导</b></td><td>为何是 0.062 而非其他值，需要形式化</td><td><span class="tag t-warn">待形式化</span></td></tr>
+      <tr><td><b>同行评审</b></td><td>arXiv 编号待定，尚未经过评审</td><td><span class="tag t-risk">未评审</span></td></tr>
+      <tr><td><b>五域实证数据</b></td><td>目前为设计层面主张 + 可视化，缺严格统计检验</td><td><span class="tag t-warn">待补充</span></td></tr>
+      <tr><td><b>证伪条件</b></td><td>应明确写出"什么情况下这个猜想不成立"</td><td><span class="tag t-risk">关键缺失</span></td></tr>
+      <tr><td><b>锥体实验代码</b></td><td>38 个 HTML 实验室已可交互运行</td><td><span class="tag t-ok">已完成</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout risk">
+    <b>最该补的是"证伪条件"。</b>一个科学猜想的价值，很大程度取决于它<b>是否可被证伪</b>。如果能明确写出"若在 X 域观察到阈值显著偏离 0.68 且不能被冗余项解释，则猜想在该域不成立"，这篇论文的严谨度会立刻上一个台阶——<b>这也是面试官最爱问的问题</b>。
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>六、面试怎么讲</h2>
+  <p class="lead">这段经历用好了是极大加分，用错了会很危险。</p>
+
+  <div class="card">
+    <h4 style="margin:0 0 8px;color:#1a1420">Q：0.68 是怎么来的？能证明吗？</h4>
+    <p style="font-size:14px;color:#4A3A6A;margin:0">
+      「它目前是一个<b>猜想</b>，不是定理。原始观察是 φ≈0.618 在五个域中反复出现，我叠加了一层熔断冗余得到 0.68 作为工程上的风险阈值。
+      论文是预印本，投的 math.HO，还没经过同行评审。我做了 38 个可交互实验让这个几何结构可被直接观察，
+      但<b>从"观察到"到"证明"还有很长的路</b>——所以我把它定位为工作论文，正在补充冗余项的形式化推导和证伪条件。」
+    </p>
+  </div>
+
+  <div class="card">
+    <h4 style="margin:0 0 8px;color:#1a1420">Q：这个对做产品经理有什么用？</h4>
+    <p style="font-size:14px;color:#4A3A6A;margin:0">
+      「它训练的是一种<b>跨域抽象能力</b>——在金融、扑克、调酒这些看起来毫无关系的场景里，找出它们共同的决策结构。
+      这种能力迁移到产品上，就是<b>快速理解一个新业务域的决策链路</b>：谁是决策者、权衡是什么、边界在哪、什么时候该熔断。
+      我做 12 个产品不是因为它们好玩，而是在反复验证同一个骨架。」
+    </p>
+  </div>
+
+  <div class="concl">
+    <h4>最后一句</h4>
+    <p>这一页最值得展示的不是「0.68 这个数字」，而是<strong>你知道自己站在什么位置上</strong>——
+    你提出了一个跨域猜想，做了一堆可交互实验让它可被观察，同时<strong>清楚地标注了它还没被证明、哪里还没做完</strong>。</p>
+    <p style="margin-top:8px">在应届生里，能做出东西的人不算少；<strong>能同时说清"我做到了什么"和"我还没做到什么"的人，很少。</strong></p>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p><b>Game-OS V2.5 · 决策锥体与 0.68 阈值</b></p>
+  <p>来源：Fibonacci–Chromosome Isomorphism（Preprint · arXiv math.HO · 2026）· HelloMInd-star</p>
+  <p style="opacity:.7;margin-top:6px">本页基于公开仓库源码与论文摘要整理 · 生成于 2026-09-07</p>
+</div></footer>
+
+</body>
+</html>

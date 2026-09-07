@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人格金融孪生平台 Y.Mine · 产品深度分析与竞品分析</title>
+<style>
+:root{
+  --navy:#1A3A5C; --navy2:#2C5580; --navy-l:#D8E2EC;
+  --gold:#C8A45C; --gold-l:#F5EEDC;
+  --text:#22272B; --grey:#6B7A88; --line:#E3E8ED;
+  --bg:#FAFBFC; --card:#FFFFFF;
+  --ok:#2E7D5B; --warn:#C8781E; --risk:#B23A3A; --info:#2C6E9B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Source Han Sans SC","Noto Sans CJK SC","PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.75; font-size:15px;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+
+/* ===== Hero ===== */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,#0F2740 100%);color:#fff;padding:64px 0 56px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:rgba(200,164,92,.08)}
+.hero .tag{display:inline-block;background:rgba(200,164,92,.18);color:var(--gold);padding:5px 14px;border-radius:20px;font-size:12.5px;letter-spacing:1.5px;margin-bottom:20px;border:1px solid rgba(200,164,92,.3)}
+.hero h1{font-size:36px;font-weight:700;letter-spacing:-.5px;margin-bottom:14px;line-height:1.3}
+.hero .sub{font-size:16px;color:#B8CBD9;max-width:760px;line-height:1.8}
+.hero .meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:32px;padding-top:26px;border-top:1px solid rgba(255,255,255,.14)}
+.hero .meta div{font-size:12.5px;color:#8FA8BC}
+.hero .meta strong{display:block;font-size:21px;color:#fff;font-weight:600;margin-bottom:2px}
+
+/* ===== Nav ===== */
+nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:4px;overflow-x:auto;padding:0 28px}
+nav a{padding:15px 13px;font-size:13.5px;color:var(--grey);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:.18s}
+nav a:hover{color:var(--navy);border-bottom-color:var(--gold)}
+
+/* ===== Section ===== */
+section{padding:52px 0;border-bottom:1px solid var(--line)}
+section:last-child{border:none}
+h2{font-size:25px;font-weight:700;color:var(--navy);margin-bottom:8px;display:flex;align-items:center;gap:12px}
+h2 .num{background:var(--navy);color:#fff;width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+h2+.lead{color:var(--grey);font-size:14.5px;margin-bottom:28px;padding-left:44px}
+h3{font-size:17.5px;font-weight:650;color:var(--navy2);margin:32px 0 14px;padding-left:11px;border-left:3px solid var(--gold)}
+h4{font-size:15px;font-weight:650;color:var(--text);margin:20px 0 8px}
+p{margin-bottom:13px}
+ul,ol{margin:0 0 14px 20px}
+li{margin-bottom:7px}
+
+/* ===== Card ===== */
+.card{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:24px;margin-bottom:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:840px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;text-align:center}
+.kpi .v{font-size:26px;font-weight:700;color:var(--navy);line-height:1.2}
+.kpi .v small{font-size:13px;font-weight:500;color:var(--grey)}
+.kpi .l{font-size:12.5px;color:var(--grey);margin-top:5px}
+
+/* ===== Table ===== */
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:16px 0;background:var(--card)}
+th{background:var(--navy);color:#fff;padding:11px 12px;text-align:left;font-weight:600;font-size:13px}
+td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:hover{background:#F6F9FB}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.hi{background:var(--gold-l)!important}
+.hi td{font-weight:600}
+
+/* ===== Tag ===== */
+.tag{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11.5px;font-weight:600;margin-right:5px}
+.t-ok{background:#E3F3EA;color:var(--ok)}
+.t-warn{background:#FDF1E0;color:var(--warn)}
+.t-risk{background:#FBE9E9;color:var(--risk)}
+.t-info{background:#E5F0F8;color:var(--info)}
+.t-navy{background:var(--navy-l);color:var(--navy)}
+.t-gold{background:var(--gold-l);color:#8A6D2F}
+
+/* ===== Callout ===== */
+.callout{border-left:4px solid var(--info);background:#F0F6FA;padding:15px 18px;border-radius:0 8px 8px 0;margin:16px 0;font-size:14px}
+.callout.warn{border-color:var(--warn);background:#FDF6EC}
+.callout.risk{border-color:var(--risk);background:#FBEDED}
+.callout.ok{border-color:var(--ok);background:#EDF7F2}
+.callout b{color:var(--navy)}
+
+/* ===== Pipeline ===== */
+.pipe{display:flex;flex-wrap:wrap;gap:7px;margin:18px 0}
+.pipe .step{flex:1;min-width:88px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:11px 8px;text-align:center;position:relative;transition:.18s}
+.pipe .step:hover{border-color:var(--navy);transform:translateY(-2px);box-shadow:0 4px 12px rgba(26,58,92,.09)}
+.pipe .step .i{font-size:17px;display:block;margin-bottom:4px}
+.pipe .step .n{font-size:12.5px;font-weight:600;color:var(--navy);line-height:1.35}
+.pipe .step .c{font-size:10px;color:#9AAAB8;margin-top:3px;font-family:ui-monospace,Menlo,monospace}
+.pipe .step.core{border-color:var(--gold);background:var(--gold-l)}
+
+/* ===== Code ===== */
+pre{background:#12263A;color:#DCE6F0;padding:15px 17px;border-radius:8px;overflow-x:auto;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:12.5px;line-height:1.65;margin:14px 0}
+pre .k{color:#7FB3D5}.c{color:#6A8296}.s{color:#9FC98B}.f{color:#E8C07D}
+code{background:#EEF2F6;padding:1.5px 6px;border-radius:4px;font-size:12.8px;font-family:ui-monospace,Menlo,monospace;color:var(--navy2)}
+
+/* ===== Module map ===== */
+.mods{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.mods span{background:var(--navy-l);color:var(--navy);padding:4px 10px;border-radius:5px;font-size:11.8px;font-family:ui-monospace,Menlo,monospace}
+.mods span.f{background:var(--gold-l);color:#7A5F26;font-weight:600}
+
+/* ===== Misc ===== */
+.src{font-size:11.5px;color:#8C9AA6;margin-top:6px}
+.src a{color:var(--info);text-decoration:none}
+.src a:hover{text-decoration:underline}
+footer{background:var(--navy);color:#9FB8CC;padding:30px 0;font-size:12.5px;text-align:center}
+.concl{background:linear-gradient(135deg,var(--navy),#0F2740);color:#fff;padding:30px 32px;border-radius:12px;margin:22px 0}
+.concl h4{color:var(--gold);font-size:17px;margin-bottom:10px}
+.concl p{color:#C9DAE7;margin-bottom:8px}
+.concl strong{color:#fff}
+.split{display:grid;grid-template-columns:340px 1fr;gap:30px;align-items:center}
+@media(max-width:840px){.split{grid-template-columns:1fr}}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--grey);margin-top:10px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="tag">PRODUCT DEEP-DIVE · COMPETITIVE ANALYSIS</span>
+    <h1>人格金融孪生平台 Y.Mine<br>产品深度剖析与竞品格局分析</h1>
+    <p class="sub">一份基于源码逐行核验与市场公开数据的产品分析报告。核心命题：<b style="color:var(--gold)">把非结构化的行为数据，抽象为可计算、可审计、可约束的金融决策链路。</b></p>
+    <div class="meta">
+      <div><strong>40</strong>线上路由模块</div>
+      <div><strong>11</strong>段式投研流水线</div>
+      <div><strong>20</strong>位投资人基准库</div>
+      <div><strong>32</strong>只覆盖标的</div>
+      <div><strong>4</strong>套估值方法交叉验证</div>
+      <div><strong>2026.09</strong>分析日期</div>
+    </div>
+  </div>
+</div>
+
+<nav><div class="wrap">
+    <a href="../cone-0.68.html" style="color:#6B4FA8;font-weight:700">📐 数学内核</a>
+  <a href="#s1">执行摘要</a>
+  <a href="#s2">核心抽象</a>
+  <a href="#s3">投研流水线</a>
+  <a href="#s4">估值与风控引擎</a>
+  <a href="#s5">用户画像体系</a>
+  <a href="#s6">投资人基准库</a>
+  <a href="#s7">AI 工程化</a>
+  <a href="#s8">技术架构与局限</a>
+  <a href="#s9">竞品格局</a>
+  <a href="#s10">差异化定位</a>
+  <a href="#s11">SWOT</a>
+  <a href="#s12">合规红线</a>
+  <a href="#s13">战略建议</a>
+  <a href="#s14">面试谈资</a>
+</div></nav>
+
+<!-- Game-OS 上下文 / 版本信息 -->
+<section style="padding:26px 0 6px;border-bottom:1px solid var(--line);background:#FBFAFD">
+ <div class="wrap">
+  <div style="background:linear-gradient(135deg,#F6F4FB,#EDF3F8);border:1px solid var(--line);
+       border-radius:12px;padding:20px 24px">
+   <div style="font-size:11.5px;letter-spacing:1.5px;color:#6B4FA8;font-weight:700;margin-bottom:8px">
+     POSITIONING · 本报告在项目矩阵中的位置</div>
+   <h3 style="margin:0 0 10px;padding:0;border:none;font-size:17px;color:#1A3A5C">本报告分析的是 Game-OS 在「金融域」的落地实例</h3>
+   <p style="font-size:13.8px;color:#4A5866;margin:0 0 14px;line-height:1.8">Game-OS 是一个决策 AI 平台，核心主张是：<b>每一个决策问题，无论领域如何，都投射到同一个几何骨架上——一个锥体，和一个位于 0.68 的通用风险阈值</b>。金融、扑克、空域调度、认知人格、分子调酒是它的五个域。本平台即该骨架在金融域的产品化：<b>11 段式流水线是决策管道的可审计化，「人性偏差校验」与「熔断风控」对应锥体上的 0.68 熔断线</b>。理解这一点，才能理解为什么它的风控是前置到下单之前，而非事后提示。</p>
+   <table style="margin:0;font-size:12.8px">
+     <tbody>
+       <tr><td style="width:120px;color:#6B7A88">报告版本</td><td>v1.1 · 2026-09-07</td></tr>
+       <tr><td style="color:#6B7A88">数据截止</td><td>2026-09-07（GitHub 仓库最后提交：2026-09-07）</td></tr>
+       <tr><td style="color:#6B7A88">内核归属</td><td>Game-OS V2.5 决策 AI 平台 · 金融域落地</td></tr>
+       <tr><td style="color:#6B7A88">姊妹报告</td><td>《Y.Mine 人格调酒系统》（感官域）· 《0.68 数学推导页》（理论内核）</td></tr>
+     </tbody>
+   </table>
+   <p style="margin:12px 0 0;font-size:12.8px">
+     <a href="../cone-0.68.html" style="color:#2C6E9B;font-weight:600;text-decoration:none">
+       📐 查看 Game-OS 理论内核：决策锥体与 0.68 阈值 →</a>
+     ｜
+     <a href="../index.html" style="color:#2C6E9B;font-weight:600;text-decoration:none">← 返回作品集首页</a>
+   </p>
+  </div>
+ </div>
+</section>
+
+<!-- ============ 1 执行摘要 ============ -->
+<section id="s1"><div class="wrap">
+  <h2><span class="num">1</span>执行摘要</h2>
+  <p class="lead">先给结论，再给证据。</p>
+
+  <div class="concl">
+    <h4>一句话定位</h4>
+    <p>Y.Mine 不应被卖成「像巴菲特的你」，而应是 <strong>一个能看见自己偏差、约束自己行为、复现自己研究、并把每一步留给审查的个人投资决策系统</strong>。</p>
+    <p style="margin-top:12px">它的真正资产不是"人格"这个叙事外壳，而是<strong>三层可被逐行验证的硬能力</strong>：① 自建的估值与风险计量引擎（数学正确、有单元测试）；② 11 段式可审计的投研决策流水线；③ 把 LLM 严格收敛为叙事层的 AI 工程化架构。</p>
+  </div>
+
+  <div class="grid4" style="margin:22px 0">
+    <div class="kpi"><div class="v">85<small>/100</small></div><div class="l">金融工程深度</div></div>
+    <div class="kpi"><div class="v">88<small>/100</small></div><div class="l">全栈工程能力</div></div>
+    <div class="kpi"><div class="v">82<small>/100</small></div><div class="l">AI 产品化</div></div>
+    <div class="kpi"><div class="v" style="color:var(--risk)">32<small>/100</small></div><div class="l">合规与商业化</div></div>
+  </div>
+  <p class="src">评分为基于源码与公开材料的自评，非第三方审计结论。短板（合规、用户验证）被刻意标红——这是当前阶段最真实的风险敞口。</p>
+
+  <h3>三个最有价值的判断</h3>
+  <div class="grid3">
+    <div class="card">
+      <span class="tag t-ok">有证据</span>
+      <h4 style="margin-top:10px">赛道定位：不是智能投顾</h4>
+      <p style="font-size:13.8px">它缺两张牌：证券投资咨询牌照，以及账户内的执行/托管能力。因此正确坐标是 <b>AI 投研决策工作台 + 行为画像层 + 持牌投顾适配层</b> 的交集，而非"智能投顾"。</p>
+    </div>
+    <div class="card">
+      <span class="tag t-info">差异化</span>
+      <h4 style="margin-top:10px">蓝海在"人格语义"，不在"行为数据"</h4>
+      <p style="font-size:13.8px">传统风险问卷（C1-C5 / R1-R5）已是红海；但<b>跨场景行为 → 人格向量 → 可审计匹配</b>尚无公开可核验的规模化成熟先例。这是机会，也是需要自证的部分。</p>
+    </div>
+    <div class="card">
+      <span class="tag t-risk">风险</span>
+      <h4 style="margin-top:10px">最大风险是合规，不是技术</h4>
+      <p style="font-size:13.8px">向中国个人投资者输出"买什么/仓位多少"即触发<b>证券投资咨询持牌要求</b>；人格画像不得替代法定适当性评估；跨场景行为数据触及敏感个人信息单独同意规则。</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 2 核心抽象 ============ -->
+<section id="s2"><div class="wrap">
+  <h2><span class="num">2</span>核心抽象：人格向量作为统一数据契约</h2>
+  <p class="lead">这是整个产品矩阵（12 个应用）真正的地基，也是被"人格""MBTI"这些词遮蔽掉的最值钱部分。</p>
+
+  <p>Y.Mine 的所有模块共享同一个抽象：<b>把人的状态表示为一组可计算的向量，再让不同业务模块消费这组向量</b>。</p>
+
+  <h3>两套向量体系</h3>
+  <div class="grid2">
+    <div class="card">
+      <h4 style="margin-top:0">六维人格向量（调酒 / 感官模块）</h4>
+      <div class="mods">
+        <span>TOL 容错</span><span>SPD 速度</span><span>INF 信息</span>
+        <span>ENT 热情</span><span>LEAD 主导</span><span>VIS 直觉</span>
+      </div>
+      <p style="font-size:13.5px;margin-top:10px">OCEAN 大五人格 → 六维映射，同一组向量向下派生<b>调酒、对局、气味</b>三类感官模块。15 个纯函数引擎 + 13 个路由页。</p>
+      <p class="src">实锤：<code>profileToVector</code> OCEAN→六维、<code>cocktailEngine</code> 余弦相似度推荐、<code>personaFusionEngine</code> 多人格融合、<code>feedbackEngine</code> 反馈校准</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">五维决策向量（金融模块）</h4>
+      <div class="mods">
+        <span class="f">riskTolerance 风险偏好</span><span class="f">timePreference 时间偏好</span>
+        <span class="f">executionDiscipline 执行纪律</span><span class="f">reflectionDeviation 路径预判</span>
+        <span class="f">aimPrecision 决策观察</span>
+      </div>
+      <p style="font-size:13.5px;margin-top:10px">这五维同时是 <b>投资人匹配引擎的输入</b> 和 <b>用户画像的输出</b>，构成"行为采集 → 建模 → 画像 → 匹配 → 建议"的闭环。</p>
+      <p class="src">实锤：<code>investorEngine.js</code>（24.8KB）五维加权欧几里得距离匹配</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <b>为什么这个抽象值钱：</b>它让"人格"从一种文案修辞，变成了<b>可复用、可计算、可跨模块迁移的数据结构</b>。同一套向量在调酒台决定风味配比，在金融端决定风险预算与资产匹配——这不是 12 个独立项目的拼盘，而是一个有内核的产品矩阵。
+  </div>
+
+  <h3>多源行为数据的融合路径</h3>
+  <table>
+    <thead><tr><th>数据源</th><th>采集的行为信号</th><th>映射到的维度</th><th>信号强度判断</th></tr></thead>
+    <tbody>
+      <tr><td>德州扑克对局</td><td>All-in 频率、Kelly 仓位选择、决策时长、tilt 情绪</td><td>风险偏好 / 执行纪律</td><td><span class="tag t-ok">较强</span> 与金融决策同构性高</td></tr>
+      <tr><td>台球</td><td>击球精度、力度控制、瞄准时间</td><td>决策观察 / 路径预判</td><td><span class="tag t-warn">中等</span> 反映耐心与精度</td></tr>
+      <tr><td>健身</td><td>计划完成度、训练纪律</td><td>执行纪律</td><td><span class="tag t-warn">中等</span> 自律性的代理变量</td></tr>
+      <tr><td>音乐偏好</td><td>曲风、节奏、情绪倾向</td><td>情绪 / 审美倾向</td><td><span class="tag t-risk">较弱</span> 更可能是文化兴趣信号</td></tr>
+      <tr class="hi"><td>价值观 / 认知测评</td><td>结构化问卷输入</td><td>全维度基准校准</td><td><span class="tag t-ok">强</span> 提供可解释的锚点</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn">
+    <b>需要警惕：</b>扑克/台球/健身与真实金融决策之间的<b>因果链尚未被验证</b>。目前它们是"有理论依据的合理推测"，不是"已被证明的预测因子"。产品表述应使用"决策风格洞察"，避免宣称能预测投资收益。
+  </div>
+</div></section>
+
+<!-- ============ 3 流水线 ============ -->
+<section id="s3"><div class="wrap">
+  <h2><span class="num">3</span>11 段式投研决策流水线</h2>
+  <p class="lead">这是产品最有结构感的设计——把"研究一只股票"这件混沌的事，拆成 11 个可独立查看、可调整假设、可留痕的环节。</p>
+
+  <div class="pipe">
+    <div class="step"><span class="i">🌊</span><span class="n">宏观海选</span><span class="c">macroFunnel</span></div>
+    <div class="step"><span class="i">🧹</span><span class="n">信息清洗 ETL</span><span class="c">ingestion</span></div>
+    <div class="step"><span class="i">⚗️</span><span class="n">因子库构建</span><span class="c">factorLibrary</span></div>
+    <div class="step"><span class="i">⚖️</span><span class="n">核心定价准备</span><span class="c">pricingPrep</span></div>
+    <div class="step core"><span class="i">📐</span><span class="n">估值模型</span><span class="c">valuationV2</span></div>
+    <div class="step core"><span class="i">🔮</span><span class="n">沙盘决策推演</span><span class="c">sandbox</span></div>
+    <div class="step"><span class="i">📈</span><span class="n">动态周期观测</span><span class="c">simulationResult</span></div>
+    <div class="step core"><span class="i">🧠</span><span class="n">人性偏差校验</span><span class="c">rationalityScore</span></div>
+    <div class="step core"><span class="i">🛡️</span><span class="n">熔断风控对冲</span><span class="c">riskControl</span></div>
+    <div class="step"><span class="i">⚡</span><span class="n">执行下单</span><span class="c">executionOrder</span></div>
+    <div class="step"><span class="i">🎯</span><span class="n">绩效归因</span><span class="c">attribution</span></div>
+  </div>
+  <p class="src">源码实证：<code>quantEngine.js</code> 中 <code>STEPS</code> 常量，每段含 id / name / icon / channel 四元组，与前端路由一一对应。</p>
+
+  <h3>设计上的三个亮点</h3>
+  <div class="grid3">
+    <div class="card"><h4 style="margin-top:0">① 人性偏差校验是独立环节</h4>
+      <p style="font-size:13.8px">第 8 段 <code>rationalityScore</code> 把"情绪与认知偏差"作为流水线的一等公民，而不是事后提醒。这与传统投研工具形成结构性差异。</p></div>
+    <div class="card"><h4 style="margin-top:0">② 熔断风控在下单之前</h4>
+      <p style="font-size:13.8px">第 9 段风控前置到第 10 段执行之前——顺序本身就是产品价值观的表达：<b>先设边界，再谈操作</b>。</p></div>
+    <div class="card"><h4 style="margin-top:0">③ 绩效归因闭环</h4>
+      <p style="font-size:13.8px">第 11 段把结果回流，形成"决策 → 执行 → 归因 → 再决策"的回路，为长期的行为数据积累留出接口。</p></div>
+  </div>
+
+  <div class="callout ok">
+    <b>建议的产品化动作：</b>把这 11 段公开为可保存、可导出的 <b>「决策审计链」</b>——每段记录：数据时间戳、来源、用户自定义参数、自动计算值、LLM 叙事版本、用户对关键假设的确认。这既区别于一问一答的通用 AI，也满足未来持牌合作方对留痕的要求。
+  </div>
+</div></section>
+
+<!-- ============ 4 估值与风控 ============ -->
+<section id="s4"><div class="wrap">
+  <h2><span class="num">4</span>估值与风险计量引擎：数学是站得住的</h2>
+  <p class="lead">我逐行读过源码，这是整个项目最硬的部分——不是调包，不是包装，是真实实现的金融模型。</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4 style="margin-top:0">估值模块（<code>corporateFinance.js</code> 34KB）</h4>
+      <ul style="font-size:13.8px">
+        <li><b>四法交叉验证</b>：DCF / WACC / APV / FTE</li>
+        <li>CAPM 权益成本求解</li>
+        <li>MM 定理与最优资本结构求解</li>
+        <li>并购估值、IRR</li>
+      </ul>
+      <p style="font-size:13px;color:var(--grey);margin-top:10px">四法并列而非单一路径，结果可互相印证——这是专业投研的做法。</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">风险模块（<code>quantEngine.js</code> 82KB）</h4>
+      <ul style="font-size:13.8px">
+        <li>参数法 <b>VaR / CVaR</b>（95% / 99%）</li>
+        <li><b>Altman Z-Score</b> 破产风险</li>
+        <li>最大回撤、IRR</li>
+        <li><b>Kelly 仓位</b>最优下注比例</li>
+      </ul>
+      <p style="font-size:13px;color:var(--grey);margin-top:10px">全部纯函数实现，配套 <code>quantEngine.test.js</code>（16KB）单元测试。</p>
+    </div>
+  </div>
+
+  <h3>WACC 实现代码（原文节选）</h3>
+  <pre><span class="c">// quantEngine.js — 加权平均资本成本</span>
+<span class="k">const</span> costOfEquity      = r + b * mp;        <span class="c">// CAPM 权益成本</span>
+<span class="k">const</span> afterTaxCostDebt = cod * (1 - tr);    <span class="c">// 税后债务成本</span>
+<span class="k">const</span> wacc = costOfEquity * ew + afterTaxCostDebt * dw;</pre>
+  <p class="src">税后债务成本处理、CAPM 权益成本、权重校验——<b style="color:var(--ok)">教科书级正确</b>，不是调包糊的。</p>
+
+  <h3>必须坦诚的三处局限</h3>
+  <div class="callout risk">
+    <b>① 32 只预设资产的因子是硬编码静态快照，且已过期。</b> <code>PRESET_ASSETS</code> 中 NVDA <code>basePrice: 875</code>、TSLA <code>245</code>——拆股前的旧数据；PE/ROE/营收增速均为写死常量，<b>不是从 API 拉取</b>。行情是实时的，估值因子是静态的。
+  </div>
+  <div class="callout risk">
+    <b>② WACC 参数口径是美股的，套在 A 股上不成立。</b> 默认 <code>rf = 4.2%</code>、<code>marketPremium = 5.5%</code>、<code>taxRate = 21%</code>（美国联邦税率）——全部美股口径。但资产池含茅台、招行、宁德，<b>中国法定税率 25%</b>。
+  </div>
+  <div class="callout warn">
+    <b>③ VaR 只有参数法（正态假设），蒙特卡洛很薄。</b> <code>computeVaR</code> 是纯 z-score 法（95%→1.645），<b>无历史模拟法、无 t 分布、未处理肥尾</b>；"蒙特卡洛"在 82KB 引擎中仅出现 1 处。对比基准 <code>benchmarkReturn</code> 默认 8% 为硬编码，非真实指数。
+  </div>
+  <p style="font-size:13.5px"><b>面试应对口径：</b>"行情是实时拉取的，估值因子是演示用静态预设，接财务数据 API 在 P3 迭代计划内；参数是默认值可交互调整，分市场参数模板是我已知的改进点；VaR 目前是参数法，历史模拟法在规划中。"——<b>如实说明，不要硬撑</b>。</p>
+</div></section>
+
+<!-- ============ 5 用户画像 ============ -->
+<section id="s5"><div class="wrap">
+  <h2><span class="num">5</span>用户画像与洞察简报引擎</h2>
+  <p class="lead">这是产品经理视角下最该被讲出来的部分，也是原简历里被藏得最深的部分。</p>
+
+  <p><code>insightBriefEngine.js</code> 的 <code>generateInsights()</code> 输出结构：</p>
+  <pre>{
+  summary,              <span class="c">// 画像总述</span>
+  strengths[],          <span class="c">// 前 3 高分维度 → 优势</span>
+  risks[],              <span class="c">// 低分维度 + 认知内耗 → 风险</span>
+  suggestions[],        <span class="c">// 每条风险挂一条改进建议</span>
+  archetype,            <span class="c">// 人格原型分类</span>
+  todayFocus, tarotInfluence, musicAlignment
+}</pre>
+
+  <p>即：<b>六维向量 → 人格原型分类 → 取前 3 高分维度标为优势、后 2 低分维度标为待发展风险 → 每个风险挂一条改进建议</b>。这是一套完整的用户分层诊断引擎。</p>
+
+  <div class="callout">
+    <b>简历层面的价值：</b>"用户画像""用户分层""个性化推荐""闭环""场景化风险评估"——这五个 PM 岗硬关键词，原简历一个都没命中，但代码全都做了。这是典型的<b>用技术语言掩盖了产品能力</b>。
+  </div>
+
+  <h3>这不是 SWOT，别这么写</h3>
+  <table>
+    <thead><tr><th>SWOT 项</th><th>代码中是否存在</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><b>S</b> 优势</td><td><span class="tag t-ok">有</span></td><td><code>strengths</code> 前 3 高分维度</td></tr>
+      <tr><td><b>W</b> 劣势</td><td><span class="tag t-ok">有</span></td><td><code>risks</code> 低分维度 + 认知内耗</td></tr>
+      <tr><td><b>O</b> 机会</td><td><span class="tag t-risk">无</span></td><td>全库搜 <code>opportunity</code> 命中 0 次</td></tr>
+      <tr><td><b>T</b> 威胁</td><td><span class="tag t-risk">无</span></td><td>全库搜 <code>threat</code> 命中 0 次</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13.8px">strengths/risks 全是<b>用户内部人格特质</b>，零外部环境因子。方法论上是"人格诊断报告"，不是 SWOT。</p>
+
+  <div class="callout ok">
+    <b>好消息：O 和 T 你已经做了，只是没拼进画像。</b><br>
+    <b>T（威胁）</b> = <code>riskStressTest.js</code>（25KB）情景压力测试、<code>/risk</code> 压力场景、Altman Z-Score 破产风险。<br>
+    <b>O（机会）</b> = <code>REGIMES</code> 宏观三态（红海防御 / 蓝海成长 / 中性平衡）、<code>step0_macroFunnel</code> 宏观海选、行业景气因子。<br>
+    <b>产品升级方向：</b>人格向量（分子）× 宏观 Regime（分母）目前是分开跑的，没有相乘。<b>接通它</b>——从"测着玩的人格玩具"变成"能给出环境适配建议的决策工具"，这是整个项目最有产品感的一次升级。
+  </div>
+</div></section>
+
+<!-- ============ 6 投资人基准库 ============ -->
+<section id="s6"><div class="wrap">
+  <h2><span class="num">6</span>20 位投资人基准库：风格坐标系</h2>
+  <p class="lead">传播性最强的功能，也是风险最高的功能。</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4 style="margin-top:0">数据库构成</h4>
+      <p style="font-size:13.8px"><code>benchmarkProfiles.js</code>（27.3KB）：<b>10 位投资人 + 10 位创业家</b>，统一人物源。</p>
+      <div class="mods">
+        <span class="f">沃伦·巴菲特</span><span class="f">查理·芒格</span><span class="f">乔治·索罗斯</span>
+        <span class="f">瑞·达利欧</span><span class="f">彼得·林奇</span><span class="f">孙正义</span>
+        <span class="f">本杰明·格雷厄姆</span><span class="f">约翰·保尔森</span><span class="f">卡尔·伊坎</span>
+        <span class="f">约翰·邓普顿</span>
+      </div>
+      <p style="font-size:13.8px;margin-top:12px">每人含：MBTI 标签、五维向量、决策风格、心智模型、代表案例（含年份）、语录、人生节点，甚至延伸到<b>味觉偏好与消费画像</b>（供调酒模块复用）。</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">匹配机制</h4>
+      <pre style="margin:8px 0"><span class="c">// investorEngine.js</span>
+weightedEuclideanDistance(userVector, invVector)
+<span class="c">// 维度权重：</span>
+riskTolerance       1.2  <span class="c">// 风格核心</span>
+timePreference      1.0  <span class="c">// 长线 vs 短线</span>
+executionDiscipline 0.9  <span class="c">// 可培养</span>
+reflectionDeviation 0.8
+aimPrecision        0.7</pre>
+      <p style="font-size:13.8px">相似度分四档：高度契合 ≥85 / 较为相似 ≥70 / 部分相似 ≥55 / 风格迥异 &lt;55；每条匹配输出<b>共同点、差异点、提升建议</b>，并支持<b>相似度趋势追踪</b>。</p>
+    </div>
+  </div>
+
+  <div class="callout risk">
+    <b>三个必须认识到的风险：</b>
+    <ol style="margin:8px 0 0 20px;font-size:13.8px">
+      <li>投资风格标签<b>未必有权威、可复现的行为基准</b>——这些参数是你自己标定的。</li>
+      <li>用户可能与某位投资人历史表现相似，却<b>不共享其资金期限、流动性、杠杆和承受力</b>。</li>
+      <li>名人对标容易诱发<b>"我也该高集中 / 高杠杆 / 逆向交易"的误读</b>。</li>
+    </ol>
+  </div>
+  <div class="callout ok">
+    <b>推荐的产品机制：</b>把相似度降为「<b>叙事与反思卡片</b>」，与法定风险等级、资金用途、期限、硬风险预算<b>并列</b>展示。当人格偏好与 VaR 限额冲突时，系统优先显示冲突和"为什么不能按偏好执行"，<b>而不是自动给出更激进的组合</b>。<br>
+    <b>核心判断：可解释的自我约束，比人格匹配本身更有商业价值。</b>
+  </div>
+</div></section>
+
+<!-- ============ 7 AI 工程化 ============ -->
+<section id="s7"><div class="wrap">
+  <h2><span class="num">7</span>AI 工程化：把 LLM 关进笼子里</h2>
+  <p class="lead">这是 2026 年最稀缺的能力之一——多数人会让 LLM 直接算数，你没有。</p>
+
+  <div class="callout ok">
+    <b>架构范式的核心决策：</b>数字全部本地计算，<b>LLM 只做叙事层</b>。这意味着 AI 可以胡说，但不会算错账——风控边界由代码守，不由模型守。
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h4 style="margin-top:0">已实现的工程化控制</h4>
+      <ul style="font-size:13.8px">
+        <li><b>9 条 Prompt 模板注册表</b>，非自由文本拼接</li>
+        <li><b>JWT 网关</b>鉴权</li>
+        <li><b>参数白名单</b>（防越权调用）</li>
+        <li><b>护栏</b>：<code>max_tokens</code> / <code>temperature</code> 限制</li>
+        <li><b>Key 仅服务端持有</b>，前端不暴露</li>
+        <li>未登录时<b>自动降级为本地模板</b>，服务不中断</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">待补的合规项</h4>
+      <ul style="font-size:13.8px">
+        <li><span class="tag t-warn">P0</span> AI 生成内容<b>显式标识</b>（《AI 生成合成内容标识办法》2025 起要求）</li>
+        <li><span class="tag t-warn">P0</span> 输出附：模型版本、生成时间、引用来源</li>
+        <li><span class="tag t-warn">P1</span> 人工复核状态标记、用户反馈入口</li>
+        <li><span class="tag t-warn">P1</span> 所有投资叙事的免责声明与合规审阅</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>三源行情兜底架构</h3>
+  <p>接入<b>东方财富 + 新浪 + 腾讯</b>三源行情合并，任一源失效自动降级，覆盖 32 只美股 / 中概 / A 股标的，支持 K 线实时渲染与 CSV 导出。行情抓取模块 <code>eastmoneyData.py</code> 40KB。</p>
+</div></section>
+
+<!-- ============ 8 技术架构与局限 ============ -->
+<section id="s8"><div class="wrap">
+  <h2><span class="num">8</span>技术架构与诚实的局限清单</h2>
+  <p class="lead">有多少说多少——这份报告的价值在于可信，不在于好看。</p>
+
+  <div class="grid4" style="margin-bottom:20px">
+    <div class="kpi"><div class="v">304</div><div class="l">仓库文件数</div></div>
+    <div class="kpi"><div class="v">42</div><div class="l">Commits</div></div>
+    <div class="kpi"><div class="v">76.2<small>%</small></div><div class="l">JavaScript</div></div>
+    <div class="kpi"><div class="v" style="color:var(--warn)">8.1<small>%</small></div><div class="l">Python（仅 10 个 .py）</div></div>
+  </div>
+
+  <h3>40 个线上路由模块</h3>
+  <div class="mods">
+    <span class="f">/dashboard</span><span class="f">/ib-dashboard</span><span class="f">/funnel</span><span class="f">/risk</span><span class="f">/stock</span>
+    <span class="f">/finance</span><span class="f">/vector</span><span class="f">/persona-mirror</span><span>/cockpit</span><span>/poker</span>
+    <span>/psychology</span><span>/mindspeak</span><span>/game-engine</span><span>/robot</span><span>/entertainment</span>
+    <span>/game-table</span><span>/bartender</span><span>/bartender-classic</span><span>/billiards</span><span>/fitness</span>
+    <span>/music</span><span>/stories</span><span>/coach-logs</span><span>/genome</span><span>/chakra</span>
+    <span>/tarot</span><span>/passport</span><span>/content-hub</span><span>/drone-dispatch</span><span>/tools</span>
+    <span>/cultivation-plan</span><span>/archive</span><span>/trust-dashboard</span><span>/player/:encoded</span>
+  </div>
+  <p class="src">金色 = 金融与画像核心链路。<code>/ib-dashboard</code>（投研看板）确实存在，但"投行级"是自封头衔，建议改为"投研看板"。</p>
+
+  <h3>局限清单（面试前必须能自圆其说）</h3>
+  <table>
+    <thead><tr><th style="width:22%">局限</th><th>实情</th><th style="width:26%">应对口径</th></tr></thead>
+    <tbody>
+      <tr><td><b>"全栈"含金量</b></td><td>Python 仅 8.1%，后端 10 个 .py（app/认证/AI引擎/行情/游戏/音乐/开发服务）。<b>金融计算全在前端 JS</b>，后端无 risk/valuation service。</td><td>说清后端做了什么：FastAPI + JWT + LLM 网关 + 行情聚合</td></tr>
+      <tr><td><b>数据持久化</b></td><td>核心数据流是 <code>localStorage</code>（<code>ymine_sandbox_v1</code>），README 待开发清单：<b>P3 后端持久化、跨设备同步</b>。</td><td>承认在迭代计划内</td></tr>
+      <tr><td><b>用户体系</b></td><td>Mock 鉴权，"任意用户名密码即可登入"。<b>无真实用户、无留存、无转化数据</b>。</td><td>埋点已选型待接；计划用种子用户做验证</td></tr>
+      <tr><td><b>已知 Bug</b></td><td>调酒模块 5 个集成测试失败（场景 2/3/4/5/7），根因 MoodDial 点击后 intensity 状态异常——<b>主流程带 bug</b>。</td><td>主流程已知问题，修复在排期</td></tr>
+      <tr><td><b>估值因子</b></td><td>静态硬编码快照，NVDA 875 / TSLA 245 已过期。</td><td>演示用预设，接财务 API 在 P3</td></tr>
+      <tr><td><b>参数口径</b></td><td>WACC 用美股参数（rf 4.2%、税率 21%）套 A 股。</td><td>默认可交互调整，分市场模板待做</td></tr>
+      <tr><td><b>VaR 方法</b></td><td>仅参数法正态假设，无历史模拟 / t 分布 / 肥尾处理。</td><td>方法学迭代项，不谎称蒙特卡洛</td></tr>
+    </tbody>
+  </table>
+</div></section>
+
+<!-- ============ 9 竞品 ============ -->
+<section id="s9"><div class="wrap">
+  <h2><span class="num">9</span>竞品格局：五类价值网的竞争</h2>
+  <p class="lead">中国竞争的核心是流量、数据与持牌闭环；海外竞争的核心是低成本配置与自动化。</p>
+
+  <h3>赛道坐标：Y.Mine 处在四个成熟市场的交界</h3>
+  <table>
+    <thead><tr><th>相邻赛道</th><th>核心交付</th><th>典型商业模式</th><th class="num">与 Y.Mine 重合度</th><th>不应混同之处</th></tr></thead>
+    <tbody>
+      <tr><td>行情资讯与社区</td><td>行情、资讯、讨论、选股</td><td>广告、导流、基金销售</td><td class="num">中低</td><td>Y.Mine 明确不做资讯</td></tr>
+      <tr><td>专业投研终端</td><td>数据、财务模型、筛选、研报</td><td>席位订阅、机构授权</td><td class="num">高</td><td>目标用户是个人，非机构</td></tr>
+      <tr><td>AI 投研助手</td><td>检索、总结、问答、工作流</td><td>订阅、API、企业版</td><td class="num">高</td><td>Y.Mine 多了人格与行为闭环</td></tr>
+      <tr class="hi"><td>行为金融 / 投资者画像</td><td>偏好、偏差、风险承受、干预</td><td>嵌入投顾、研究</td><td class="num">最高（差异化）</td><td>不得替代法定问卷</td></tr>
+      <tr><td>智能投顾 / 基金投顾</td><td>测评、配置、申购、调仓、陪伴</td><td>AUM 管理费、投顾费</td><td class="num">中低</td><td>必须持牌并承担受托责任</td></tr>
+    </tbody>
+  </table>
+
+  <h3>代表竞品对比</h3>
+  <table>
+    <thead><tr><th>类别与代表</th><th>目标用户</th><th>核心能力</th><th>AI 程度</th><th>可核验规模</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>东方财富 / 天天基金</b><br><span class="src">行情社区</span></td>
+        <td>个人投资者、基民</td><td>行情、资讯、社区、选基、开户导流</td><td>AI+金融信息服务整合</td>
+        <td>天天基金非货公募保有 <b>7,701.33 亿元</b><br>基金销售 2.61 万亿元</td>
+      </tr>
+      <tr>
+        <td><b>雪球</b><br><span class="src">行情社区</span></td>
+        <td>个人投资者</td><td>社区、组合、讨论</td><td>中等</td>
+        <td>用户超 <b>7,800 万</b></td>
+      </tr>
+      <tr>
+        <td><b>且慢（盈米）</b><br><span class="src">基金投顾</span></td>
+        <td>长钱 / 家庭配置用户</td><td>"四笔钱"、风险测评、调仓、陪伴</td><td>2024 推"AI小顾"</td>
+        <td>服务资产 <b>570 亿元+</b><br>签约客户 50 万+，平均持仓 <b>782 天</b></td>
+      </tr>
+      <tr>
+        <td><b>招商银行摩羯智投 / 蚂蚁财富</b><br><span class="src">基金投顾</span></td>
+        <td>零售理财客户</td><td>测评、配置、投教</td><td>蚂小财风险提醒</td>
+        <td>蚂小财累计服务 <b>超 1 亿用户</b><br>全年 1.2 亿次风险提醒</td>
+      </tr>
+      <tr>
+        <td><b>Wind / 彭博</b><br><span class="src">专业终端</span></td>
+        <td>机构、研究员</td><td>数据、模型、研报、工作流</td><td>Wind Alice 个人版"看公司、选标的"</td>
+        <td>个人版独立用户数未公开</td>
+      </tr>
+      <tr>
+        <td><b>DeepSeek / 豆包 / Kimi</b><br><span class="src">通用 AI</span></td>
+        <td>泛用户</td><td>文档解读、研报总结、问答</td><td>强在语言与检索</td>
+        <td>非持牌投顾；无审计链</td>
+      </tr>
+      <tr>
+        <td><b>Wealthfront</b><br><span class="src">海外对标</span></td>
+        <td>美国长期投资者</td><td>目标/期限配置、自动再平衡</td><td>自动化配置先驱</td>
+        <td>总资产 <b>880 亿美元</b><br>投资咨询资产 420 亿美元</td>
+      </tr>
+      <tr class="hi">
+        <td><b>Y.Mine</b><br><span class="src">本项目</span></td>
+        <td>有研究需求的中高阶个人投资者</td><td>11 段流水线 + 人格向量 + 投资人对标 + 自建估值风控</td><td>LLM 严格收敛为叙事层</td>
+        <td>无真实用户数据（当前阶段）</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="src">数据来源：东方财富 2025 年报、雪球公开报道（2026-02）、新浪财经《基金投顾六年卡在哪》（2026-07）、中国证券报（2026-06）、Wealthfront 招股书转引（2025-07）。</p>
+
+  <div class="callout warn">
+    <b>战略结论：不要正面竞争资讯密度。</b>东财、同花顺、雪球的护城河是数据采购成本、用户时长、分发渠道和合规责任。Y.Mine 更合理的定位是成为这些平台的<b>「决策层插件」</b>，或优先服务已有明确研究需求、但不愿被信息流支配的中高阶个人投资者。
+  </div>
+
+  <h3>市场规模：三层口径，不能混算</h3>
+  <table>
+    <thead><tr><th>口径（中国市场）</th><th class="num">数据</th><th>时间</th><th>局限说明</th></tr></thead>
+    <tbody>
+      <tr><td>智能投顾 AUM（研究转引）</td><td class="num">2024 约 200 亿元<br>2025E 约 2,000 亿元</td><td>2025-09 披露</td><td>北大普惠金融基地展示数据；2030 的万亿值基于 20-30% 年增假设，非已实现</td></tr>
+      <tr><td>公募基金投顾</td><td class="num">2025 年突破千亿元</td><td>2026-05 报道</td><td>行业媒体口径，非官方精确存量</td></tr>
+      <tr><td>头部机构</td><td class="num">华泰 210.37 亿元<br>盈米逾 510 亿元</td><td>2025 上半年末</td><td>各机构统计口径（服务资产/保有/签约）不可横比</td></tr>
+      <tr><td>AI 理财触达</td><td class="num">蚂小财 1 亿+ 用户</td><td>2025 年度</td><td>非投顾 AUM，非付费用户</td></tr>
+    </tbody>
+  </table>
+  <p class="src"><b>测算建议：</b>用「可触达用户数 × 订阅/B2B 单价」做收入模型，不要用"智能投顾 AUM"外推——那是持牌机构的游戏。</p>
+</div></section>
+
+<!-- ============ 10 差异化定位 ============ -->
+<section id="s10"><div class="wrap">
+  <h2><span class="num">10</span>差异化定位：一张坐标图说清处境</h2>
+  <p class="lead">横轴是"从数据到执行"的价值链位置，纵轴是"从通用到个人化"的画像深度。</p>
+
+  <div class="split">
+    <div>
+      <svg viewBox="0 0 400 400" style="width:100%;max-width:400px">
+        <!-- 网格 -->
+        <g stroke="#E3E8ED" stroke-width="1">
+          <line x1="50" y1="50" x2="50" y2="340"/><line x1="50" y1="50" x2="370" y2="50"/>
+          <line x1="50" y1="122" x2="370" y2="122" stroke-dasharray="3,3"/>
+          <line x1="50" y1="195" x2="370" y2="195" stroke-dasharray="3,3"/>
+          <line x1="50" y1="267" x2="370" y2="267" stroke-dasharray="3,3"/>
+          <line x1="130" y1="50" x2="130" y2="340" stroke-dasharray="3,3"/>
+          <line x1="210" y1="50" x2="210" y2="340" stroke-dasharray="3,3"/>
+          <line x1="290" y1="50" x2="290" y2="340" stroke-dasharray="3,3"/>
+        </g>
+        <g stroke="#9AAAB8" stroke-width="1.5" fill="none"><path d="M50 340 L50 50"/><path d="M50 340 L370 340"/></g>
+        <!-- 轴标签 -->
+        <text x="210" y="368" font-size="11.5" fill="#6B7A88" text-anchor="middle">数据资讯 → 决策判断 → 执行/资金闭环</text>
+        <text x="18" y="195" font-size="11.5" fill="#6B7A88" text-anchor="middle" transform="rotate(-90 18 195)">通用 → 个人化画像深度</text>
+        <!-- 竞品点 -->
+        <g font-size="11">
+          <circle cx="95" cy="290" r="7" fill="#8FA8BC"/><text x="95" y="310" text-anchor="middle" fill="#4A5A68">东财/同花顺</text>
+          <circle cx="140" cy="255" r="7" fill="#8FA8BC"/><text x="140" y="275" text-anchor="middle" fill="#4A5A68">Wind/彭博</text>
+          <circle cx="160" cy="215" r="7" fill="#8FA8BC"/><text x="160" y="235" text-anchor="middle" fill="#4A5A68">通用AI助手</text>
+          <circle cx="285" cy="185" r="7" fill="#8FA8BC"/><text x="285" y="205" text-anchor="middle" fill="#4A5A68">且慢/摩羯智投</text>
+          <circle cx="310" cy="165" r="7" fill="#8FA8BC"/><text x="310" y="145" text-anchor="middle" fill="#4A5A68">Wealthfront</text>
+          <!-- Y.Mine -->
+          <circle cx="245" cy="85" r="13" fill="#C8A45C" fill-opacity="0.28" stroke="#C8A45C" stroke-width="2"/>
+          <circle cx="245" cy="85" r="5.5" fill="#C8A45C"/>
+          <text x="245" y="66" text-anchor="middle" fill="#8A6D2F" font-weight="700" font-size="12.5">Y.Mine</text>
+        </g>
+        <!-- 空白机会区 -->
+        <rect x="215" y="60" width="145" height="105" fill="#2E7D5B" fill-opacity="0.06" stroke="#2E7D5B" stroke-dasharray="4,3" rx="6"/>
+        <text x="288" y="78" font-size="10.5" fill="#2E7D5B" text-anchor="middle">深度个性化 × 决策层</text>
+      </svg>
+      <div class="legend">
+        <span><i style="background:#8FA8BC"></i>成熟竞品</span>
+        <span><i style="background:#C8A45C"></i>Y.Mine</span>
+        <span><i style="background:#2E7D5B;opacity:.35"></i>相对空白区</span>
+      </div>
+    </div>
+    <div>
+      <div class="callout ok">
+        <b>读图结论：</b>Y.Mine 在<b>纵轴（个性化深度）</b>上显著领先所有成熟竞品——这是它的差异化立足点。但在<b>横轴右侧（执行 / 资金闭环）</b>上明显靠后，而这恰恰是商业变现发生的地方。
+      </div>
+      <h4>这个错位意味着什么</h4>
+      <ul style="font-size:14px">
+        <li><b>优势区已被占满</b>：横轴左段（资讯/数据）是东财、同花顺、Wind 的主场，正面进攻胜率极低。</li>
+        <li><b>右侧需要牌照</b>：且慢、摩羯智投、Wealthfront 都在右段，但它们的通行货币是<b>牌照、账户、托管和信任</b>，不是模型能力。</li>
+        <li><b>绿色空白区是机会</b>：深度个性化 × 决策层，目前无规模化成熟产品占据。但进入它需要证明<b>画像的增量效度</b>——这是产品的生死线。</li>
+      </ul>
+      <div class="callout warn">
+        <b>因此最现实的路径是 B2B2C</b>：Y.Mine 提供分析引擎与人格洞察层，持牌机构负责适当性、KYC、签约、投顾意见、交易与投诉。<b>不要试图独立获取全链条资质。</b>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 11 SWOT ============ -->
+<section id="s11"><div class="wrap">
+  <h2><span class="num">11</span>PESTEL 宏观扫描 → SWOT</h2>
+  <p class="lead">先用 PESTEL 系统扫描外部环境，再由此导出 SWOT 的 O/T——确保"机会"与"威胁"来自分析而非直觉。内部项（S/W）来自前 10 章的源码核验。</p>
+
+  <h3>PESTEL 外部环境扫描</h3>
+  <table>
+    <thead><tr><th style="width:13%">维度</th><th style="width:30%">关键因素</th><th style="width:32%">对本产品的影响</th><th style="width:12%">导出</th></tr></thead>
+    <tbody>
+      <tr><td><b>P 政治 / 监管</b></td><td>算法推荐备案要求；《AI 生成合成内容标识办法》2025-09-01 施行；基金投顾试点转常规</td><td>合规交付标准提高；但同时催生持牌机构对"可审计投研工具"的采购需求</td><td><span class="tag t-warn">T</span> <span class="tag t-ok">O</span></td></tr>
+      <tr><td><b>E 经济</b></td><td>利率下行、居民储蓄向投资迁移；个人投资者规模扩大</td><td>目标用户池扩大，个人投研工具需求上升</td><td><span class="tag t-ok">O</span></td></tr>
+      <tr><td><b>S 社会</b></td><td>散户占比高、追涨杀跌普遍、投教供给不足</td><td>"行为偏差干预"有真实痛点，不是伪需求</td><td><span class="tag t-ok">O</span></td></tr>
+      <tr><td><b>T 技术</b></td><td>LLM 能力成熟；本地轻量计算可行；开源量化库丰富</td><td>降低实现门槛（利好），但同质产品涌现、壁垒下降（利空）</td><td><span class="tag t-ok">O</span> <span class="tag t-warn">T</span></td></tr>
+      <tr><td><b>E 环境 / ESG</b></td><td>ESG 投资兴起，可持续因子受关注</td><td>可作为因子库扩展方向，非当前核心</td><td><span class="tag t-ok">O</span></td></tr>
+      <tr><td><b>L 法律</b></td><td>《个人信息保护法》《数据安全法》；证券投资咨询需持牌</td><td><b>硬约束</b>：无牌照不得出具具体投资建议，人格数据需单独同意</td><td><span class="tag t-warn">T</span></td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>为什么要先做 PESTEL：</b>SWOT 最常见的失效模式是 O/T 栏写满主观判断（"市场前景广阔""竞争激烈"）。用 PESTEL 逐维度扫描后，每一个 O 和 T 都能追溯到具体的外部事实——<b>这让 SWOT 从"填空练习"变成"可追溯的推导"</b>。下方四象限中的 O/T 条目，均来自上表。
+  </div>
+
+
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--ok)">
+      <h4 style="margin-top:0;color:var(--ok)">S · 优势（内部）</h4>
+      <ul style="font-size:13.8px">
+        <li>自建估值与风控引擎，<b>数学正确且有单元测试</b>，非调包</li>
+        <li>11 段式流水线具备<b>可审计</b>骨架</li>
+        <li>LLM 收敛为叙事层的<b>架构克制力</b>——数字由代码守</li>
+        <li>人格向量作为<b>统一数据契约</b>，跨 12 个模块复用</li>
+        <li>全栈独立交付能力，<b>40 个路由全部上线</b></li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--risk)">
+      <h4 style="margin-top:0;color:var(--risk)">W · 劣势（内部）</h4>
+      <ul style="font-size:13.8px">
+        <li><b>零真实用户数据</b>——无 DAU、留存、转化</li>
+        <li>估值因子为<b>过期静态硬编码</b>，行情实时但财务非实时</li>
+        <li>WACC 参数<b>美股口径套 A 股</b></li>
+        <li>VaR 仅参数法，<b>无肥尾处理</b></li>
+        <li>无数据持久化（localStorage），<b>跨设备不可用</b></li>
+        <li>主流程存在<b>已知集成测试失败</b></li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--info)">
+      <h4 style="margin-top:0;color:var(--info)">O · 机会（外部）</h4>
+      <ul style="font-size:13.8px">
+        <li>监管<b>支持 AI 用于投研与投资者教育</b>（证监会 2025 世界投资者周，参考 IOSCO 倡议）</li>
+        <li>基金投顾<b>试点转常规</b>，行业规模突破千亿，生态成熟</li>
+        <li>个人投资者最缺的不是"又一份 AI 研报"，而是<b>可复盘、可控制的决策系统</b></li>
+        <li>跨场景人格画像<b>尚无规模化成熟先例</b>——蓝海</li>
+        <li>持牌机构需要<b>差异化的行为风控能力</b>，B2B2C 通道存在</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--warn)">
+      <h4 style="margin-top:0;color:var(--warn)">T · 威胁（外部）</h4>
+      <ul style="font-size:13.8px">
+        <li><b>合规红线</b>：证券投资咨询须持牌，无牌输出"买什么"即涉非法经营</li>
+        <li>人格画像<b>不得替代法定适当性</b>（C1-C5 / R1-R5），禁止诱导问卷</li>
+        <li>跨场景行为数据触及<b>敏感个人信息单独同意</b>规则</li>
+        <li>通用大模型<b>快速拉平</b>文本总结能力，叙事层优势易被侵蚀</li>
+        <li>《AI 生成合成内容标识办法》<b>提高交付标准</b>，违规有处罚</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 12 合规 ============ -->
+<section id="s12"><div class="wrap">
+  <h2><span class="num">12</span>合规红线：这不是可选项</h2>
+  <p class="lead">在中国做"基于人格画像的资产匹配"，以下四条是硬约束。</p>
+
+  <div class="callout risk">
+    <b>① 智能投顾 = 证券投资咨询，须持牌。</b> 陕西证监局明确：涉及证券期货的"智能投顾"属于证券投资咨询业务，须取得证监会许可的<b>经营证券期货业务许可证</b>；未经批准擅自开展，存在非法证券期货活动和刑事法律风险。
+  </div>
+  <div class="callout risk">
+    <b>② 人格画像不得替代法定适当性。</b> 证监会适当性指引要求持续评估，普通投资者分 C1-C5、产品分 R1-R5，<b>禁止诱导或误导</b>。人格画像必须作为<b>独立洞察</b>放在法定测评之后，明确标注"不等于风险等级、不得用于绕过准入、可关闭删除"。
+  </div>
+  <div class="callout warn">
+    <b>③ 多场景行为数据触发敏感信息规则。</b> 《个人信息保护法》将金融账户、医疗健康、生物识别等列为敏感个人信息，处理需<b>特定目的 + 充分必要性 + 单独同意</b>。健身数据、音乐偏好、人格向量都应视为高风险画像。
+  </div>
+  <div class="callout warn">
+    <b>④ 自动化决策需可解释、可拒绝。</b> 法律要求自动化决策透明公平；对个人权益有重大影响的决定，个人<b>有权要求说明并拒绝</b>仅由自动化决策作出。"人格分低于阈值即禁止某类资产"这类功能必须设人工复核、申诉与退出机制。
+  </div>
+
+  <h3>数据采集的默认策略</h3>
+  <table>
+    <thead><tr><th>数据类型</th><th>应采用</th><th>不宜采取</th></tr></thead>
+    <tbody>
+      <tr><td>扑克 / 台球行为</td><td>用户主动输入或聚合后的去标识化指标</td><td>接入原始对局、聊天、定位、设备指纹</td></tr>
+      <tr><td>健身数据</td><td>授权后采集与风险自控相关的<b>摘要</b></td><td>默认读取完整健康 / 生理数据</td></tr>
+      <tr><td>音乐偏好</td><td>允许一键关闭，贡献度透明化</td><td>用文化标签做高风险资产准入</td></tr>
+      <tr><td>交易 / 持仓 / 账户</td><td>在持牌机构授权下最小化、加密、限期保存</td><td>自行保存证券账户与交易明细</td></tr>
+      <tr><td>人格向量与相似度</td><td>提供下载、删除、纠正、撤回同意</td><td>向第三方共享或用于差别定价</td></tr>
+    </tbody>
+  </table>
+  <p class="src">合规优先顺序：<b>先"用户自主输入 + 公开/授权数据 + 可解释规则"，再逐步增加多模态行为；先证明某数据源的增量价值，再采集</b>——而不是"先全量采集、后找用途"。</p>
+</div></section>
+
+<!-- ============ 13 战略建议 ============ -->
+<section id="s13"><div class="wrap">
+  <h2><span class="num">13</span>战略建议：优先级排序</h2>
+  <p class="lead">把产品拆成四层，不要后两层前置为获客承诺。</p>
+
+  <table>
+    <thead><tr><th>优先级</th><th>方向</th><th>用户价值</th><th>商业可行性</th><th class="num">合规难度</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td><span class="tag t-ok">P0</span></td><td><b>行为偏差校验与熔断建议</b></td><td>抑制追涨杀跌、过度杠杆、情绪交易</td><td>高（订阅 / B2B）</td><td class="num">中</td></tr>
+      <tr class="hi"><td><span class="tag t-ok">P0</span></td><td><b>多源估值 / 风险工作流</b></td><td>降低个人投研的信息处理成本</td><td>高</td><td class="num">中</td></tr>
+      <tr><td><span class="tag t-info">P1</span></td><td>人格原型 + 投资人对标</td><td>提升自我认知与留存</td><td>中</td><td class="num">高</td></tr>
+      <tr><td><span class="tag t-warn">P2</span></td><td>持牌资产配置匹配</td><td>实现交易闭环</td><td>高（若持牌）</td><td class="num">极高</td></tr>
+      <tr><td><span class="tag t-warn">P2</span></td><td>跨场景原始行为数据采集</td><td>增加数据维度</td><td>不确定</td><td class="num">极高</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <b>关键设计原则：硬风险指标给出边界，人格语义负责解释和干预。</b>不能让"像达利欧"之类的相似度直接改变仓位。人格标签最可能提升"用户参与和偏差觉察"，而 VaR/CVaR、Kelly、Z-Score、估值模块更可能提升"决策质量"——<b>两者必须分离</b>。
+  </div>
+
+  <h3>最低成本的下一步（两天可完成）</h3>
+  <div class="card">
+    <p style="font-size:14px"><b>当前最大短板是"零用户数据"，但应届生阶段这情有可原。</b>不需要等真实用户，用种子样本自证即可：</p>
+    <ol style="font-size:13.8px">
+      <li>用六维向量对 <b>10 位你熟悉的人</b> 做画像，看输出的人格原型与实际认知的吻合度</li>
+      <li>用历史行情跑一次 <b>VaR 回测</b>，看实际突破次数是否落在 95% 置信区间内</li>
+      <li>把 Mock 登录换成<b>不记名行为埋点</b>（调酒项目的埋点已选型待接，正好并过去）</li>
+    </ol>
+    <p style="font-size:13.8px;margin-top:10px">完成后即可写出：「以 10 名种子用户完成画像准确性验证，人格原型匹配度 X%；VaR 回测突破率落在理论置信区间内」——<b>这比"100 个陌生用户"更硬</b>，因为它证明你会设计验证方法。</p>
+  </div>
+
+  <h3>三个待验证的效度问题（决定产品生死）</h3>
+  <div class="grid3">
+    <div class="card"><h4 style="margin-top:0">区分效度</h4><p style="font-size:13.5px">六维向量能否区分<b>客观财务约束、风险承受能力与短期情绪</b>？</p></div>
+    <div class="card"><h4 style="margin-top:0">预测效度</h4><p style="font-size:13.5px">人格分数能否预测未来回撤反应、换手率或组合偏离，且<b>优于年龄、收入、期限等低成本变量</b>？</p></div>
+    <div class="card"><h4 style="margin-top:0">干预效度</h4><p style="font-size:13.5px">基于画像的提醒是否<b>降低非理性交易</b>，而非提高焦虑或促成交易？</p></div>
+  </div>
+  <p class="src">在这三项有证据前，产品材料应使用"偏好与决策风格洞察""行为偏差提示"，避免"风险评级""收益适配""巴菲特式投资者"等易被理解为投资结论的表述。</p>
+
+  <h3>三大战略框架的推导</h3>
+  <p style="font-size:14px">上述 P0-P2 排序并非直觉，而是三套框架的交叉结果。</p>
+
+  <h4 style="font-size:15px;color:#1A3A5C;margin:18px 0 8px">① Ansoff 增长矩阵 —— 往哪个方向长</h4>
+  <table>
+    <thead><tr><th style="width:16%">战略</th><th style="width:26%">方向</th><th style="width:30%">具体动作</th><th style="width:12%">风险</th><th style="width:16%">优先级</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td><b>市场渗透</b></td><td>现有产品 → 现有市场</td><td>扩大标的覆盖（32 → 更多）、提升画像准确性、补充回测</td><td>低</td><td><span class="tag t-ok">当前主攻</span></td></tr>
+      <tr class="hi"><td><b>产品开发</b></td><td>新产品 → 现有市场</td><td>增加决策复盘 / 行为日记 / 偏差提醒，强化留存</td><td>中</td><td><span class="tag t-ok">当前主攻</span></td></tr>
+      <tr><td><b>市场开发</b></td><td>现有产品 → 新市场</td><td><b>B2B2C</b>：引擎输出给持牌机构，由其承接牌照与交易</td><td>中高</td><td><span class="tag t-info">中期</span></td></tr>
+      <tr><td><b>多元化</b></td><td>新产品 → 新市场</td><td>出海 / 跨资产类别（加密、期权）</td><td>高</td><td><span class="tag t-warn">暂缓</span></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13.5px;color:#5A6875"><b>结论：</b>Ansoff 的四个象限中，风险最低的两个（渗透 + 产品开发）应优先；"市场开发"即 B2B2C 是唯一能绕开牌照硬约束的规模化路径；"多元化"在核心未验证前不应启动。</p>
+
+  <h4 style="font-size:15px;color:#1A3A5C;margin:20px 0 8px">② BCG 矩阵 —— 模块怎么排资源</h4>
+  <div class="callout warn" style="margin:10px 0">
+    <b>口径声明：</b>BCG 严格依赖市场份额与增长率数据，而本项目无市场数据。此处为<b>定性类比</b>——用"用户价值确定性"替代相对份额、用"投入需求"替代增长率，用于资源排序，<b>不构成市场份额判断</b>。
+  </div>
+  <table>
+    <thead><tr><th style="width:16%">象限</th><th style="width:30%">对应模块</th><th style="width:32%">判断依据</th><th style="width:22%">资源决策</th></tr></thead>
+    <tbody>
+      <tr><td><b>⭐ 明星</b></td><td>行为偏差校验 + 熔断建议</td><td>用户价值最直接（抑制追涨杀跌），且与 Game-OS 内核同源，是差异化所在</td><td><b>重投入</b>，作为核心叙事</td></tr>
+      <tr><td><b>🐄 金牛</b></td><td>估值 / 风险引擎（DCF·WACC·APV·VaR·CVaR）</td><td>数学正确、有单测、已是稳定资产，构成技术壁垒</td><td><b>维护 + 守成</b>，不轻易重构</td></tr>
+      <tr><td><b>❓ 问题</b></td><td>LLM 叙事层</td><td>体验增益明显，但成本与幻觉风险并存，效果未验证</td><td><b>受控投入</b>，严格收敛在叙事层</td></tr>
+      <tr><td><b>🐕 瘦狗</b></td><td>装饰性人格标签（如"像某位投资人"的话术包装）</td><td>传播性强但与决策质量无关，且易触碰合规红线</td><td><b>缩减</b>，不作为核心卖点</td></tr>
+    </tbody>
+  </table>
+
+  <h4 style="font-size:15px;color:#1A3A5C;margin:20px 0 8px">③ OLI 范式 —— 要不要跨区域 / 出海</h4>
+  <p style="font-size:13.8px">OLI（Ownership-Location-Internalization）原用于解释对外直接投资。这里借用它判断"<b>能力应当自建自营，还是授权给外部</b>"这一组织边界问题。</p>
+  <table>
+    <thead><tr><th style="width:18%">维度</th><th style="width:38%">本项目状况</th><th style="width:44%">推论</th></tr></thead>
+    <tbody>
+      <tr><td><b>O 所有权优势</b></td><td>六维人格向量 + 可审计投研流水线是独特抽象，跨场景可复用</td><td>优势<b>存在</b>，且可脱离具体业务独立存在 → 具备授权的可行性</td></tr>
+      <tr><td><b>L 区位优势</b></td><td>中国个人投资者基数大；但监管明确、牌照门槛高</td><td>区位对<b>持牌方</b>有利，对无牌照的我方不利 → 不宜直接面向 C 端做交易闭环</td></tr>
+      <tr><td><b>I 内部化优势</b></td><td>自建引擎可保证数学正确性与可审计性；授权则失控风险高</td><td>核心引擎<b>应内部化</b>（不外包），但面向用户的交付<b>应外部化</b>给持牌方</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>OLI 的合成结论：</b>O 有、L 不在我方、I 在核心引擎——三者交叉指向唯一可行解：<b>核心能力内部化自持，牌照与交易环节外部化给持牌机构</b>，即 B2B2C。这与第 10 章差异化定位的结论独立得出、相互印证。
+  </div>
+</div></section>
+
+<!-- ============ 14 面试谈资 ============ -->
+<section id="s14"><div class="wrap">
+  <h2><span class="num">14</span>面试谈资：三句话讲清这个项目</h2>
+  <p class="lead">产品分析最终要服务于你的求职——这是最可能被问到的四个问题及答法。</p>
+
+  <div class="card">
+    <h4 style="margin-top:0">Q1：用一句话说这个项目是什么？</h4>
+    <p style="font-size:14px;color:var(--navy2)"><b>"一个把投资者行为数据抽象成可计算人格向量、再驱动个性化投研决策的个人投资操作系统。它的核心不是荐股，而是帮人看见并约束自己的决策偏差。"</b></p>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0">Q2：你的核心差异化在哪？</h4>
+    <p style="font-size:14px;color:var(--navy2)"><b>"市面上的工具要么给数据（东财/Wind），要么给配置（且慢/摩羯智投），中间缺一层——把'我是谁'翻译成'我该怎么决策'。我做的是这一层：11 段流水线 + 人格向量 + 自建估值风控，且每段都可审计。"</b></p>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0">Q3：你怎么验证它有效？</h4>
+    <p style="font-size:14px;color:var(--navy2)"><b>"三层验证：底层是单元测试覆盖金融模型（WACC 四法交叉验证互相印证）；中层是 20 位投资人风格基准，用户向量与标杆做距离匹配，输出相似度和差异诊断；上层是历史行情的 VaR 回测。下一步是种子用户画像一致性验证。"</b></p>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0">Q4：最大的风险是什么？你怎么处理？</h4>
+    <p style="font-size:14px;color:var(--navy2)"><b>"合规。向个人投资者输出买卖建议需要证券投资咨询牌照，人格画像也不能替代法定适当性评估。所以我的设计是：硬风险指标给出边界，人格语义只做解释和干预，相似度降为反思卡片而非配置依据。商业化走 B2B2C——引擎给我，牌照和交易给持牌机构。"</b></p>
+  </div>
+
+  <div class="concl" style="margin-top:26px">
+    <h4>最后一句</h4>
+    <p>这个项目的真正价值不在"人格金融孪生"这个漂亮的名字，而在于它证明了三件事：<strong>你能把金融工程真正实现出来</strong>（不是调包）、<strong>你能克制地工程化 AI</strong>（不让 LLM 算数）、<strong>你能看见合规边界</strong>（不把相似度当配置依据）。</p>
+    <p style="margin-top:10px">在应届生里，同时做到这三点的很少。<strong>这才是你该讲的故事。</strong></p>
+  </div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <p>人格金融孪生平台 Y.Mine · 产品深度分析与竞品分析报告</p>
+    <p style="margin-top:6px;opacity:.75">分析基于 GitHub 公开仓库源码（逐行核验）与市场公开数据 · 生成于 2026 年 9 月</p>
+    <p style="margin-top:6px;opacity:.6">报告中的评分与判断为分析方观点，非第三方审计结论；引用数据以标注来源为准。</p>
+  </div>
+</footer>
+
+</body>
+</html>
