@@ -1050,6 +1050,205 @@
                 padding: 8px 4px;
             }
         }
+
+        /* ================================================================
+           产品叙事 · 新增区块（问题 → 主张 → 主角 → 自证 → 取舍 → 迁移）
+           ================================================================ */
+        .statement {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(167, 139, 250, 0.04);
+            border-left: 2px solid rgba(34, 211, 238, 0.35);
+            border-radius: var(--radius-card);
+            padding: 22px 24px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-card);
+        }
+        .statement .st-kicker {
+            font-size: 10px;
+            letter-spacing: 4px;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            opacity: .8;
+        }
+        .statement h2 {
+            font-size: 21px;
+            line-height: 1.55;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        .statement h2 em {
+            font-style: normal;
+            color: var(--accent-cyan);
+        }
+        .statement p {
+            font-size: 14px;
+            line-height: 1.95;
+            color: var(--text-sec);
+        }
+        .statement p strong { color: var(--text-primary); font-weight: 600; }
+
+        .claims {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 0 0 8px;
+        }
+        .claim {
+            background: rgba(10, 8, 12, 0.4);
+            border: 1px solid rgba(167, 139, 250, 0.05);
+            border-radius: 12px;
+            padding: 14px 14px 16px;
+        }
+        .claim .cl-n {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+        }
+        .claim .cl-t {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 6px 0 6px;
+        }
+        .claim .cl-d {
+            font-size: 12px;
+            line-height: 1.7;
+            color: var(--text-sec);
+        }
+
+        .hero-product {
+            display: block;
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(167, 139, 250, 0.10);
+            border-radius: var(--radius-card);
+            padding: 20px 22px;
+            margin: 14px 0 10px;
+            text-decoration: none;
+            box-shadow: var(--shadow-card);
+            transition: var(--transition-smooth);
+        }
+        .hero-product:hover {
+            border-color: rgba(167, 139, 250, 0.22);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 60px rgba(0,0,0,.5);
+        }
+        .hero-product .hp-tag {
+            display: inline-block;
+            font-size: 11px;
+            color: var(--accent-purple);
+            border: 1px solid rgba(167,139,250,.15);
+            border-radius: 999px;
+            padding: 2px 10px;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .hero-product .hp-name {
+            font-size: 19px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .hero-product .hp-claim {
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-bottom: 14px;
+        }
+        .hp-block { margin-bottom: 12px; }
+        .hp-block .hp-k {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--accent-cyan);
+            margin-bottom: 4px;
+            opacity: .85;
+        }
+        .hp-block .hp-v {
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--text-sec);
+        }
+        .hp-block .hp-v strong { color: var(--text-primary); font-weight: 600; }
+        .hp-foot {
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(167,139,250,.06);
+            font-size: 12.5px;
+            color: var(--accent-cyan);
+        }
+
+        .proof {
+            background: rgba(52, 211, 153, 0.03);
+            border: 1px solid rgba(52, 211, 153, 0.14);
+            border-radius: var(--radius-card);
+            padding: 20px 22px;
+            margin: 16px 0 8px;
+        }
+        .proof .pf-kicker {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #6ee7b7;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        .proof p {
+            font-size: 13.5px;
+            line-height: 1.95;
+            color: var(--text-sec);
+            margin-bottom: 8px;
+        }
+        .proof p strong { color: var(--text-primary); font-weight: 600; }
+        .proof .pf-link {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 12.5px;
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+
+        .cut {
+            background: var(--bg-card);
+            border: 1px solid rgba(167,139,250,.04);
+            border-radius: var(--radius-card);
+            padding: 18px 22px;
+            margin: 16px 0 8px;
+        }
+        .cut .cut-t {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        .cut ul { list-style: none; }
+        .cut li {
+            font-size: 13px;
+            line-height: 1.9;
+            color: var(--text-sec);
+            padding-left: 16px;
+            position: relative;
+        }
+        .cut li::before {
+            content: '\2014';
+            position: absolute;
+            left: 0;
+            color: var(--text-dim);
+        }
+        .cut li b { color: var(--text-primary); font-weight: 600; }
+        .cut .cut-note {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(167,139,250,.05);
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.85;
+        }
+
+        @media (max-width: 640px) {
+            .claims { grid-template-columns: 1fr; }
+            .statement h2 { font-size: 18px; }
+        }
     </style>
 </head>
 <body>
@@ -1079,164 +1278,83 @@
             </div>
         </div>
 
-        <!-- ===== 🆕 Mermaid 能力链（替换原四段文字） ===== -->
-        <div class="mermaid-wrapper">
-            <div class="mw-label">⚡ 能力链路 · 从审计到决策中台</div>
-            <div class="mermaid">
-                graph TD
-                subgraph 经历输入["三段经历 · 输入层"]
-                A1["📊 财务审计<br/>『哪里会出错』"]
-                A2["⚙️ 工程实践<br/>『怎么让它不出错』"]
-                A3["📈 MBA 商业<br/>『什么值得做』"]
-                end
+        <!-- ===== ① 问题开场 ===== -->
+        <div class="statement">
+            <div class="st-kicker">The Problem</div>
+            <h2>AI 决策的问题，不是不够聪明<br/>是<em>出了错说不清为什么</em></h2>
+            <p>所以我做的不是"让 AI 给一个建议"，而是一套 <strong>可审计、可熔断、可跨域迁移</strong> 的决策内核 —— 每一步假设、每一次取舍，都能被翻出来看。</p>
+        </div>
 
-                subgraph 能力抽象["能力抽象 · 方法论层"]
-                A1 --> B1["七层不可绕过熔断"]
-                A1 --> B2["三角校验"]
-                A2 --> B3["11 条底层公理（系统宪法）"]
-                A2 --> B4["148 项单元测试 · 100% 通过"]
-                A3 --> B5["跨域迁移能力"]
-                A3 --> B6["价值判断模型"]
-                end
-
-                subgraph 核心产物["核心产物 · 系统层"]
-                B1 & B2 & B3 & B4 & B5 & B6 --> C["Game-OS<br/>可信决策 AI 中台"]
-                end
-
-                subgraph 跨域迁移["跨域迁移 · 应用层"]
-                C --> D1["💹 金融决策<br/>人格金融孪生平台"]
-                C --> D2["🃏 博弈对抗<br/>PokerEgg 扑克竞技场"]
-                C --> D3["🍸 消费体验<br/>Y.MINE 人格调酒"]
-                C --> D4["🛩️ 低空经济<br/>AirMind OS"]
-                C --> D5["🎬 内容市场<br/>短剧 MBTI 推演器"]
-                end
-
-                subgraph 数据验证["数据验证 · 成果层"]
-                D1 & D2 & D3 & D4 & D5 --> E["500+ 次 Git 迭代<br/>41 个跨域实验<br/>25,424 次自动化模拟运行"]
-                end
-
-                style A1 fill:#1a1420,stroke:#F472B6,color:#fff
-                style A2 fill:#1a1420,stroke:#22D3EE,color:#fff
-                style A3 fill:#1a1420,stroke:#FBBF24,color:#fff
-                style C fill:#1a1420,stroke:#A78BFA,color:#fff,stroke-width:2px
-                style E fill:#1a1420,stroke:#34D399,color:#fff,stroke-width:2px
+        <!-- ===== ② 三条主张 ===== -->
+        <div class="claims">
+            <div class="claim">
+                <div class="cl-n">01</div>
+                <div class="cl-t">可审计</div>
+                <div class="cl-d">把一次决策拆成 11 个环节，每步的假设与结论可查看、可调整，而不是一个黑箱结论。</div>
+            </div>
+            <div class="claim">
+                <div class="cl-n">02</div>
+                <div class="cl-t">可熔断</div>
+                <div class="cl-d">七层不可绕过校验 + 三角校验，在结论输出前拦住它，而不是事后解释。</div>
+            </div>
+            <div class="claim">
+                <div class="cl-n">03</div>
+                <div class="cl-t">可迁移</div>
+                <div class="cl-d">内核与场景解耦，换领域只换外壳 —— 迁移是为了检验它是否只在单一场景成立。</div>
             </div>
         </div>
 
-        <!-- ===== 正文（精简版，保留核心数据） ===== -->
-        <div class="content">
-            <p>
-                我把三段经历 —— <span class="pill">财务</span>、<span class="pill">工程</span>、<span class="pill">MBA</span> —— 揉成了一个东西：
-                一套让 AI 决策 <strong>"可审计、可熔断、可跨域迁移"</strong> 的操作系统。
-            </p>
-            <p>
-                目前，这套系统已完成 <strong style="color:var(--text-sec);">500+ 次 Git 迭代</strong>、
-                <strong style="color:var(--text-sec);">148 项单元测试</strong>、
-                <strong style="color:var(--text-sec);">41 个跨域实验</strong>、
-                <strong style="color:var(--text-sec);">25,424 次自动化模拟运行</strong>。
-                内核已成功迁移至 <strong style="color:var(--text-sec);">金融决策、博弈对抗、调酒消费、低空经济、内容市场</strong> 五大场景。<br><span style="font-size:12px;color:var(--text-dim)">全部产品已部署于 GitHub Pages 并公开可访问，源码同步开放。</span>
-            </p>
+        <!-- ===== ③ 主角项目（完整展开） ===== -->
+        <div class="section-head">🎯 主角项目 <span>问题 → 方案 → 取舍 → 结果，完整展开这一个</span></div>
+        <a class="hero-product" href="https://hellomind-star.github.io/finance-personality/" target="_blank">
+            <div class="hp-tag">金融决策 · 旗舰</div>
+            <div class="hp-name">人格金融孪生平台</div>
+            <div class="hp-claim">让投资者事后能说清"当初为什么买"</div>
+
+            <div class="hp-block">
+                <div class="hp-k">问题</div>
+                <div class="hp-v">个人投资者亏钱后最难的不是接受损失，而是<strong>复盘时说不清当初的逻辑</strong>——因为那个逻辑从来没被记录下来。</div>
+            </div>
+            <div class="hp-block">
+                <div class="hp-k">方案</div>
+                <div class="hp-v">把投研链路拆成 <strong>11 个可审计环节</strong>，每步的假设、依据与结论都留痕；估值用 <strong>DCF / WACC / APV 四法交叉验证</strong>，风险用 <strong>VaR / CVaR</strong> 量化，偏差校验与熔断前置。</div>
+            </div>
+            <div class="hp-block">
+                <div class="hp-k">一个反直觉的取舍</div>
+                <div class="hp-v">人格画像没有用 16 型做底层，而是<strong>六维连续向量</strong> —— 因为 n=20,000 的数据检验显示人格空间不存在离散类型结构，离散的 16 型只留在展示层，方便记忆与传播。</div>
+            </div>
+
+            <div class="hp-foot">Live ↗ · 阅读 15 章深度分析报告 →</div>
+        </a>
+
+        <!-- ===== ④ 我怎么验证自己（阴性结果） ===== -->
+        <div class="proof">
+            <div class="pf-kicker">⚠ 我也验证过自己 —— 结果是阴性的</div>
+            <p>用 n=20,000 的公开人格数据检验：人格空间<strong>不存在离散类型结构</strong>（轮廓净增益 0.08，低于 0.10 的判定阈值）。结论是部分支持，不是证实。</p>
+            <p>所以底层改用<strong>连续向量</strong>，离散类型只保留在展示层。过程中我还发现自己在用的 η² 指标存在同义反复（用 X 聚类、再用 X 算解释力），<strong>主动弃用了它</strong>。</p>
+            <p style="font-size:12.5px;color:var(--text-dim);margin-bottom:0;">这件事的价值不在于"验证成功"，而在于它决定了架构 —— 而架构一旦定错，后面所有功能都要推倒重来。</p>
+            <a href="./theory.html" class="pf-link">读完整方法论（13 章）→</a>
         </div>
 
-        <!-- 普通矩阵卡片 -->
-        <div style="margin:26px 0 8px">
-  <div class="mw-label" style="font-size:11px;letter-spacing:2px;color:var(--accent-cyan);margin-bottom:4px">🧬 行为建模内核</div>
-  <div style="font-size:12px;color:var(--text-dim);margin-bottom:12px">所有产品共用同一套底层：把人的行为抽象成可计算的向量，再反过来影响决策</div>
-<div class="matrix-grid">
-            <a class="matrix-card" href="persona-mask.html">
-                <div class="mc-head"><span class="mc-emoji">🎭</span><span class="mc-domain">人格实验</span></div>
-                <div class="mc-name">人格面具双面镜</div>
-                <div class="mc-desc">同一个人在社交场合与独处时的行为并不一致。用六维向量同时刻画"社交面具"与"真实人格"两侧，让行为差异可被看见 —— 这套向量也是其余产品共用的底层。</div>
-                <div class="mc-live">照镜子 →</div>
-            </a>
-    <a class="matrix-card" href="./cone-0.68.html" target="_blank">
-      <div class="mc-head"><span class="mc-emoji">📐</span><span class="mc-domain">理论内核</span></div>
-      <div class="mc-name">0.68 决策锥体 · 数学页</div>
-      <div class="mc-desc">跨域决策的统一几何骨架：锥体模型、0.68 阈值的构成与尚未形式化的部分。</div>
-      <div class="mc-live">查看推导 →</div>
-    </a>
-        </div>
-</div>
-
-        <!-- ===== 项目列表 ===== -->
-        <div class="project-list">
-            <div class="project-item">
-                <span class="name">Game-OS</span>
-                <span class="desc">可信决策 AI 中台 · 七层熔断 + 三角校验</span>
-                <a href="https://hellomind-star.github.io/ymine/" target="_blank" class="link">↗</a>
-            </div>
-            <div class="project-item">
-                <span class="name">PokerEgg</span>
-                <span class="desc">德州扑克博弈桌台 · 16 型人格 AI 陪练</span>
-                <a href="https://hellomind-star.github.io/poker-egg-fullstack/" target="_blank" class="link">↗</a>
-            </div>
-            <div class="project-item">
-                <span class="name">Y.MINE</span>
-                <span class="desc">人格调酒 · 午夜酒馆 · 五感叙事</span>
-                <a href="https://hellomind-star.github.io/ymine-demos/" target="_blank" class="link">↗</a>
-            </div>
-            <div class="project-item">
-                <span class="name">🧪 实验集群</span>
-                <span class="desc">5 个核心工具 · A/B 测试 · 向量库 · 状态判定 · 记忆基座</span>
-                <a href="https://hellomind-star.github.io/ymine-validation-hub/hub.html" class="link" style="color:var(--accent-cyan);">→ 进入</a>
-            </div>
-            <div class="project-item">
-                <span class="name">🎨 午夜酒馆</span>
-                <span class="desc">UI设计系统 · Neo-Noir · 19界面 · 16型人格视觉</span>
-                <a href="https://hellomind-star.github.io/ymine-validation-hub/Midnight-Tavern-Portfolio.pdf" target="_blank" class="link">📄 PDF</a>
-            </div>
-            <div class="project-item">
-                <span class="name">📄 决策染色体</span>
-                <span class="desc">斐波那契-染色体跨域映射 · 核型分析 · 人格遗传模拟</span>
-                <a href="https://hellomind-star.github.io/ymine-validation-hub/Fibonacci-Chromosome_Isomorphism.pdf" target="_blank" class="link">📄 PDF</a>
-            </div>
+        <!-- ===== ⑤ 我放弃了什么 ===== -->
+        <div class="cut">
+            <div class="cut-t">我放弃了什么</div>
+            <ul>
+                <li><b>Y.MINE</b>：六通道 → 三通道，先收敛才敢做 MVP</li>
+                <li><b>短剧项目</b>：25 集剧本 → 只做一个推演器</li>
+                <li><b>明确不做</b>：创作者中台、品牌纪念馆、分子 DIY</li>
+                <li><b>十余个产品里，主角只有 1 个</b> —— 人格金融孪生平台，其余五个是验证内核迁移性的实验</li>
+            </ul>
+            <div class="cut-note">我的收敛标准只有一条：改它需要推倒重来吗？<br/>需要 → 尽早定死并先用最便宜的数据验证；不需要 → 留活口，等真实数据来校准。</div>
         </div>
 
-        <!-- ===== 📊 深度分析报告（新增） ===== -->
-<div style="margin:26px 0 8px">
-  <div class="mw-label" style="font-size:11px;letter-spacing:2px;color:var(--accent-cyan);margin-bottom:4px">📊 深度分析报告</div>
-  <div style="font-size:12px;color:var(--text-dim);margin-bottom:12px">每个旗舰产品都有一份完整的产品分析 —— 需求洞察、方案权衡、竞品格局与合规边界</div>
-  <div class="matrix-grid">
-    <a class="matrix-card" href="./reports/finance-report.html" target="_blank">
-      <div class="mc-head"><span class="mc-emoji">💹</span><span class="mc-domain">金融决策 · 15 章</span></div>
-      <div class="mc-name">人格金融孪生平台 · 深度分析</div>
-      <div class="mc-desc">从需求洞察到合规边界：11 段可审计投研链路的设计理由、竞品格局与差异化定位。</div>
-      <div class="mc-live">阅读报告 →</div>
-    </a>
-    <a class="matrix-card" href="./reports/wine-report.html" target="_blank">
-      <div class="mc-head"><span class="mc-emoji">🍸</span><span class="mc-domain">消费体验 · 15 章</span></div>
-      <div class="mc-name">Y.MINE 人格调酒系统 · 深度分析</div>
-      <div class="mc-desc">情绪经济 2.72 万亿市场下的 MVP 取舍：六通道如何收敛为三通道，以及成都试点路径。</div>
-      <div class="mc-live">阅读报告 →</div>
-    </a>
-    <a class="matrix-card" href="./knowledge-base.html" target="_blank">
-      <div class="mc-head"><span class="mc-emoji">📘</span><span class="mc-domain">方法论</span></div>
-      <div class="mc-name">数字营销知识库</div>
-      <div class="mc-desc">Mimic Pro 模拟体系化：A/B 测试八步、CRO、评分模型，及其与产品内核的同构关系。</div>
-      <div class="mc-live">进入知识库 →</div>
-    </a>
-    <a class="matrix-card" href="./theory.html" target="_blank">
-      <div class="mc-head"><span class="mc-emoji">📐</span><span class="mc-domain">行为建模 · 13 章</span></div>
-      <div class="mc-name">行为建模方法论 · 理论依据</div>
-      <div class="mc-desc">为什么是「预测」而非「测量」：巴纳姆效应、标签效应、贝叶斯校准，以及公开数据集（n=20,000）的实证结果与架构影响。</div>
-      <div class="mc-live">阅读方法论 →</div>
-    </a>
-  </div>
-</div>
-
-<!-- ===== 跨域应用矩阵 ===== -->
-        <div class="section-head">🌌 跨域应用矩阵 <span>一套 Game-OS 内核 × 五大应用场景 · 全部在线可交互</span></div>
+        <!-- ===== ⑥ 迁移验证（其余场景） ===== -->
+        <div class="section-head">🌌 同一套内核 · 迁移到四个场景 <span>验证它是不是只在金融里成立 · 全部在线可交互</span></div>
         <div class="matrix-grid">
-            <a class="matrix-card" href="https://hellomind-star.github.io/finance-personality/" target="_blank">
-                <div class="mc-head"><span class="mc-emoji">💹</span><span class="mc-domain">金融决策</span></div>
-                <div class="mc-name">人格金融孪生平台</div>
-                <div class="mc-desc">个人投资者事后说不清"当初为什么买"。将投研拆为 11 个可审计环节，每步假设与结论可查看、可调整 —— 让决策过程本身可回溯。<br><span style="opacity:.62">DCF/WACC/APV 四法交叉验证 · VaR/CVaR · 偏差校验 · 熔断前置</span></div>
-                <div class="mc-live">Live ↗</div>
-            </a>
             <a class="matrix-card" href="https://hellomind-star.github.io/airmind-os/" target="_blank">
                 <div class="mc-head"><span class="mc-emoji">🛩️</span><span class="mc-domain">低空经济</span></div>
                 <div class="mc-name">AirMind OS</div>
-                <div class="mc-desc">低空作业调度依赖经验判断，出错代价高。把定价、空域分级与应急处置统一到同可复算的框架，让调度结果可解释、可追溯。<br><span style="opacity:.62">Kelly 博弈定价 · 空域分级精算 · 应急调度六策略 · V/S/L 算力监控</span></div>
+                <div class="mc-desc">低空作业调度依赖经验判断，出错代价高。把定价、空域分级与应急处置统一到同一可复算框架，让调度结果可解释、可追溯。<br><span style="opacity:.62">Kelly 博弈定价 · 空域分级精算 · 应急调度六策略 · V/S/L 算力监控</span></div>
                 <div class="mc-live">Live ↗</div>
             </a>
             <a class="matrix-card" href="https://hellomind-star.github.io/poker-egg-fullstack/" target="_blank">
@@ -1265,28 +1383,158 @@
             </a>
         </div>
 
-        <!-- ===== 创作工具集 ===== -->
-        <div class="section-head">🛠 创作工具集 <span>我指挥 AI 军团的工作台 · 全部在线可用</span></div>
+        <!-- ===== ⑦ 行为建模内核 ===== -->
+        <div style="margin:26px 0 8px">
+            <div class="mw-label" style="font-size:11px;letter-spacing:2px;color:var(--accent-cyan);margin-bottom:4px">🧬 行为建模内核</div>
+            <div style="font-size:12px;color:var(--text-dim);margin-bottom:12px">上面所有产品共用同一套底层：把人的行为抽象成可计算的向量，再反过来影响决策</div>
+            <div class="matrix-grid">
+                <a class="matrix-card" href="https://hellomind-star.github.io/Profile/persona-mask.html">
+                    <div class="mc-head"><span class="mc-emoji">🎭</span><span class="mc-domain">人格实验</span></div>
+                    <div class="mc-name">人格面具双面镜</div>
+                    <div class="mc-desc">同一个人在社交场合与独处时的行为并不一致。用六维向量同时刻画"社交面具"与"真实人格"两侧，让行为差异可被看见 —— 这套向量也是其余产品共用的底层。</div>
+                    <div class="mc-live">照镜子 →</div>
+                </a>
+                <a class="matrix-card" href="./cone-0.68.html" target="_blank">
+                    <div class="mc-head"><span class="mc-emoji">📐</span><span class="mc-domain">理论内核</span></div>
+                    <div class="mc-name">0.68 决策锥体 · 数学页</div>
+                    <div class="mc-desc">跨域决策的统一几何骨架：锥体模型、0.68 阈值的构成与尚未形式化的部分。</div>
+                    <div class="mc-live">查看推导 →</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- ===== ⑧ 来路：三段经历 + 解法路径 ===== -->
+        <div class="section-head">🧭 我为什么会这样想 <span>来路 · 与方法论路径</span></div>
+        <div class="content">
+            <p>
+                我把三段经历 —— <span class="pill">财务审计</span>、<span class="pill">工程</span>、<span class="pill">MBA</span> —— 揉成了一个判断：
+                决策系统真正的风险不是算错，而是<strong>错完之后没人说得清错在哪一步</strong>。
+                审计教我看到"哪里会出错"，工程让我知道"怎么让它不出错"，MBA 逼我问"这值不值得做"。
+            </p>
+            <p>
+                这套内核已完成 <strong style="color:var(--text-sec);">500+ 次 Git 迭代</strong>、
+                <strong style="color:var(--text-sec);">41 个跨域实验</strong>、
+                <strong style="color:var(--text-sec);">25,424 次自动化模拟运行</strong>，核心链路单元测试 100% 通过。<br><span style="font-size:12px;color:var(--text-dim)">全部产品已部署于 GitHub Pages 并公开可访问，源码同步开放。</span>
+            </p>
+        </div>
+
+        <div class="mermaid-wrapper">
+            <div class="mw-label">解法路径 · 从问题到系统</div>
+            <div class="mermaid">
+                graph TD
+                subgraph 问题["问题 · 起点"]
+                P1["AI 给了结论<br/>但说不清为什么"]
+                P2["出了错<br/>定位不到哪一步错"]
+                end
+
+                subgraph 判断["我的判断 · 主张层"]
+                P1 --> J1["可审计<br/>拆成 11 个环节"]
+                P2 --> J2["可熔断<br/>七层不可绕过校验"]
+                P1 --> J3["可迁移<br/>内核与场景解耦"]
+                end
+
+                subgraph 系统["系统 · 产物层"]
+                J1 & J2 & J3 --> S["Game-OS<br/>可信决策 AI 中台"]
+                end
+
+                subgraph 验证["验证 · 证据层"]
+                S --> V1["💹 金融"]
+                S --> V2["🃏 博弈"]
+                S --> V3["🍸 消费"]
+                S --> V4["🛩️ 低空"]
+                S --> V5["🎬 内容"]
+                V1 & V2 & V3 & V4 & V5 --> V6["n=20,000 公开数据检验<br/>结果阴性"]
+                end
+
+                V6 --> R["架构收敛<br/>连续向量底层 + 离散展示层"]
+
+                style P1 fill:#1a1420,stroke:#F472B6,color:#fff
+                style P2 fill:#1a1420,stroke:#F472B6,color:#fff
+                style S fill:#1a1420,stroke:#A78BFA,color:#fff,stroke-width:2px
+                style V6 fill:#1a1420,stroke:#34D399,color:#fff,stroke-width:2px
+                style R fill:#1a1420,stroke:#22D3EE,color:#fff,stroke-width:2px
+            </div>
+        </div>
+
+        <!-- ===== ⑨ 深度分析报告 ===== -->
+        <div style="margin:26px 0 8px">
+            <div class="mw-label" style="font-size:11px;letter-spacing:2px;color:var(--accent-cyan);margin-bottom:4px">📊 深度分析报告</div>
+            <div style="font-size:12px;color:var(--text-dim);margin-bottom:12px">每个旗舰产品都有一份完整的产品分析 —— 需求洞察、方案权衡、竞品格局与合规边界</div>
+            <div class="matrix-grid">
+                <a class="matrix-card" href="./reports/finance-report.html" target="_blank">
+                    <div class="mc-head"><span class="mc-emoji">💹</span><span class="mc-domain">金融决策 · 15 章</span></div>
+                    <div class="mc-name">人格金融孪生平台 · 深度分析</div>
+                    <div class="mc-desc">从需求洞察到合规边界：11 段可审计投研链路的设计理由、竞品格局与差异化定位。</div>
+                    <div class="mc-live">阅读报告 →</div>
+                </a>
+                <a class="matrix-card" href="./reports/wine-report.html" target="_blank">
+                    <div class="mc-head"><span class="mc-emoji">🍸</span><span class="mc-domain">消费体验 · 15 章</span></div>
+                    <div class="mc-name">Y.MINE 人格调酒系统 · 深度分析</div>
+                    <div class="mc-desc">情绪经济 2.72 万亿市场下的 MVP 取舍：六通道如何收敛为三通道，以及成都试点路径。</div>
+                    <div class="mc-live">阅读报告 →</div>
+                </a>
+                <a class="matrix-card" href="./knowledge-base.html" target="_blank">
+                    <div class="mc-head"><span class="mc-emoji">📘</span><span class="mc-domain">方法论</span></div>
+                    <div class="mc-name">数字营销知识库</div>
+                    <div class="mc-desc">Mimic Pro 模拟体系化：A/B 测试八步、CRO、评分模型，及其与产品内核的同构关系。</div>
+                    <div class="mc-live">进入知识库 →</div>
+                </a>
+                <a class="matrix-card" href="./theory.html" target="_blank">
+                    <div class="mc-head"><span class="mc-emoji">📐</span><span class="mc-domain">行为建模 · 13 章</span></div>
+                    <div class="mc-name">行为建模方法论 · 理论依据</div>
+                    <div class="mc-desc">为什么是「预测」而非「测量」：巴纳姆效应、标签效应、贝叶斯校准，以及公开数据集（n=20,000）的实证结果与架构影响。</div>
+                    <div class="mc-live">阅读方法论 →</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- ===== ⑩ 其余站点 ===== -->
+        <div class="section-head">🧪 实验与衍生 <span>实验集群、设计系统与跨域研究</span></div>
+        <div class="project-list">
+            <div class="project-item">
+                <span class="name">Game-OS</span>
+                <span class="desc">可信决策 AI 中台 · 七层熔断 + 三角校验</span>
+                <a href="https://hellomind-star.github.io/ymine/" target="_blank" class="link">↗</a>
+            </div>
+            <div class="project-item">
+                <span class="name">🧪 实验集群</span>
+                <span class="desc">5 个核心工具 · A/B 测试 · 向量库 · 状态判定 · 记忆基座</span>
+                <a href="https://hellomind-star.github.io/ymine-validation-hub/hub.html" class="link" style="color:var(--accent-cyan);">→ 进入</a>
+            </div>
+            <div class="project-item">
+                <span class="name">🎨 午夜酒馆</span>
+                <span class="desc">UI设计系统 · Neo-Noir · 19界面 · 16型人格视觉</span>
+                <a href="https://hellomind-star.github.io/ymine-validation-hub/Midnight-Tavern-Portfolio.pdf" target="_blank" class="link">📄 PDF</a>
+            </div>
+            <div class="project-item">
+                <span class="name">📄 决策染色体</span>
+                <span class="desc">斐波那契-染色体跨域映射 · 核型分析 · 人格遗传模拟</span>
+                <a href="https://hellomind-star.github.io/ymine-validation-hub/Fibonacci-Chromosome_Isomorphism.pdf" target="_blank" class="link">📄 PDF</a>
+            </div>
+        </div>
+
+        <!-- ===== ⑪ 创作工具集（过程产物） ===== -->
+        <div class="section-head">🛠 创作工具集 <span>做上面这些产品时顺手造的工作台 · 过程产物，不是主推</span></div>
         <div class="matrix-grid">
-            <a class="matrix-card" href="idea-forge.html">
+            <a class="matrix-card" href="https://hellomind-star.github.io/Profile/idea-forge.html">
                 <div class="mc-head"><span class="mc-emoji">💡</span><span class="mc-domain">创意</span></div>
                 <div class="mc-name">Idea Forge · 想法锻造台</div>
                 <div class="mc-desc">灵感零散、难以落地。用固定流程把一句话想法锻造成可执行方案，减少"想到但做不出来"的损耗。</div>
                 <div class="mc-live">打开 →</div>
             </a>
-            <a class="matrix-card" href="code-mate-pro.html">
+            <a class="matrix-card" href="https://hellomind-star.github.io/Profile/code-mate-pro.html">
                 <div class="mc-head"><span class="mc-emoji">🤝</span><span class="mc-domain">代码</span></div>
                 <div class="mc-name">Code-Mate Pro · 代码分析器</div>
                 <div class="mc-desc">把 AI 当作结对伙伴：审查代码、分析结构、给出重构建议，让 solo 开发也有第二双眼睛。</div>
                 <div class="mc-live">打开 →</div>
             </a>
-            <a class="matrix-card" href="code-interpreter.html">
+            <a class="matrix-card" href="https://hellomind-star.github.io/Profile/code-interpreter.html">
                 <div class="mc-head"><span class="mc-emoji">📟</span><span class="mc-domain">代码</span></div>
                 <div class="mc-name">Code Interpreter · 代码解释器</div>
                 <div class="mc-desc">逐行讲懂一段代码在干什么 —— 给未来的我和现在的你。</div>
                 <div class="mc-live">打开 →</div>
             </a>
-            <a class="matrix-card" href="ab-test.html">
+            <a class="matrix-card" href="https://hellomind-star.github.io/Profile/ab-test.html">
                 <div class="mc-head"><span class="mc-emoji">📊</span><span class="mc-domain">方法论</span></div>
                 <div class="mc-name">Y-Exp 实验评估框架</div>
                 <div class="mc-desc">改了一版，怎么知道是变好还是变差？用双检验（z-test + 贝叶斯因子）与最小样本量把"判断"变成可复算的结论。</div>
@@ -1294,7 +1542,7 @@
             </a>
         </div>
 
-        <!-- ===== 全站直达 ===== -->
+        <!-- ===== ⑫ 全站直达 ===== -->
         <div class="section-head">🔗 全站直达 <span>全部作品与实验站点 · 点击即达</span></div>
         <div class="site-tags">
             <a class="site-tag" href="https://hellomind-star.github.io/ymine/" target="_blank">🧠 Y.Mine 主站</a>
@@ -1325,7 +1573,7 @@
             <div class="social">
                 <a href="https://github.com/HelloMInd-star/ymine" target="_blank">GitHub</a>
             </div>
-            <div>© 2026 罗煜 · 设计 & 代码</div>
+            <div>© 2026 罗煜 · 设计 &amp; 代码</div>
         </div>
 
     </div>
